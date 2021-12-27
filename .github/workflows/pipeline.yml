@@ -1,0 +1,54 @@
+name: libNOM.map
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x'
+      - name: Dependency
+        run: dotnet restore
+      - name: Build
+        run: dotnet build libNom.map -c Release --no-restore
+      - name: Unit Test
+        run: dotnet test libNOM.test --no-restore
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: libNOM.map
+          path: libNOM.map\bin\Release\net6.0\libNOM.map.dll
+  release:
+    name: Release
+    runs-on: windows-latest
+    # Only run if commit was tagged.
+    if: ${{ startsWith(github.ref, 'refs/tags/') }}
+    needs: build
+    env:
+      dll_version: $((Get-Item libNOM.map.dll).VersionInfo.ProductVersion)
+    steps:
+      # Checkout again for changelog.
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Download
+        uses: actions/download-artifact@v2
+        with:
+          name: libNOM.map
+      - name: Create
+        # Workaround with echo to evaluate value of environment variable.
+        if: (echo ${{ github.ref_name }}) == (echo ${{ env.dll_version }})
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: ${{ github.workspace }}\.github\changelogs\${{ github.ref_name }}.md
+          files: libNOM.map.dll
+      - name: Check
+        if: (echo ${{ github.ref_name }}) != (echo ${{ env.dll_version }})
+        run: |
+          echo "There is a version mismatch between the tag and dll version!"
+          exit 1

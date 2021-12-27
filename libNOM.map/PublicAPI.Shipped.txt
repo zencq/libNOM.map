@@ -1,0 +1,6 @@
+﻿#nullable enable
+libNOM.map.Mapping
+libNOM.map.Mapping.Deobfuscate(Newtonsoft.Json.Linq.JObject! root) -> System.Collections.Generic.HashSet<string!>!
+libNOM.map.Mapping.Obfuscate(Newtonsoft.Json.Linq.JObject! root) -> void
+libNOM.map.Mapping.Update() -> void
+static libNOM.map.Mapping.Instance.get -> libNOM.map.Mapping!
