@@ -48,13 +48,11 @@ public class Mapping
 
     #region Contructor
 
-#pragma warning disable CS8601, CS8618 // As we are loading resources those will not be null.
     private Mapping()
     {
-        JsonCompiler = MappingJson.Deserialize(Properties.Resources.MBINCompiler);
-        JsonLegacy = MappingJson.Deserialize(Properties.Resources.Legacy);
-        JsonWizard = MappingJson.Deserialize(Properties.Resources.SaveWizard);
-#pragma warning restore CS8601, CS8618
+        JsonCompiler = MappingJson.Deserialize(Properties.Resources.MBINCompiler)!;
+        JsonLegacy = MappingJson.Deserialize(Properties.Resources.Legacy)!;
+        JsonWizard = MappingJson.Deserialize(Properties.Resources.SaveWizard)!;
         if (File.Exists(PATH))
         {
             JsonDownload = MappingJson.Deserialize(File.ReadAllText(PATH));
@@ -206,17 +204,15 @@ public class Mapping
     {
         if (token.Type == JTokenType.Property)
         {
-#pragma warning disable CS8602 // As Type is JTokenType.Property we can be sure that "token as JProperty" is not null.
             var property = token as JProperty;
-            if (MapForDeobfuscation.ContainsKey(property.Name))
+            if (MapForDeobfuscation.ContainsKey(property!.Name))
             {
                 jProperties.Add(property);
             }
-            else if (!MapForDeobfuscation.ContainsValue(property.Name))
+            else if (!MapForDeobfuscation.ContainsValue(property!.Name))
             {
-                keys.Add(property.Name);
+                keys.Add(property!.Name);
             }
-#pragma warning restore CS8602
         }
         foreach (var child in token.Children().Where(c => c.HasValues))
         {
@@ -258,13 +254,11 @@ public class Mapping
     {
         if (token.Type == JTokenType.Property)
         {
-#pragma warning disable CS8602 // As Type is JTokenType.Property we can be sure that "token as JProperty" is not null.
             var property = token as JProperty;
-            if (MapForObfuscation.ContainsKey(property.Name))
+            if (MapForObfuscation.ContainsKey(property!.Name))
             {
                 jProperties.Add(property);
             }
-#pragma warning restore CS8602
         }
         foreach (var child in token.Children().Where(c => c.HasValues))
         {

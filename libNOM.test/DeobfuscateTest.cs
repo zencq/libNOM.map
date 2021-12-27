@@ -17,9 +17,7 @@ public class DeobfuscateTest
         var jsonObject = JsonConvert.DeserializeObject(Properties.Resources.compiler_375_obfuscated) as JObject;
 
         // Act
-#pragma warning disable CS8604 // Loaded from resource and therefore not null.
-        _ = Mapping.Instance.Deobfuscate(jsonObject);
-#pragma warning restore CS8604
+        _ = Mapping.Instance.Deobfuscate(jsonObject!);
 
         // Assert
         var actual = JsonConvert.SerializeObject(jsonObject);
@@ -34,9 +32,7 @@ public class DeobfuscateTest
         var jsonObject = JsonConvert.DeserializeObject(Properties.Resources.legay_350_obfuscated) as JObject;
 
         // Act
-#pragma warning disable CS8604 // Loaded from resource and therefore not null.
-        _ = Mapping.Instance.Deobfuscate(jsonObject);
-#pragma warning restore CS8604
+        _ = Mapping.Instance.Deobfuscate(jsonObject!);
 
         // Assert
         var actual = JsonConvert.SerializeObject(jsonObject);
@@ -51,9 +47,7 @@ public class DeobfuscateTest
         var jsonObject = JsonConvert.DeserializeObject(Properties.Resources.wizard_362_original) as JObject;
 
         // Act
-#pragma warning disable CS8604 // Loaded from resource and therefore not null.
-        _ = Mapping.Instance.Deobfuscate(jsonObject);
-#pragma warning restore CS8604
+        _ = Mapping.Instance.Deobfuscate(jsonObject!);
 
         // Assert
         var actual = JsonConvert.SerializeObject(jsonObject);
