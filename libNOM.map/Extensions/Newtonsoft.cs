@@ -30,9 +30,7 @@ internal static class NewtonsoftExtensions
         // To avoid triggering a clone of the existing property's value, we need to save a reference to it
         // and then null out property.Value before adding the value to the new JProperty.
         var existingValue = property.Value;
-#pragma warning disable CS8625 // Can be null nonetheless.
-        property.Value = null;
-#pragma warning restore CS8625
+        property.Value = null!;
 
         var newProperty = new JProperty(newName, existingValue);
         property.Replace(newProperty);
