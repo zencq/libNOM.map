@@ -13,10 +13,11 @@ All notable changes to this project will be documented in this file. It uses the
 ### Fixed
 ### Security
 
-## 0.1.1 (2021-12-27)
+## 0.1.1 (2021-12-28)
 
 ### Changed
 * Using null-forgiving operator instead of disabled warnings
+* Structure optimization
 
 ## 0.1.0 (2021-12-27)
 

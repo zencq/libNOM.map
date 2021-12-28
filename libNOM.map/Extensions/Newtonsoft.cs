@@ -26,9 +26,8 @@ internal static class NewtonsoftExtensions
             property = (JProperty)(token.Parent);
         }
 
-        // Note:
-        // To avoid triggering a clone of the existing property's value, we need to save a reference to it
-        // and then null out property.Value before adding the value to the new JProperty.
+        // To avoid triggering a clone of the existing value, we save a reference to it and then
+        // null out property.Value before adding the value to the new JProperty.
         var existingValue = property.Value;
         property.Value = null!;
 

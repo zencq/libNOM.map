@@ -19,14 +19,9 @@ in [NomNom](https://github.com/zencq/NomNom), a savegame editor for [No Man's Sk
 The mapping is stored in a singleton instance and each function is just a simple call.
 
 Not only the latest mapping is supported but also legacy keys that are gone in a
-game version after **2.09**. It is also possible to download an updated the mapping from
+game version after **2.09**. It is also possible to download an updated mapping from
 the [lastest MBINCompiler release](https://github.com/monkeyman192/MBINCompiler/releases/latest).
 It will be downloaded to **download/mapping.json** and automatically loaded if present.
-
-### Requirements
-
-The following packages are used in the public API:
-* [Newtonsoft.Json](https://www.nuget.org/packages/Newtonsoft.Json/) for JSON handling.
 
 ### Usage
 
@@ -60,3 +55,10 @@ file for details.
 Thanks to the following people for their help in one way or another.
 
 * [monkeyman192](https://github.com/monkeyman192/MBINCompiler) - Maintaining MBINCompiler and creating up-to-date mapping files
+
+## Dependencies
+
+* [Microsoft.CodeAnalysis.PublicApiAnalyzers](https://www.nuget.org/packages/Microsoft.CodeAnalysis.PublicApiAnalyzers/) - Monitor changes to the public API.
+* [Newtonsoft.Json](https://www.nuget.org/packages/Newtonsoft.Json/) - Handle JSON objects.
+* [Octokit](https://www.nuget.org/packages/Octokit/) - Query MBINCompiler release information.
+* [Serilog](https://www.nuget.org/packages/Serilog/) - Log mentionable eventsevents.

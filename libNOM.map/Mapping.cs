@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using libNOM.map.Extensions;
+using libNOM.map.Json;
 using Newtonsoft.Json.Linq;
 using Serilog;
 
@@ -7,7 +8,7 @@ namespace libNOM.map;
 
 
 /// <summary>
-/// Holds all necessary mapping data and provides obfuscation and deobfuscation functions.
+/// Holds all necessary mapping data and provides obfuscation and deobfuscation.
 /// </summary>
 public class Mapping
 {
@@ -39,9 +40,6 @@ public class Mapping
 
     private static readonly Lazy<Mapping> _Lazy = new(() => new Mapping());
 
-    /// <summary>
-    /// Instance that has all necessary data to obfuscate and deobfuscate a file.
-    /// </summary>
     public static Mapping Instance => _Lazy.Value; // { get; }
 
     #endregion
@@ -209,6 +207,7 @@ public class Mapping
             {
                 jProperties.Add(property);
             }
+            // Only add if it is not a target value as well.
             else if (!MapForDeobfuscation.ContainsValue(property!.Name))
             {
                 keys.Add(property!.Name);
