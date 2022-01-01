@@ -36,6 +36,12 @@ public class Mapping
 
     #endregion
 
+    #region Property
+
+    public Task? UpdateTask { get; private set; }
+
+    #endregion
+
     #region Singleton
 
     private static readonly Lazy<Mapping> _Lazy = new(() => new Mapping());
@@ -119,6 +125,14 @@ public class Mapping
         {
             CreateMap();
         }
+    }
+
+    /// <summary>
+    /// Download the mapping file from the lastet MBINCompiler release on GitHub and create new maps.
+    /// </summary>
+    public void UpdateAsync()
+    {
+        UpdateTask = Task.Run(Update);
     }
 
     /// <summary>

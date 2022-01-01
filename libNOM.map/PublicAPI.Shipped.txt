@@ -3,4 +3,6 @@ libNOM.map.Mapping
 libNOM.map.Mapping.Deobfuscate(Newtonsoft.Json.Linq.JObject! root) -> System.Collections.Generic.HashSet<string!>!
 libNOM.map.Mapping.Obfuscate(Newtonsoft.Json.Linq.JObject! root) -> void
 libNOM.map.Mapping.Update() -> void
+libNOM.map.Mapping.UpdateAsync() -> void
+libNOM.map.Mapping.UpdateTask.get -> System.Threading.Tasks.Task?
 static libNOM.map.Mapping.Instance.get -> libNOM.map.Mapping!

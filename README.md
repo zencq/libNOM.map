@@ -19,7 +19,7 @@ in [NomNom](https://github.com/zencq/NomNom), a savegame editor for [No Man's Sk
 The mapping is stored in a singleton instance and each function is just a simple call.
 
 Not only the latest mapping is supported but also legacy keys that are gone in a
-game version after **2.09**. It is also possible to download an updated mapping from
+game version after **2.11**. It is also possible to download an updated mapping from
 the [lastest MBINCompiler release](https://github.com/monkeyman192/MBINCompiler/releases/latest).
 It will be downloaded to **download/mapping.json** and automatically loaded if present.
 
@@ -38,7 +38,10 @@ Mapping.Instance.Obfuscate(jsonObject);
 Update and download the mapping.json if a newer version is available.
 ```csharp
 // Update
-Mapping.Instance.Update()
+Mapping.Instance.Update();
+
+Mapping.Instance.UpdateAsync();
+Mapping.Instance.UpdateTask.Wait();
 ```
 
 ## License
