@@ -13,6 +13,11 @@ All notable changes to this project will be documented in this file. It uses the
 ### Fixed
 ### Security
 
+## 0.2.0 (2022-01-03)
+
+### Added
+* UpdateAsync
+
 ## 0.1.1 (2021-12-28)
 
 ### Changed
