@@ -2,7 +2,6 @@
 using libNOM.map.Extensions;
 using libNOM.map.Json;
 using Newtonsoft.Json.Linq;
-using Serilog;
 
 namespace libNOM.map;
 
@@ -167,8 +166,6 @@ public class Mapping
         using Stream contentStream = await (await httpClient.SendAsync(request)).Content.ReadAsStreamAsync();
         using Stream fileStream = new FileStream(PATH, FileMode.Create, FileAccess.Write, FileShare.None);
         await contentStream.CopyToAsync(fileStream);
-
-        Log.Information($"Downloaded {version} of {FILE}");
 
         // Deserialize the downloaded file. 
         contentStream.Position = 0;

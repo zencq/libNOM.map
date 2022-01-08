@@ -61,7 +61,8 @@ Thanks to the following people for their help in one way or another.
 
 ## Dependencies
 
+### libNOM.map
+
 * [Microsoft.CodeAnalysis.PublicApiAnalyzers](https://www.nuget.org/packages/Microsoft.CodeAnalysis.PublicApiAnalyzers/) - Monitor changes to the public API.
 * [Newtonsoft.Json](https://www.nuget.org/packages/Newtonsoft.Json/) - Handle JSON objects.
 * [Octokit](https://www.nuget.org/packages/Octokit/) - Query MBINCompiler release information.
-* [Serilog](https://www.nuget.org/packages/Serilog/) - Log mentionable events.
