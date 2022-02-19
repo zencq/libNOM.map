@@ -1,9 +1,9 @@
-﻿using System.Reflection;
-using libNOM.map.Extensions;
+﻿using libNOM.map.Extensions;
 using libNOM.map.Json;
 using Newtonsoft.Json.Linq;
+using System.Reflection;
 
-namespace libNOM.map;
+namespace libNOM.map.Models;
 
 
 /// <summary>
@@ -13,9 +13,7 @@ public class Mapping
 {
     #region Constant
 
-    private const string DIRECTORY = "download";
     private const string FILE = "mapping.json";
-    private const string PATH = $"{DIRECTORY}/{FILE}";
 
     #endregion
 
@@ -33,11 +31,15 @@ public class Mapping
 
     private readonly MappingJson JsonWizard; // adjust differing mapping of SaveWizard
 
+    private MappingSettings Settings = new();
+
     #endregion
 
     #region Property
 
     public Task? UpdateTask { get; private set; }
+
+    private string CombinedPath => Path.Combine(Settings.PathDownload, FILE);
 
     #endregion
 
@@ -56,9 +58,10 @@ public class Mapping
         JsonCompiler = MappingJson.Deserialize(Properties.Resources.MBINCompiler)!;
         JsonLegacy = MappingJson.Deserialize(Properties.Resources.Legacy)!;
         JsonWizard = MappingJson.Deserialize(Properties.Resources.SaveWizard)!;
-        if (File.Exists(PATH))
+
+        if (File.Exists(CombinedPath))
         {
-            JsonDownload = MappingJson.Deserialize(File.ReadAllText(PATH));
+            JsonDownload = MappingJson.Deserialize(File.ReadAllText(CombinedPath));
         }
 
         CreateMap();
@@ -158,13 +161,13 @@ public class Mapping
         if (asset is null)
             return false;
 
-        Directory.CreateDirectory(DIRECTORY);
+        Directory.CreateDirectory(Settings.PathDownload);
 
         // Download the mapping.json and save it to disk.
         using var httpClient = new HttpClient();
         using var request = new HttpRequestMessage(HttpMethod.Get, asset.BrowserDownloadUrl);
         using Stream contentStream = await (await httpClient.SendAsync(request)).Content.ReadAsStreamAsync();
-        using Stream fileStream = new FileStream(PATH, FileMode.Create, FileAccess.Write, FileShare.None);
+        using Stream fileStream = new FileStream(CombinedPath, FileMode.Create, FileAccess.Write, FileShare.None);
         await contentStream.CopyToAsync(fileStream);
 
         // Deserialize the downloaded file. 
@@ -274,6 +277,18 @@ public class Mapping
         {
             CollectForObfuscation(child, jProperties);
         }
+    }
+
+    #endregion
+
+    #region Settings
+
+    /// <summary>
+    /// Set new settings for the instance.
+    /// </summary>
+    public void SetSettings(MappingSettings mappingSettings)
+    {
+        Settings = mappingSettings ?? new();
     }
 
     #endregion

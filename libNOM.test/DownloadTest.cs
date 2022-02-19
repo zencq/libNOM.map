@@ -1,5 +1,5 @@
 using System.IO;
-using libNOM.map;
+using libNOM.map.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace libNOM.test;

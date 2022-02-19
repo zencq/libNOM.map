@@ -21,11 +21,12 @@ The mapping is stored in a singleton instance and each function is just a simple
 Not only the latest mapping is supported but also legacy keys that are gone in a
 game version after **2.11**. It is also possible to download an updated mapping from
 the [lastest MBINCompiler release](https://github.com/monkeyman192/MBINCompiler/releases/latest).
-It will be downloaded to **download/mapping.json** and automatically loaded if present.
+It will be downloaded to **download/mapping.json** (if no other path is set) and
+automatically loaded if present.
 
 ### Usage
 
-The obfuscation and deobfuscation is done in-place. Deobfuscation will return a list
+The obfuscation and deobfuscation is done in-place. Deobfuscation will return a set
 of unknown keys.
 ```csharp
 // Deobfuscate
@@ -33,6 +34,15 @@ HashSet<string> unknownKeys = Mapping.Instance.Deobfuscate(jsonObject);
 
 // Obfuscate
 Mapping.Instance.Obfuscate(jsonObject);
+```
+
+Create and update settings.
+```csharp
+// Create Settings
+MappingSettings settings = new() { PathDownload = "download" };
+
+// Update Settings
+Mapping.Instance.SetSettings(settings);
 ```
 
 Update and download the mapping.json if a newer version is available.

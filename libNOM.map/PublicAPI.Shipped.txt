@@ -1,8 +1,12 @@
 ﻿#nullable enable
-libNOM.map.Mapping
-libNOM.map.Mapping.Deobfuscate(Newtonsoft.Json.Linq.JObject! root) -> System.Collections.Generic.HashSet<string!>!
-libNOM.map.Mapping.Obfuscate(Newtonsoft.Json.Linq.JObject! root) -> void
-libNOM.map.Mapping.Update() -> void
-libNOM.map.Mapping.UpdateAsync() -> void
-libNOM.map.Mapping.UpdateTask.get -> System.Threading.Tasks.Task?
-static libNOM.map.Mapping.Instance.get -> libNOM.map.Mapping!
+libNOM.map.Models.Mapping
+libNOM.map.Models.Mapping.Deobfuscate(Newtonsoft.Json.Linq.JObject! root) -> System.Collections.Generic.HashSet<string!>!
+libNOM.map.Models.Mapping.Obfuscate(Newtonsoft.Json.Linq.JObject! root) -> void
+libNOM.map.Models.Mapping.SetSettings(libNOM.map.Models.MappingSettings! mappingSettings) -> void
+libNOM.map.Models.Mapping.Update() -> void
+libNOM.map.Models.Mapping.UpdateAsync() -> void
+libNOM.map.Models.Mapping.UpdateTask.get -> System.Threading.Tasks.Task?
+libNOM.map.Models.MappingSettings
+libNOM.map.Models.MappingSettings.PathDownload.get -> string!
+libNOM.map.Models.MappingSettings.PathDownload.set -> void
+static libNOM.map.Models.Mapping.Instance.get -> libNOM.map.Models.Mapping!
