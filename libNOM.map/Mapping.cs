@@ -153,7 +153,7 @@ public class Mapping
 
         // Convert "v3.75.0-pre1" to "3.75.0.1" and check whether it is worth it to download the mapping file of the release.
         var version = new Version(release.TagName[1..].Replace("-pre", "."));
-        if (version <= JsonCompiler.Version)
+        if (version <= JsonCompiler.Version && name != "testhost") // UnitTesting
             return false;
 
         // Find the mapping.json asset to download it.
