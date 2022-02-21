@@ -13,6 +13,17 @@ All notable changes to this project will be documented in this file. It uses the
 ### Fixed
 ### Security
 
+## 0.4.0 (2022-02-??)
+
+### Changed
+* Updated mapping to 3.81.0.2
+* Moved all public classes to root namespace
+
+## 0.3.0 (2022-02-20)
+
+### Added
+* MappingSettings
+
 ## 0.2.1 (2022-01-08)
 
 ### Changed
