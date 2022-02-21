@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <RepositoryUrl>https://github.com/zencq/libNOM.map</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Version>0.3.0</Version>
+    <Version>0.4.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

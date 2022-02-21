@@ -1,4 +1,4 @@
-﻿namespace libNOM.map.Models;
+﻿namespace libNOM.map;
 
 public record MappingSettings
 {

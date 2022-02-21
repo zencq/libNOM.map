@@ -3,7 +3,7 @@ using libNOM.map.Json;
 using Newtonsoft.Json.Linq;
 using System.Reflection;
 
-namespace libNOM.map.Models;
+namespace libNOM.map;
 
 
 /// <summary>
@@ -23,7 +23,7 @@ public class Mapping
 
     private readonly Dictionary<string, string> MapForObfuscation = new();
 
-    private readonly MappingJson JsonCompiler; // lastet MBINCompiler mapping.json when this version created
+    private readonly MappingJson JsonCompiler; // latest MBINCompiler mapping.json when this version was created
 
     private MappingJson? JsonDownload; // dynamic content from the latest MBINCompiler release on GitHub
 
@@ -151,7 +151,7 @@ public class Mapping
         if (release is null)
             return false;
 
-        // Convert "v3.75.0-pre1" to "3.75.0.1" and check whether it is worth it to download the mapping file of the release. 
+        // Convert "v3.75.0-pre1" to "3.75.0.1" and check whether it is worth it to download the mapping file of the release.
         var version = new Version(release.TagName[1..].Replace("-pre", "."));
         if (version <= JsonCompiler.Version)
             return false;
@@ -170,7 +170,7 @@ public class Mapping
         using Stream fileStream = new FileStream(CombinedPath, FileMode.Create, FileAccess.Write, FileShare.None);
         await contentStream.CopyToAsync(fileStream);
 
-        // Deserialize the downloaded file. 
+        // Deserialize the downloaded file.
         contentStream.Position = 0;
         JsonDownload = MappingJson.Deserialize(new StreamReader(contentStream).ReadToEnd());
 
