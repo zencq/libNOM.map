@@ -5,7 +5,7 @@
 ![C# 10](https://img.shields.io/badge/C%23-10-lightgrey)
 ![Release](https://img.shields.io/github/v/release/zencq/libNOM.map?display_name=tag)
 
-[![libNOM.map](https://github.com/zencq/libNOM.map/actions/workflows/pipeline.yml/badge.svg)](https://github.com/zencq/libNOM.map/actions/workflows/pipeline.yml)
+![libNOM.map](https://github.com/zencq/libNOM.map/actions/workflows/pipeline.yml/badge.svg)
 
 ## Introduction
 
@@ -24,7 +24,7 @@ the [lastest MBINCompiler release](https://github.com/monkeyman192/MBINCompiler/
 It will be downloaded to **download/mapping.json** (if no other path is set) and
 automatically loaded if present.
 
-The built-in mapping bases on `3.81.0.2` as of version `0.4.0`.
+The built-in mapping bases on `3.82.0.1` as of version `0.4.0`.
 
 ### Usage
 
