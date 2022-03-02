@@ -4,13 +4,14 @@
 public static class HttpExtensions
 {
     /// <summary>
-    /// Downloads, to a local file, the resource with the specified URI.
+    /// Downloads the resource with the specified URI to a local file.
+    /// This method does not block the calling thread.
     /// </summary>
     /// <param name="input"></param>
     /// <param name="address">The URI from which to download data.</param>
     /// <param name="file">The name of the local file that is to receive the data.</param>
     /// <returns></returns>
-    public static async Task<string> DownloadFile(this HttpClient input, string address, string path)
+    public static async Task<string> DownloadFileAsync(this HttpClient input, string address, string path)
     {
         var file = new FileInfo(path);
         Directory.CreateDirectory(file.DirectoryName!);

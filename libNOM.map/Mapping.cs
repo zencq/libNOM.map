@@ -55,9 +55,26 @@ public class Mapping
 
     #region Getter
 
+    /// <summary>
+    /// Combines the download path from the settings with the filename.
+    /// </summary>
+    /// <returns></returns>
     private string GetCombinedPath()
     {
         return Path.Combine(_Settings.PathDownload, FILE);
+    }
+
+    #endregion
+
+    #region Setter
+
+    /// <summary>
+    /// Updates the instance with the new configuration.
+    /// </summary>
+    public void SetSettings(MappingSettings mappingSettings)
+    {
+        _Settings = mappingSettings ?? new();
+        _Path = GetCombinedPath();
     }
 
     #endregion
@@ -84,7 +101,7 @@ public class Mapping
     #region Create Map
 
     /// <summary>
-    /// Create maps with the mapping data of all files for obfuscation and deobfuscation.
+    /// Creates maps with the mapping data of all files for obfuscation and deobfuscation.
     /// </summary>
     private void CreateMap()
     {
@@ -103,7 +120,7 @@ public class Mapping
     }
 
     /// <summary>
-    /// Add mapping data of a single file to the maps for obfuscation and deobfuscation.
+    /// Adds mapping data of a single file to the maps for obfuscation and deobfuscation.
     /// </summary>
     /// <param name="mappingJson">Object of a deserialized file.</param>
     /// <param name="deobfuscate">Whether to add a pair to the deobfuscation map.</param>
@@ -129,7 +146,7 @@ public class Mapping
     #region Update Map
 
     /// <summary>
-    /// Download the mapping file from the lastet MBINCompiler release on GitHub and create new maps.
+    /// Downloads the lastet mapping file and updates the maps.
     /// </summary>
     public void Update()
     {
@@ -142,7 +159,8 @@ public class Mapping
     }
 
     /// <summary>
-    /// Download the mapping file from the lastet MBINCompiler release on GitHub and create new maps.
+    /// Downloads the lastet mapping file and updates the maps.
+    /// This method does not block the calling thread.
     /// </summary>
     public void UpdateAsync()
     {
@@ -150,7 +168,8 @@ public class Mapping
     }
 
     /// <summary>
-    /// Check the lastet MBINCompiler release on GitHub and download the mapping file if it is newer.
+    /// Downloads the lastet mapping file.
+    /// This method does not block the calling thread.
     /// </summary>
     /// <returns>Whether a newer version of the mapping file was successfully downloaded.</returns>
     private async Task<bool> DownloadAsync()
@@ -174,7 +193,7 @@ public class Mapping
         if (asset is null)
             return false;
 
-        var json = await _HttpClient.DownloadFile(asset.BrowserDownloadUrl, _Path);
+        var json = await _HttpClient.DownloadFileAsync(asset.BrowserDownloadUrl, _Path);
         _JsonDownload = MappingJson.Deserialize(json);
 
         return true;
@@ -185,9 +204,9 @@ public class Mapping
     #region Deobfuscate
 
     /// <summary>
-    /// Deobfuscate a file to make it human-readable.
+    /// Deobfuscates a file to make it human-readable.
     /// </summary>
-    /// <param name="root">Entire file as JObject.</param>
+    /// <param name="root">Entire file as JSON object.</param>
     /// <returns>List of unknown keys.</returns>
     public HashSet<string> Deobfuscate(JObject root)
     {
@@ -210,10 +229,10 @@ public class Mapping
     }
 
     /// <summary>
-    /// Iterate over all JProperty to collect a list for deobfuscation.
+    /// Iterates over all JSON properties to collect a list for deobfuscation.
     /// </summary>
-    /// <param name="token">Current JToken that should be deobfuscated.</param>
-    /// <param name="jProperties">List of JProperty that need to be deobfuscated.</param>
+    /// <param name="token">Current property that should be deobfuscated.</param>
+    /// <param name="jProperties">List of properties that need to be deobfuscated.</param>
     /// <param name="keys">List of keys that cannot be deobfuscated.</param>
     private void CollectForDeobfuscation(JToken token, List<JProperty> jProperties, HashSet<string> keys)
     {
@@ -241,9 +260,9 @@ public class Mapping
     #region Obfuscate
 
     /// <summary>
-    /// Obfuscate a file to make it readable by the game again.
+    /// Obfuscates a file to make it readable by the game.
     /// </summary>
-    /// <param name="root">Entire file as JObject.</param>
+    /// <param name="root">Entire file as JSON object.</param>
     public void Obfuscate(JObject root)
     {
         var jProperties = new List<JProperty>();
@@ -262,10 +281,10 @@ public class Mapping
     }
 
     /// <summary>
-    /// Iterate over all JProperty to collect a list for obfuscation.
+    /// Iterates over all JSON properties to collect a list for obfuscation.
     /// </summary>
-    /// <param name="token">Current JToken that should be obfuscated.</param>
-    /// <param name="jProperties">List of JProperty that need to be obfuscated.</param>
+    /// <param name="token">Current property that should be obfuscated.</param>
+    /// <param name="jProperties">List of properties that need to be obfuscated.</param>
     private void CollectForObfuscation(JToken token, List<JProperty> jProperties)
     {
         if (token.Type == JTokenType.Property)
@@ -280,19 +299,6 @@ public class Mapping
         {
             CollectForObfuscation(child, jProperties);
         }
-    }
-
-    #endregion
-
-    #region Settings
-
-    /// <summary>
-    /// Set new settings for the instance.
-    /// </summary>
-    public void SetSettings(MappingSettings mappingSettings)
-    {
-        _Settings = mappingSettings ?? new();
-        _Path = GetCombinedPath();
     }
 
     #endregion
