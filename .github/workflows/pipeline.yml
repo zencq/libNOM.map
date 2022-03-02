@@ -39,7 +39,6 @@ jobs:
         with:
           name: libNOM.map
       - name: Create
-        # Workaround with echo to evaluate value of environment variable.
         uses: softprops/action-gh-release@v1
         with:
           body_path: ${{ github.workspace }}\.github\changelogs\${{ github.ref_name }}.md

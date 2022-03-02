@@ -19,27 +19,29 @@ public class Mapping
 
     #region Member
 
-    private readonly Dictionary<string, string> MapForDeobfuscation = new();
+    private readonly HttpClient _HttpClient = new();
 
-    private readonly Dictionary<string, string> MapForObfuscation = new();
+    private readonly MappingJson _JsonCompiler; // latest MBINCompiler mapping.json when this version was created
 
-    private readonly MappingJson JsonCompiler; // latest MBINCompiler mapping.json when this version was created
+    private MappingJson? _JsonDownload; // dynamic content from the latest MBINCompiler release on GitHub
 
-    private MappingJson? JsonDownload; // dynamic content from the latest MBINCompiler release on GitHub
+    private readonly MappingJson _JsonLegacy; // older keys that are not present in the latest version
 
-    private readonly MappingJson JsonLegacy; // older keys that are not present in the latest version
+    private readonly MappingJson _JsonWizard; // adjust differing mapping of SaveWizard
 
-    private readonly MappingJson JsonWizard; // adjust differing mapping of SaveWizard
+    private readonly Dictionary<string, string> _MapForDeobfuscation = new();
 
-    private MappingSettings Settings = new();
+    private readonly Dictionary<string, string> _MapForObfuscation = new();
+
+    private string _Path;
+
+    private MappingSettings _Settings = new();
 
     #endregion
 
     #region Property
 
     public Task? UpdateTask { get; private set; }
-
-    private string CombinedPath => Path.Combine(Settings.PathDownload, FILE);
 
     #endregion
 
@@ -51,17 +53,27 @@ public class Mapping
 
     #endregion
 
+    #region Getter
+
+    private string GetCombinedPath()
+    {
+        return Path.Combine(_Settings.PathDownload, FILE);
+    }
+
+    #endregion
+
     #region Contructor
 
     private Mapping()
     {
-        JsonCompiler = MappingJson.Deserialize(Properties.Resources.MBINCompiler)!;
-        JsonLegacy = MappingJson.Deserialize(Properties.Resources.Legacy)!;
-        JsonWizard = MappingJson.Deserialize(Properties.Resources.SaveWizard)!;
+        _JsonCompiler = MappingJson.Deserialize(Properties.Resources.MBINCompiler)!;
+        _JsonLegacy = MappingJson.Deserialize(Properties.Resources.Legacy)!;
+        _JsonWizard = MappingJson.Deserialize(Properties.Resources.SaveWizard)!;
+        _Path = GetCombinedPath();
 
-        if (File.Exists(CombinedPath))
+        if (File.Exists(_Path))
         {
-            JsonDownload = MappingJson.Deserialize(File.ReadAllText(CombinedPath));
+            _JsonDownload = MappingJson.Deserialize(File.ReadAllText(_Path));
         }
 
         CreateMap();
@@ -76,17 +88,17 @@ public class Mapping
     /// </summary>
     private void CreateMap()
     {
-        MapForDeobfuscation.Clear();
-        MapForObfuscation.Clear();
+        _MapForDeobfuscation.Clear();
+        _MapForObfuscation.Clear();
 
-        AddToMap(JsonCompiler, true, true);
-        AddToMap(JsonLegacy, true, true);
-        AddToMap(JsonWizard, true, false);
+        AddToMap(_JsonCompiler, true, true);
+        AddToMap(_JsonLegacy, true, true);
+        AddToMap(_JsonWizard, true, false);
 
         // Apply additional mapping but keep those that might have become outdated by adding JsonCompiler nonetheless.
-        if (JsonDownload?.Version > JsonCompiler.Version)
+        if (_JsonDownload?.Version > _JsonCompiler.Version)
         {
-            AddToMap(JsonDownload, true, true);
+            AddToMap(_JsonDownload, true, true);
         }
     }
 
@@ -103,11 +115,11 @@ public class Mapping
             // Set it this way to avoid conflicts if adding JsonDownload.
             if (deobfuscate)
             {
-                MapForDeobfuscation[pair.Key] = pair.Value;
+                _MapForDeobfuscation[pair.Key] = pair.Value;
             }
             if (obfuscate)
             {
-                MapForObfuscation[pair.Value] = pair.Key;
+                _MapForObfuscation[pair.Value] = pair.Key;
             }
         }
     }
@@ -147,13 +159,14 @@ public class Mapping
         var githubClient = new Octokit.GitHubClient(new Octokit.ProductHeaderValue(name));
 
         // Get the latest release from GitHub.
-        var release = await githubClient.Repository.Release.GetLatest("monkeyman192", "MBINCompiler");
+
+        var release = await githubClient.Repository.Release.GetLatest(Properties.Resources.REPO_OWNER, Properties.Resources.REPO_NAME);
         if (release is null)
             return false;
 
         // Convert "v3.75.0-pre1" to "3.75.0.1" and check whether it is worth it to download the mapping file of the release.
         var version = new Version(release.TagName[1..].Replace("-pre", "."));
-        if (version <= JsonCompiler.Version && name != "testhost") // UnitTesting
+        if (version <= _JsonCompiler.Version && name != "testhost") // UnitTesting
             return false;
 
         // Find the mapping.json asset to download it.
@@ -161,18 +174,8 @@ public class Mapping
         if (asset is null)
             return false;
 
-        Directory.CreateDirectory(Settings.PathDownload);
-
-        // Download the mapping.json and save it to disk.
-        using var httpClient = new HttpClient();
-        using var request = new HttpRequestMessage(HttpMethod.Get, asset.BrowserDownloadUrl);
-        using Stream contentStream = await (await httpClient.SendAsync(request)).Content.ReadAsStreamAsync();
-        using Stream fileStream = new FileStream(CombinedPath, FileMode.Create, FileAccess.Write, FileShare.None);
-        await contentStream.CopyToAsync(fileStream);
-
-        // Deserialize the downloaded file.
-        contentStream.Position = 0;
-        JsonDownload = MappingJson.Deserialize(new StreamReader(contentStream).ReadToEnd());
+        var json = await _HttpClient.DownloadFile(asset.BrowserDownloadUrl, _Path);
+        _JsonDownload = MappingJson.Deserialize(json);
 
         return true;
     }
@@ -200,7 +203,7 @@ public class Mapping
         // Actually rename each jProperty.
         foreach (var jProperty in jProperties)
         {
-            jProperty.Rename(MapForDeobfuscation[jProperty.Name]);
+            jProperty.Rename(_MapForDeobfuscation[jProperty.Name]);
         }
 
         return keys;
@@ -217,12 +220,12 @@ public class Mapping
         if (token.Type == JTokenType.Property)
         {
             var property = token as JProperty;
-            if (MapForDeobfuscation.ContainsKey(property!.Name))
+            if (_MapForDeobfuscation.ContainsKey(property!.Name))
             {
                 jProperties.Add(property);
             }
             // Only add if it is not a target value as well.
-            else if (!MapForDeobfuscation.ContainsValue(property!.Name))
+            else if (!_MapForDeobfuscation.ContainsValue(property!.Name))
             {
                 keys.Add(property!.Name);
             }
@@ -254,7 +257,7 @@ public class Mapping
         // Actually rename each jProperty.
         foreach (var jProperty in jProperties)
         {
-            jProperty.Rename(MapForObfuscation[jProperty.Name]);
+            jProperty.Rename(_MapForObfuscation[jProperty.Name]);
         }
     }
 
@@ -268,7 +271,7 @@ public class Mapping
         if (token.Type == JTokenType.Property)
         {
             var property = token as JProperty;
-            if (MapForObfuscation.ContainsKey(property!.Name))
+            if (_MapForObfuscation.ContainsKey(property!.Name))
             {
                 jProperties.Add(property);
             }
@@ -288,7 +291,8 @@ public class Mapping
     /// </summary>
     public void SetSettings(MappingSettings mappingSettings)
     {
-        Settings = mappingSettings ?? new();
+        _Settings = mappingSettings ?? new();
+        _Path = GetCombinedPath();
     }
 
     #endregion

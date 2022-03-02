@@ -124,6 +124,12 @@
   <data name="MBINCompiler" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\mapping_mbincompiler.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="REPO_NAME" xml:space="preserve">
+    <value>MBINCompiler</value>
+  </data>
+  <data name="REPO_OWNER" xml:space="preserve">
+    <value>monkeyman192</value>
+  </data>
   <data name="SaveWizard" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\mapping_savewizard.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>

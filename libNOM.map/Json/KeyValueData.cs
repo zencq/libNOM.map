@@ -3,7 +3,10 @@
 namespace libNOM.map.Json;
 
 
-internal partial class KeyValueData
+/// <summary>
+/// Holds data of a single deserialized key/value pair.
+/// </summary>
+internal record class KeyValueData
 {
     [JsonProperty("Key")]
     internal string Key { get; set; } = default!;
