@@ -5,41 +5,55 @@ on: [push, pull_request]
 jobs:
   build:
     name: Build and Test
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
           dotnet-version: '6.0.x'
       - name: Dependency
         run: dotnet restore
-      - name: Build
-        run: dotnet build libNom.map -c Release --no-restore
       - name: Unit Test
         run: dotnet test libNOM.test --no-restore
+      - name: Build
+        run: dotnet publish libNOM.map -c Release --no-restore
+      - name: NuGet
+        run: dotnet pack libNOM.map -c Release --no-restore
+      - name: Archive
+        uses: thedoctor0/zip-release@0.6.1
+        with:
+          filename: 'libNOM.map.zip'
+          directory: 'libNOM.map/bin/Release/net6.0/publish'
+          exclusions: '*.json *.pdb'
       - name: Upload
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: libNOM.map
-          path: libNOM.map\bin\Release\net6.0\libNOM.map.dll
+          path: |
+            libNOM.map/bin/Release/net6.0/libNOM.map.dll
+            libNOM.map/bin/Release/net6.0/publish/libNOM.map.zip
+            libNOM.map/bin/Release/libNOM.map.*.nupkg
   release:
     name: Release
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     # Only run if commit was tagged.
     if: ${{ startsWith(github.ref, 'refs/tags/') }}
     needs: build
     steps:
       # Checkout again for changelog.
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Download
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: libNOM.map
       - name: Create
         uses: softprops/action-gh-release@v1
         with:
-          body_path: ${{ github.workspace }}\.github\changelogs\${{ github.ref_name }}.md
-          files: libNOM.map.dll
+          body_path: ${{ github.workspace }}/.github/changelogs/${{ github.ref_name }}.md
+          files: |
+            net6.0/libNOM.map.dll
+            net6.0/publish/publish/libNOM.map.zip
+            libNOM.map.*.nupkg
