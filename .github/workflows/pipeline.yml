@@ -38,17 +38,26 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    # Only run if commit was tagged.
+    # Only if commit was tagged.
     if: ${{ startsWith(github.ref, 'refs/tags/') }}
     needs: build
     steps:
-      # Checkout again for changelog.
-      - name: Checkout
-        uses: actions/checkout@v3
       - name: Download
         uses: actions/download-artifact@v3
         with:
           name: libNOM.map
+      - name: Version
+        run: echo "dll_version=$((Get-Command .\libNOM.map\bin\Release\net6.0\libNOM.map.dll).FileVersionInfo.ProductVersion)" >> $env:GITHUB_ENV
+        shell: pwsh
+      # Exit if version mismatch.
+      - name: Mismatch
+        if: ${{ github.ref_name != env.dll_version }}
+        run: |
+          echo "There is a version mismatch between git tag and dll version!"
+          exit 1
+      # Checkout to access the changelog.
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: Create
         uses: softprops/action-gh-release@v1
         with:
