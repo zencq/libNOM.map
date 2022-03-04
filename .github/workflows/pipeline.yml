@@ -64,5 +64,5 @@ jobs:
           body_path: ${{ github.workspace }}/.github/changelogs/${{ github.ref_name }}.md
           files: |
             net6.0/libNOM.map.dll
-            net6.0/publish/publish/libNOM.map.zip
+            net6.0/publish/libNOM.map.zip
             libNOM.map.*.nupkg
