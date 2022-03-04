@@ -24,7 +24,7 @@ the [lastest MBINCompiler release](https://github.com/monkeyman192/MBINCompiler/
 It will be downloaded to **download/mapping.json** (if no other path is set) and
 automatically loaded if present.
 
-The built-in mapping bases on `3.82.0.2` as of version `0.4.1`.
+The built-in mapping is based on `3.82.0.2`.
 
 ### Usage
 
@@ -53,7 +53,7 @@ Update and download the mapping.json if a newer version is available.
 Mapping.Instance.Update();
 
 Mapping.Instance.UpdateAsync();
-Mapping.Instance.UpdateTask.Wait();
+Mapping.Instance.UpdateTask?.Wait();
 ```
 
 ## License

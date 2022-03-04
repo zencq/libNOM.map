@@ -13,7 +13,17 @@ All notable changes to this project will be documented in this file. It uses the
 ### Fixed
 ### Security
 
-## 0.4.0 (2022-02-??)
+## 0.4.1 (2022-03-04)
+
+### Added
+* More output in the release assets
+    * NuGet package
+    * archive with all necessary DLLs
+
+### Changed
+* Updated mapping to 3.82.0.2
+
+## 0.4.0 (2022-02-24)
 
 ### Changed
 * Updated mapping to 3.81.0.2
