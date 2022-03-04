@@ -47,7 +47,7 @@ jobs:
         with:
           name: libNOM.map
       - name: Version
-        run: echo "dll_version=$((Get-Command .\libNOM.map\bin\Release\net6.0\libNOM.map.dll).FileVersionInfo.ProductVersion)" >> $env:GITHUB_ENV
+        run: echo "dll_version=$((Get-Command .\net6.0\libNOM.map.dll).FileVersionInfo.ProductVersion)" >> $env:GITHUB_ENV
         shell: pwsh
       # Exit if version mismatch.
       - name: Mismatch
