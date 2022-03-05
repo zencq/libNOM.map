@@ -1,3 +1,1 @@
 ﻿#nullable enable
-libNOM.map.Extensions.HttpExtensions
-static libNOM.map.Extensions.HttpExtensions.DownloadFileAsync(this System.Net.Http.HttpClient! input, string! address, string! path) -> System.Threading.Tasks.Task<string!>!

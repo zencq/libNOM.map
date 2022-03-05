@@ -10,3 +10,5 @@ libNOM.map.MappingSettings
 libNOM.map.MappingSettings.PathDownload.get -> string!
 libNOM.map.MappingSettings.PathDownload.set -> void
 static libNOM.map.Mapping.Instance.get -> libNOM.map.Mapping!
+libNOM.map.Extensions.HttpExtensions
+static libNOM.map.Extensions.HttpExtensions.DownloadFileAsync(this System.Net.Http.HttpClient! input, string! address, string! path) -> System.Threading.Tasks.Task<string!>!
