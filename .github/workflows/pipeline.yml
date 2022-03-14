@@ -18,9 +18,9 @@ jobs:
       - name: Unit Test
         run: dotnet test libNOM.test --no-restore
       - name: Build
-        run: dotnet publish libNOM.map -c Release --no-restore
+        run: dotnet publish libNOM.map --no-restore -c Release
       - name: NuGet
-        run: dotnet pack libNOM.map -c Release --no-restore
+        run: dotnet pack libNOM.map --no-restore -c Release
       - name: Archive
         uses: thedoctor0/zip-release@0.6.1
         with:
