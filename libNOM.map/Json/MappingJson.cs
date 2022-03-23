@@ -11,10 +11,10 @@ internal record class MappingJson
     #region Property
 
     [JsonProperty("libMBIN_version")]
-    internal Version Version { get; set; } = default!;
+    internal Version Version { get; set; } = null!;
 
     [JsonProperty("Mapping")]
-    internal KeyValueData[] Data { get; set; } = default!;
+    internal KeyValueData[] Data { get; set; } = null!;
 
     #endregion
 

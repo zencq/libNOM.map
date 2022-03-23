@@ -9,8 +9,8 @@ namespace libNOM.map.Json;
 internal record class KeyValueData
 {
     [JsonProperty("Key")]
-    internal string Key { get; set; } = default!;
+    internal string Key { get; set; } = null!;
 
     [JsonProperty("Value")]
-    internal string Value { get; set; } = default!;
+    internal string Value { get; set; } = null!;
 }

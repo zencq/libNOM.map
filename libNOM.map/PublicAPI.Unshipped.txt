@@ -1,1 +1,2 @@
 ﻿#nullable enable
+libNOM.map.Mapping.Update() -> bool

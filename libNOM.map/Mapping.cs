@@ -98,6 +98,8 @@ public class Mapping
 
     #endregion
 
+    // //
+
     #region Create Map
 
     /// <summary>
@@ -148,14 +150,23 @@ public class Mapping
     /// <summary>
     /// Downloads the lastet mapping file and updates the maps.
     /// </summary>
-    public void Update()
+    /// <returns>Whether a newer version of the mapping file was successfully downloaded.</returns>
+    public bool Update()
     {
-        var task = DownloadAsync();
-        task.Wait();
-        if (task.Result)
+        var result = false;
+        if (UpdateTask is null || UpdateTask.IsCompleted)
         {
-            CreateMap();
+            UpdateTask = Task.Run(async () =>
+            {
+                result = await DownloadAsync();
+                if (result)
+                {
+                    CreateMap();
+                }
+            });
         }
+        UpdateTask.Wait(); // in case of doubt not newer
+        return result;
     }
 
     /// <summary>
@@ -164,7 +175,14 @@ public class Mapping
     /// </summary>
     public void UpdateAsync()
     {
-        UpdateTask = Task.Run(Update);
+        UpdateTask = Task.Run(async () =>
+        {
+            var result = await DownloadAsync();
+            if (result)
+            {
+                CreateMap();
+            }
+        });
     }
 
     /// <summary>
@@ -178,15 +196,16 @@ public class Mapping
         var githubClient = new Octokit.GitHubClient(new Octokit.ProductHeaderValue(name));
 
         // Get the latest release from GitHub.
-
         var release = await githubClient.Repository.Release.GetLatest(Properties.Resources.REPO_OWNER, Properties.Resources.REPO_NAME);
         if (release is null)
             return false;
 
+#if RELEASE
         // Convert "v3.75.0-pre1" to "3.75.0.1" and check whether it is worth it to download the mapping file of the release.
         var version = new Version(release.TagName[1..].Replace("-pre", "."));
         if (version <= _JsonCompiler.Version && name != "testhost") // UnitTesting
             return false;
+#endif
 
         // Find the mapping.json asset to download it.
         var asset = release.Assets.FirstOrDefault(a => a.Name.Equals(FILE));
