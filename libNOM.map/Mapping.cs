@@ -1,7 +1,6 @@
 ﻿using libNOM.map.Extensions;
 using libNOM.map.Json;
 using Newtonsoft.Json.Linq;
-using System.Reflection;
 
 namespace libNOM.map;
 
@@ -11,71 +10,51 @@ namespace libNOM.map;
 /// </summary>
 public class Mapping
 {
-    #region Constant
+    #region Field
 
-    private const string FILE = "mapping.json";
+    private readonly HttpClient _httpClient = new();
 
-    #endregion
+    private readonly MappingJson _jsonCompiler; // latest MBINCompiler mapping.json when this version was created
 
-    #region Member
+    private MappingJson? _jsonDownload; // dynamic content from the latest MBINCompiler release on GitHub
 
-    private readonly HttpClient _HttpClient = new();
+    private readonly MappingJson _jsonLegacy; // older keys that are not present in the latest version
 
-    private readonly MappingJson _JsonCompiler; // latest MBINCompiler mapping.json when this version was created
+    private readonly MappingJson _jsonWizard; // adjust differing mapping of SaveWizard
 
-    private MappingJson? _JsonDownload; // dynamic content from the latest MBINCompiler release on GitHub
+    private readonly Dictionary<string, string> _mapForDeobfuscation = new();
 
-    private readonly MappingJson _JsonLegacy; // older keys that are not present in the latest version
+    private readonly Dictionary<string, string> _mapForObfuscation = new();
 
-    private readonly MappingJson _JsonWizard; // adjust differing mapping of SaveWizard
+    private string _path;
 
-    private readonly Dictionary<string, string> _MapForDeobfuscation = new();
+    private MappingSettings _settings = new();
 
-    private readonly Dictionary<string, string> _MapForObfuscation = new();
-
-    private string _Path;
-
-    private MappingSettings _Settings = new();
+    private Task? _updateTask;
 
     #endregion
 
     #region Property
 
-    public Task? UpdateTask { get; private set; }
+    private bool IsRunning => !_updateTask?.IsCompleted ?? false; // { get; }
+
+    public MappingSettings? Settings // { get; set; }
+    {
+        get => _settings;
+        set
+        {
+            _settings = value ?? new();
+            _path = GetCombinedPath();
+        }
+    }
 
     #endregion
 
     #region Singleton
 
-    private static readonly Lazy<Mapping> _Lazy = new(() => new Mapping());
+    private static readonly Lazy<Mapping> _lazy = new(() => new());
 
-    public static Mapping Instance => _Lazy.Value; // { get; }
-
-    #endregion
-
-    #region Getter
-
-    /// <summary>
-    /// Combines the download path from the settings with the filename.
-    /// </summary>
-    /// <returns></returns>
-    private string GetCombinedPath()
-    {
-        return Path.Combine(_Settings.PathDownload, FILE);
-    }
-
-    #endregion
-
-    #region Setter
-
-    /// <summary>
-    /// Updates the instance with the new configuration.
-    /// </summary>
-    public void SetSettings(MappingSettings mappingSettings)
-    {
-        _Settings = mappingSettings ?? new();
-        _Path = GetCombinedPath();
-    }
+    public static Mapping Instance => _lazy.Value; // { get; }
 
     #endregion
 
@@ -83,14 +62,14 @@ public class Mapping
 
     private Mapping()
     {
-        _JsonCompiler = MappingJson.Deserialize(Properties.Resources.MBINCompiler)!;
-        _JsonLegacy = MappingJson.Deserialize(Properties.Resources.Legacy)!;
-        _JsonWizard = MappingJson.Deserialize(Properties.Resources.SaveWizard)!;
-        _Path = GetCombinedPath();
+        _jsonCompiler = MappingJson.Deserialize(Properties.Resources.MBINCompiler)!;
+        _jsonLegacy = MappingJson.Deserialize(Properties.Resources.Legacy)!;
+        _jsonWizard = MappingJson.Deserialize(Properties.Resources.SaveWizard)!;
+        _path = GetCombinedPath();
 
-        if (File.Exists(_Path))
+        if (File.Exists(_path))
         {
-            _JsonDownload = MappingJson.Deserialize(File.ReadAllText(_Path));
+            _jsonDownload = MappingJson.Deserialize(File.ReadAllText(_path));
         }
 
         CreateMap();
@@ -100,24 +79,24 @@ public class Mapping
 
     // //
 
-    #region Create Map
+    #region Create
 
     /// <summary>
     /// Creates maps with the mapping data of all files for obfuscation and deobfuscation.
     /// </summary>
     private void CreateMap()
     {
-        _MapForDeobfuscation.Clear();
-        _MapForObfuscation.Clear();
+        _mapForDeobfuscation.Clear();
+        _mapForObfuscation.Clear();
 
-        AddToMap(_JsonCompiler, true, true);
-        AddToMap(_JsonLegacy, true, true);
-        AddToMap(_JsonWizard, true, false);
+        AddToMap(_jsonCompiler, true, true);
+        AddToMap(_jsonLegacy, true, true);
+        AddToMap(_jsonWizard, true, false);
 
         // Apply additional mapping but keep those that might have become outdated by adding JsonCompiler nonetheless.
-        if (_JsonDownload?.Version > _JsonCompiler.Version)
+        if (_jsonDownload?.Version > _jsonCompiler.Version)
         {
-            AddToMap(_JsonDownload, true, true);
+            AddToMap(_jsonDownload, true, true);
         }
     }
 
@@ -134,88 +113,13 @@ public class Mapping
             // Set it this way to avoid conflicts if adding JsonDownload.
             if (deobfuscate)
             {
-                _MapForDeobfuscation[pair.Key] = pair.Value;
+                _mapForDeobfuscation[pair.Key] = pair.Value;
             }
             if (obfuscate)
             {
-                _MapForObfuscation[pair.Value] = pair.Key;
+                _mapForObfuscation[pair.Value] = pair.Key;
             }
         }
-    }
-
-    #endregion
-
-    #region Update Map
-
-    /// <summary>
-    /// Downloads the lastet mapping file and updates the maps.
-    /// </summary>
-    /// <returns>Whether a newer version of the mapping file was successfully downloaded.</returns>
-    public bool Update()
-    {
-        var result = false;
-        if (UpdateTask is null || UpdateTask.IsCompleted)
-        {
-            UpdateTask = Task.Run(async () =>
-            {
-                result = await DownloadAsync();
-                if (result)
-                {
-                    CreateMap();
-                }
-            });
-        }
-        UpdateTask.Wait(); // in case of doubt not newer
-        return result;
-    }
-
-    /// <summary>
-    /// Downloads the lastet mapping file and updates the maps.
-    /// This method does not block the calling thread.
-    /// </summary>
-    public void UpdateAsync()
-    {
-        UpdateTask = Task.Run(async () =>
-        {
-            var result = await DownloadAsync();
-            if (result)
-            {
-                CreateMap();
-            }
-        });
-    }
-
-    /// <summary>
-    /// Downloads the lastet mapping file.
-    /// This method does not block the calling thread.
-    /// </summary>
-    /// <returns>Whether a newer version of the mapping file was successfully downloaded.</returns>
-    private async Task<bool> DownloadAsync()
-    {
-        var name = Assembly.GetEntryAssembly()?.GetName().Name ?? Assembly.GetExecutingAssembly().GetName().Name;
-        var githubClient = new Octokit.GitHubClient(new Octokit.ProductHeaderValue(name));
-
-        // Get the latest release from GitHub.
-        var release = await githubClient.Repository.Release.GetLatest(Properties.Resources.REPO_OWNER, Properties.Resources.REPO_NAME);
-        if (release is null)
-            return false;
-
-#if RELEASE
-        // Convert "v3.75.0-pre1" to "3.75.0.1" and check whether it is worth it to download the mapping file of the release.
-        var version = new Version(release.TagName[1..].Replace("-pre", "."));
-        if (version <= _JsonCompiler.Version && name != "testhost") // UnitTesting
-            return false;
-#endif
-
-        // Find the mapping.json asset to download it.
-        var asset = release.Assets.FirstOrDefault(a => a.Name.Equals(FILE));
-        if (asset is null)
-            return false;
-
-        var json = await _HttpClient.DownloadFileAsync(asset.BrowserDownloadUrl, _Path);
-        _JsonDownload = MappingJson.Deserialize(json);
-
-        return true;
     }
 
     #endregion
@@ -229,6 +133,9 @@ public class Mapping
     /// <returns>List of unknown keys.</returns>
     public HashSet<string> Deobfuscate(JObject root)
     {
+        // Wait in case of currently running update.
+        _updateTask?.Wait();
+
         var jProperties = new List<JProperty>();
         var keys = new HashSet<string>();
 
@@ -241,7 +148,7 @@ public class Mapping
         // Actually rename each jProperty.
         foreach (var jProperty in jProperties)
         {
-            jProperty.Rename(_MapForDeobfuscation[jProperty.Name]);
+            jProperty.Rename(_mapForDeobfuscation[jProperty.Name]);
         }
 
         return keys;
@@ -258,12 +165,12 @@ public class Mapping
         if (token.Type == JTokenType.Property)
         {
             var property = token as JProperty;
-            if (_MapForDeobfuscation.ContainsKey(property!.Name))
+            if (_mapForDeobfuscation.ContainsKey(property!.Name))
             {
                 jProperties.Add(property);
             }
             // Only add if it is not a target value as well.
-            else if (!_MapForDeobfuscation.ContainsValue(property!.Name))
+            else if (!_mapForDeobfuscation.ContainsValue(property!.Name))
             {
                 keys.Add(property!.Name);
             }
@@ -276,6 +183,19 @@ public class Mapping
 
     #endregion
 
+    #region Getter
+
+    /// <summary>
+    /// Combines the download path from the settings with the filename.
+    /// </summary>
+    /// <returns></returns>
+    private string GetCombinedPath()
+    {
+        return Path.Combine(Path.GetFullPath(_settings.PathDownload), Properties.Resources.RELEASE_ASSET);
+    }
+
+    #endregion
+
     #region Obfuscate
 
     /// <summary>
@@ -284,6 +204,9 @@ public class Mapping
     /// <param name="root">Entire file as JSON object.</param>
     public void Obfuscate(JObject root)
     {
+        // Wait in case of currently running update.
+        _updateTask?.Wait();
+
         var jProperties = new List<JProperty>();
 
         // Collect all jProperties that need to be renamed.
@@ -295,7 +218,7 @@ public class Mapping
         // Actually rename each jProperty.
         foreach (var jProperty in jProperties)
         {
-            jProperty.Rename(_MapForObfuscation[jProperty.Name]);
+            jProperty.Rename(_mapForObfuscation[jProperty.Name]);
         }
     }
 
@@ -309,7 +232,7 @@ public class Mapping
         if (token.Type == JTokenType.Property)
         {
             var property = token as JProperty;
-            if (_MapForObfuscation.ContainsKey(property!.Name))
+            if (_mapForObfuscation.ContainsKey(property!.Name))
             {
                 jProperties.Add(property);
             }
@@ -318,6 +241,71 @@ public class Mapping
         {
             CollectForObfuscation(child, jProperties);
         }
+    }
+
+    #endregion
+
+    #region Update
+
+    /// <summary>
+    /// Downloads the lastet mapping file and updates the maps.
+    /// </summary>
+    /// <returns>Whether a newer version of the mapping file was successfully downloaded.</returns>
+    public bool Update()
+    {
+        var result = false;
+        if (!IsRunning)
+        {
+            _updateTask = Task.Run(async () =>
+            {
+                result = await DownloadAsync();
+                if (result)
+                {
+                    CreateMap();
+                }
+            });
+        }
+        _updateTask!.Wait(); // in case it was running, assume not newer
+        return result;
+    }
+
+    /// <summary>
+    /// Downloads the lastet mapping file and updates the maps.
+    /// This method does not block the calling thread.
+    /// </summary>
+    public void UpdateAsync()
+    {
+        // No need to run if currently running.
+        if (IsRunning)
+            return;
+
+        _updateTask = Task.Run(async () =>
+        {
+            var result = await DownloadAsync();
+            if (result)
+            {
+                CreateMap();
+            }
+        });
+    }
+
+    /// <summary>
+    /// Downloads the lastet mapping file.
+    /// This method does not block the calling thread.
+    /// </summary>
+    /// <returns>Whether a newer version of the mapping file was successfully downloaded.</returns>
+    private async Task<bool> DownloadAsync()
+    {
+        var content = await _httpClient.DownloadTextFileContentFromGitHubReleaseAsync(Properties.Resources.REPO_OWNER, Properties.Resources.REPO_NAME, Properties.Resources.RELEASE_ASSET);
+        if (string.IsNullOrEmpty(content))
+            return false;
+
+        Directory.CreateDirectory(new FileInfo(_path).DirectoryName!);
+        _ = File.WriteAllTextAsync(_path, content);
+
+        _jsonDownload = MappingJson.Deserialize(content);
+
+        return true;
     }
 
     #endregion

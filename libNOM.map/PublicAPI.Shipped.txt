@@ -1,13 +1,14 @@
 ﻿#nullable enable
+libNOM.map.Extensions.HttpExtensions
 libNOM.map.Mapping
 libNOM.map.Mapping.Deobfuscate(Newtonsoft.Json.Linq.JObject! root) -> System.Collections.Generic.HashSet<string!>!
 libNOM.map.Mapping.Obfuscate(Newtonsoft.Json.Linq.JObject! root) -> void
-libNOM.map.Mapping.SetSettings(libNOM.map.MappingSettings! mappingSettings) -> void
+libNOM.map.Mapping.Settings.get -> libNOM.map.MappingSettings?
+libNOM.map.Mapping.Settings.set -> void
+libNOM.map.Mapping.Update() -> bool
 libNOM.map.Mapping.UpdateAsync() -> void
-libNOM.map.Mapping.UpdateTask.get -> System.Threading.Tasks.Task?
 libNOM.map.MappingSettings
 libNOM.map.MappingSettings.PathDownload.get -> string!
 libNOM.map.MappingSettings.PathDownload.set -> void
+static libNOM.map.Extensions.HttpExtensions.DownloadTextFileContentFromGitHubReleaseAsync(this System.Net.Http.HttpClient! input, string! owner, string! name, string! asset) -> System.Threading.Tasks.Task<string!>!
 static libNOM.map.Mapping.Instance.get -> libNOM.map.Mapping!
-libNOM.map.Extensions.HttpExtensions
-static libNOM.map.Extensions.HttpExtensions.DownloadFileAsync(this System.Net.Http.HttpClient! input, string! address, string! path) -> System.Threading.Tasks.Task<string!>!

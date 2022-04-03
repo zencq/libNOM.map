@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <RepositoryUrl>https://github.com/zencq/libNOM.map</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Version>0.4.2</Version>
+    <Version>0.5.0</Version>
     <Description>Provides obfuscation and deobfuscation of save files from the game No Man's Sky.</Description>
     <Authors>zencq</Authors>
     <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>

@@ -1,31 +1,38 @@
-﻿namespace libNOM.map.Extensions;
+﻿using Octokit;
+using System.Reflection;
+
+namespace libNOM.map.Extensions;
 
 
 public static class HttpExtensions
 {
     /// <summary>
-    /// Downloads the resource with the specified URI to a local file.
-    /// This method does not block the calling thread.
+    /// Downloads the specified asset from the latest GitHub release of the specified repository.
     /// </summary>
     /// <param name="input"></param>
-    /// <param name="address">The URI from which to download data.</param>
-    /// <param name="file">The name of the local file that is to receive the data.</param>
-    /// <returns></returns>
-    public static async Task<string> DownloadFileAsync(this HttpClient input, string address, string path)
+    /// <param name="owner"></param>
+    /// <param name="name"></param>
+    /// <param name="asset"></param>
+    /// <returns>File content as string.</returns>
+    public static async Task<string> DownloadTextFileContentFromGitHubReleaseAsync(this HttpClient input, string owner, string name, string asset)
     {
-        var file = new FileInfo(path);
-        Directory.CreateDirectory(file.DirectoryName!);
+        var userAgent = Assembly.GetExecutingAssembly().GetName().Name;
+        var githubClient = new GitHubClient(new ProductHeaderValue(userAgent));
 
-        var response = await input.GetAsync(address);
+        // Get the latest release from GitHub.
+        var release = await githubClient.Repository.Release.GetLatest(owner, name);
+        if (release is null)
+            return string.Empty;
+
+        // Find the asset to download it.
+        var result = release.Assets.FirstOrDefault(a => a.Name.Equals(asset));
+        if (result is null)
+            return string.Empty;
+
+        var response = await input.GetAsync(result.BrowserDownloadUrl);
         response.EnsureSuccessStatusCode();
 
         await using var contentStream = await response.Content.ReadAsStreamAsync();
-        await using var fileStream = File.Create(file.FullName);
-
-        contentStream.Seek(0, SeekOrigin.Begin);
-        contentStream.CopyTo(fileStream);
-
-        contentStream.Seek(0, SeekOrigin.Begin);
         return new StreamReader(contentStream).ReadToEnd();
     }
 }

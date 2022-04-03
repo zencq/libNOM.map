@@ -40,20 +40,15 @@ Mapping.Instance.Obfuscate(jsonObject);
 
 Create and update settings.
 ```csharp
-// Create Settings
-MappingSettings settings = new() { PathDownload = "download" };
-
-// Update Settings
-Mapping.Instance.SetSettings(settings);
+// Settings
+Mapping.Instance.Settings = new() { PathDownload = "download" };
 ```
 
 Update and download the mapping.json if a newer version is available.
 ```csharp
 // Update
 Mapping.Instance.Update();
-
 Mapping.Instance.UpdateAsync();
-Mapping.Instance.UpdateTask?.Wait();
 ```
 
 ## License

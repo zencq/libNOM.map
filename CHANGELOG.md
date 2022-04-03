@@ -13,6 +13,15 @@ All notable changes to this project will be documented in this file. It uses the
 ### Fixed
 ### Security
 
+## 0.5.0 (2022-04-03)
+
+### Changed
+* Hid `UpdateTask` from public and only use internal
+* Moved `SetSettings` directly into property
+
+### Fixed
+* A deadlock when calling `Update` or `UpdateAsync`
+
 ## 0.4.1 (2022-03-04)
 
 ### Added
