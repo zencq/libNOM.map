@@ -13,6 +13,11 @@ All notable changes to this project will be documented in this file. It uses the
 ### Fixed
 ### Security
 
+## 0.6.0 (2022-04-05)
+
+### Changed
+* Removed singleton and now use static class instead
+
 ## 0.5.0 (2022-04-03)
 
 ### Changed

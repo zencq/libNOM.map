@@ -12,7 +12,7 @@ public class DownloadTest
     public void Download()
     {
         // Act
-        Mapping.Instance.Update();
+        Mapping.Update();
 
         // Assert
         Assert.IsTrue(File.Exists("download/mapping.json"));

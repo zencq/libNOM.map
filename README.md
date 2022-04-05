@@ -32,23 +32,23 @@ The obfuscation and deobfuscation is done in-place. Deobfuscation will return a
 set of unknown keys.
 ```csharp
 // Deobfuscate
-HashSet<string> unknownKeys = Mapping.Instance.Deobfuscate(jsonObject);
+HashSet<string> unknownKeys = Mapping.Deobfuscate(jsonObject);
 
 // Obfuscate
-Mapping.Instance.Obfuscate(jsonObject);
+Mapping.Obfuscate(jsonObject);
 ```
 
 Create and update settings.
 ```csharp
 // Settings
-Mapping.Instance.Settings = new() { PathDownload = "download" };
+Mapping.Settings = new() { PathDownload = "download" };
 ```
 
 Update and download the mapping.json if a newer version is available.
 ```csharp
 // Update
-Mapping.Instance.Update();
-Mapping.Instance.UpdateAsync();
+Mapping.Update();
+Mapping.UpdateAsync();
 ```
 
 ## License

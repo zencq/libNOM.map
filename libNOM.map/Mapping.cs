@@ -8,37 +8,41 @@ namespace libNOM.map;
 /// <summary>
 /// Holds all necessary mapping data and provides obfuscation and deobfuscation.
 /// </summary>
-public class Mapping
+public static class Mapping
 {
     #region Field
 
-    private readonly HttpClient _httpClient = new();
+    private static readonly HttpClient _httpClient = new();
 
-    private readonly MappingJson _jsonCompiler; // latest MBINCompiler mapping.json when this version was created
+    private static readonly MappingJson _jsonCompiler = MappingJson.Deserialize(Properties.Resources.MBINCompiler)!; // latest MBINCompiler mapping.json when this version was created
 
-    private MappingJson? _jsonDownload; // dynamic content from the latest MBINCompiler release on GitHub
+    private static MappingJson? _jsonDownload; // dynamic content from the latest MBINCompiler release on GitHub
 
-    private readonly MappingJson _jsonLegacy; // older keys that are not present in the latest version
+    private static readonly MappingJson _jsonLegacy = MappingJson.Deserialize(Properties.Resources.Legacy)!; // older keys that are not present in the latest version
 
-    private readonly MappingJson _jsonWizard; // adjust differing mapping of SaveWizard
+    private static readonly MappingJson _jsonWizard = MappingJson.Deserialize(Properties.Resources.SaveWizard)!; // adjust differing mapping of SaveWizard
 
-    private readonly Dictionary<string, string> _mapForDeobfuscation = new();
+    private static readonly Dictionary<string, string> _mapForDeobfuscation = new();
 
-    private readonly Dictionary<string, string> _mapForObfuscation = new();
+    private static readonly Dictionary<string, string> _mapForObfuscation = new();
 
-    private string _path;
+    private static MappingSettings _settings = new();
 
-    private MappingSettings _settings = new();
+    private static Task? _updateTask;
 
-    private Task? _updateTask;
+    #region Dependency
+
+    private static string _path = GetCombinedPath();
+
+    #endregion
 
     #endregion
 
     #region Property
 
-    private bool IsRunning => !_updateTask?.IsCompleted ?? false; // { get; }
+    private static bool IsRunning => !_updateTask?.IsCompleted ?? false; // { private get; }
 
-    public MappingSettings? Settings // { get; set; }
+    public static MappingSettings Settings // { get; set; }
     {
         get => _settings;
         set
@@ -50,33 +54,6 @@ public class Mapping
 
     #endregion
 
-    #region Singleton
-
-    private static readonly Lazy<Mapping> _lazy = new(() => new());
-
-    public static Mapping Instance => _lazy.Value; // { get; }
-
-    #endregion
-
-    #region Contructor
-
-    private Mapping()
-    {
-        _jsonCompiler = MappingJson.Deserialize(Properties.Resources.MBINCompiler)!;
-        _jsonLegacy = MappingJson.Deserialize(Properties.Resources.Legacy)!;
-        _jsonWizard = MappingJson.Deserialize(Properties.Resources.SaveWizard)!;
-        _path = GetCombinedPath();
-
-        if (File.Exists(_path))
-        {
-            _jsonDownload = MappingJson.Deserialize(File.ReadAllText(_path));
-        }
-
-        CreateMap();
-    }
-
-    #endregion
-
     // //
 
     #region Create
@@ -84,7 +61,7 @@ public class Mapping
     /// <summary>
     /// Creates maps with the mapping data of all files for obfuscation and deobfuscation.
     /// </summary>
-    private void CreateMap()
+    private static void CreateMap()
     {
         _mapForDeobfuscation.Clear();
         _mapForObfuscation.Clear();
@@ -93,6 +70,10 @@ public class Mapping
         AddToMap(_jsonLegacy, true, true);
         AddToMap(_jsonWizard, true, false);
 
+        if (_jsonDownload is null && File.Exists(_path))
+        {
+            _jsonDownload = MappingJson.Deserialize(File.ReadAllText(_path));
+        }
         // Apply additional mapping but keep those that might have become outdated by adding JsonCompiler nonetheless.
         if (_jsonDownload?.Version > _jsonCompiler.Version)
         {
@@ -106,7 +87,7 @@ public class Mapping
     /// <param name="mappingJson">Object of a deserialized file.</param>
     /// <param name="deobfuscate">Whether to add a pair to the deobfuscation map.</param>
     /// <param name="obfuscate">Whether to add a pair to the obfuscation map.</param>
-    private void AddToMap(MappingJson mappingJson, bool deobfuscate, bool obfuscate)
+    private static void AddToMap(MappingJson mappingJson, bool deobfuscate, bool obfuscate)
     {
         foreach (var pair in mappingJson.Data)
         {
@@ -124,34 +105,15 @@ public class Mapping
 
     #endregion
 
-    #region Deobfuscate
+    #region Getter
 
     /// <summary>
-    /// Deobfuscates a file to make it human-readable.
+    /// Combines the download path from the settings with the filename.
     /// </summary>
-    /// <param name="root">Entire file as JSON object.</param>
-    /// <returns>List of unknown keys.</returns>
-    public HashSet<string> Deobfuscate(JObject root)
+    /// <returns></returns>
+    private static string GetCombinedPath()
     {
-        // Wait in case of currently running update.
-        _updateTask?.Wait();
-
-        var jProperties = new List<JProperty>();
-        var keys = new HashSet<string>();
-
-        // Collect all jProperties that need to be renamed.
-        foreach (var child in root.Children().Where(c => c.HasValues))
-        {
-            CollectForDeobfuscation(child, jProperties, keys);
-        }
-
-        // Actually rename each jProperty.
-        foreach (var jProperty in jProperties)
-        {
-            jProperty.Rename(_mapForDeobfuscation[jProperty.Name]);
-        }
-
-        return keys;
+        return Path.Combine(Path.GetFullPath(_settings.PathDownload), Properties.Resources.RELEASE_ASSET);
     }
 
     /// <summary>
@@ -160,7 +122,7 @@ public class Mapping
     /// <param name="token">Current property that should be deobfuscated.</param>
     /// <param name="jProperties">List of properties that need to be deobfuscated.</param>
     /// <param name="keys">List of keys that cannot be deobfuscated.</param>
-    private void CollectForDeobfuscation(JToken token, List<JProperty> jProperties, HashSet<string> keys)
+    private static void GetPropertiesToDeobfuscate(JToken token, List<JProperty> jProperties, HashSet<string> keys)
     {
         if (token.Type == JTokenType.Property)
         {
@@ -177,48 +139,7 @@ public class Mapping
         }
         foreach (var child in token.Children().Where(c => c.HasValues))
         {
-            CollectForDeobfuscation(child, jProperties, keys);
-        }
-    }
-
-    #endregion
-
-    #region Getter
-
-    /// <summary>
-    /// Combines the download path from the settings with the filename.
-    /// </summary>
-    /// <returns></returns>
-    private string GetCombinedPath()
-    {
-        return Path.Combine(Path.GetFullPath(_settings.PathDownload), Properties.Resources.RELEASE_ASSET);
-    }
-
-    #endregion
-
-    #region Obfuscate
-
-    /// <summary>
-    /// Obfuscates a file to make it readable by the game.
-    /// </summary>
-    /// <param name="root">Entire file as JSON object.</param>
-    public void Obfuscate(JObject root)
-    {
-        // Wait in case of currently running update.
-        _updateTask?.Wait();
-
-        var jProperties = new List<JProperty>();
-
-        // Collect all jProperties that need to be renamed.
-        foreach (var child in root.Children().Where(c => c.HasValues))
-        {
-            CollectForObfuscation(child, jProperties);
-        }
-
-        // Actually rename each jProperty.
-        foreach (var jProperty in jProperties)
-        {
-            jProperty.Rename(_mapForObfuscation[jProperty.Name]);
+            GetPropertiesToDeobfuscate(child, jProperties, keys);
         }
     }
 
@@ -227,7 +148,7 @@ public class Mapping
     /// </summary>
     /// <param name="token">Current property that should be obfuscated.</param>
     /// <param name="jProperties">List of properties that need to be obfuscated.</param>
-    private void CollectForObfuscation(JToken token, List<JProperty> jProperties)
+    private static void GetPropertiesToObfuscate(JToken token, List<JProperty> jProperties)
     {
         if (token.Type == JTokenType.Property)
         {
@@ -239,7 +160,76 @@ public class Mapping
         }
         foreach (var child in token.Children().Where(c => c.HasValues))
         {
-            CollectForObfuscation(child, jProperties);
+            GetPropertiesToObfuscate(child, jProperties);
+        }
+    }
+
+    #endregion
+
+    #region Mapping
+
+    /// <summary>
+    /// Deobfuscates a file to make it human-readable.
+    /// </summary>
+    /// <param name="root">Entire file as JSON object.</param>
+    /// <returns>List of unknown keys.</returns>
+    public static HashSet<string> Deobfuscate(JObject root)
+    {
+        EnsurePreconditions();
+
+        var jProperties = new List<JProperty>();
+        var keys = new HashSet<string>();
+
+        // Collect all jProperties that need to be renamed.
+        foreach (var child in root.Children().Where(c => c.HasValues))
+        {
+            GetPropertiesToDeobfuscate(child, jProperties, keys);
+        }
+
+        // Actually rename each jProperty.
+        foreach (var jProperty in jProperties)
+        {
+            jProperty.Rename(_mapForDeobfuscation[jProperty.Name]);
+        }
+
+        return keys;
+    }
+
+    /// <summary>
+    /// Ensures that the update task is complete and both maps are created.
+    /// </summary>
+    private static void EnsurePreconditions()
+    {
+        // Wait in case of currently running update.
+        _updateTask?.Wait();
+
+        // Create map if not done yet.
+        if (!_mapForDeobfuscation.Any() || !_mapForObfuscation.Any())
+        {
+            CreateMap();
+        }
+    }
+
+    /// <summary>
+    /// Obfuscates a file to make it readable by the game.
+    /// </summary>
+    /// <param name="root">Entire file as JSON object.</param>
+    public static void Obfuscate(JObject root)
+    {
+        EnsurePreconditions();
+
+        var jProperties = new List<JProperty>();
+
+        // Collect all jProperties that need to be renamed.
+        foreach (var child in root.Children().Where(c => c.HasValues))
+        {
+            GetPropertiesToObfuscate(child, jProperties);
+        }
+
+        // Actually rename each jProperty.
+        foreach (var jProperty in jProperties)
+        {
+            jProperty.Rename(_mapForObfuscation[jProperty.Name]);
         }
     }
 
@@ -251,7 +241,7 @@ public class Mapping
     /// Downloads the lastet mapping file and updates the maps.
     /// </summary>
     /// <returns>Whether a newer version of the mapping file was successfully downloaded.</returns>
-    public bool Update()
+    public static bool Update()
     {
         var result = false;
         if (!IsRunning)
@@ -273,7 +263,7 @@ public class Mapping
     /// Downloads the lastet mapping file and updates the maps.
     /// This method does not block the calling thread.
     /// </summary>
-    public void UpdateAsync()
+    public static void UpdateAsync()
     {
         // No need to run if currently running.
         if (IsRunning)
@@ -294,13 +284,14 @@ public class Mapping
     /// This method does not block the calling thread.
     /// </summary>
     /// <returns>Whether a newer version of the mapping file was successfully downloaded.</returns>
-    private async Task<bool> DownloadAsync()
+    private static async Task<bool> DownloadAsync()
     {
         var content = await _httpClient.DownloadTextFileContentFromGitHubReleaseAsync(Properties.Resources.REPO_OWNER, Properties.Resources.REPO_NAME, Properties.Resources.RELEASE_ASSET);
         if (string.IsNullOrEmpty(content))
             return false;
 
         Directory.CreateDirectory(new FileInfo(_path).DirectoryName!);
+        // File does not matter until next startup and therefore no need to wait.
         _ = File.WriteAllTextAsync(_path, content);
 
         _jsonDownload = MappingJson.Deserialize(content);

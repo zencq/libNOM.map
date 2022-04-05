@@ -17,7 +17,7 @@ public class DeobfuscateTest
         var jsonObject = JsonConvert.DeserializeObject(Properties.Resources.compiler_375_obfuscated) as JObject;
 
         // Act
-        _ = Mapping.Instance.Deobfuscate(jsonObject!);
+        _ = Mapping.Deobfuscate(jsonObject!);
 
         // Assert
         var actual = JsonConvert.SerializeObject(jsonObject);
@@ -32,7 +32,7 @@ public class DeobfuscateTest
         var jsonObject = JsonConvert.DeserializeObject(Properties.Resources.legay_350_obfuscated) as JObject;
 
         // Act
-        _ = Mapping.Instance.Deobfuscate(jsonObject!);
+        _ = Mapping.Deobfuscate(jsonObject!);
 
         // Assert
         var actual = JsonConvert.SerializeObject(jsonObject);
@@ -47,7 +47,7 @@ public class DeobfuscateTest
         var jsonObject = JsonConvert.DeserializeObject(Properties.Resources.wizard_362_original) as JObject;
 
         // Act
-        _ = Mapping.Instance.Deobfuscate(jsonObject!);
+        _ = Mapping.Deobfuscate(jsonObject!);
 
         // Assert
         var actual = JsonConvert.SerializeObject(jsonObject);

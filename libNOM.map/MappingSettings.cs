@@ -9,5 +9,5 @@ public record MappingSettings
     /// <summary>
     /// Where to download the mapping.json.
     /// </summary>
-    public string PathDownload { get; set; } = "download";
+    public string PathDownload { get; init; } = "download";
 }
