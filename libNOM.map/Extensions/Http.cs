@@ -14,20 +14,25 @@ public static class HttpExtensions
     /// <param name="name"></param>
     /// <param name="asset"></param>
     /// <returns>File content as string.</returns>
-    public static async Task<string> DownloadTextFileContentFromGitHubReleaseAsync(this HttpClient input, string owner, string name, string asset)
+    public static async Task<string?> DownloadTextFileContentFromGitHubReleaseAsync(this HttpClient input, string owner, string name, string asset)
     {
         var userAgent = Assembly.GetExecutingAssembly().GetName().Name;
         var githubClient = new GitHubClient(new ProductHeaderValue(userAgent));
 
         // Get the latest release from GitHub.
-        var release = await githubClient.Repository.Release.GetLatest(owner, name);
+        Release? release = null;
+        try
+        {
+            release = await githubClient.Repository.Release.GetLatest(owner, name);
+        }
+        catch (RateLimitExceededException) { }
         if (release is null)
-            return string.Empty;
+            return null;
 
         // Find the asset to download it.
         var result = release.Assets.FirstOrDefault(a => a.Name.Equals(asset));
         if (result is null)
-            return string.Empty;
+            return null;
 
         var response = await input.GetAsync(result.BrowserDownloadUrl);
         response.EnsureSuccessStatusCode();

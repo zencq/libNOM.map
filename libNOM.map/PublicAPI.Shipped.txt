@@ -4,7 +4,7 @@ libNOM.map.Mapping
 libNOM.map.MappingSettings
 libNOM.map.MappingSettings.PathDownload.get -> string!
 libNOM.map.MappingSettings.PathDownload.init -> void
-static libNOM.map.Extensions.HttpExtensions.DownloadTextFileContentFromGitHubReleaseAsync(this System.Net.Http.HttpClient! input, string! owner, string! name, string! asset) -> System.Threading.Tasks.Task<string!>!
+static libNOM.map.Extensions.HttpExtensions.DownloadTextFileContentFromGitHubReleaseAsync(this System.Net.Http.HttpClient! input, string! owner, string! name, string! asset) -> System.Threading.Tasks.Task<string?>!
 static libNOM.map.Mapping.Deobfuscate(Newtonsoft.Json.Linq.JObject! root) -> System.Collections.Generic.HashSet<string!>!
 static libNOM.map.Mapping.Obfuscate(Newtonsoft.Json.Linq.JObject! root) -> void
 static libNOM.map.Mapping.Settings.get -> libNOM.map.MappingSettings!
