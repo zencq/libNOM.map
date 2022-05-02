@@ -20,7 +20,7 @@ jobs:
       - name: Pack
         run: dotnet pack libNOM.map --no-restore --configuration Release
       - name: Version
-        run: echo "dll_version=$((Get-Command libNOM.map\bin\Release\net6.0\libNOM.map.dll).FileVersionInfo.ProductVersion)" >> $env:GITHUB_ENV
+        run: echo "dll_version=$((Get-Command .\libNOM.map\bin\Release\net6.0\libNOM.map.dll).FileVersionInfo.ProductVersion)" >> $env:GITHUB_ENV
         shell: pwsh
       - name: Upload (NuGet Package)
         uses: actions/upload-artifact@v3
