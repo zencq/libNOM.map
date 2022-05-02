@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         os: [ windows-latest, macos-latest, ubuntu-latest ]
-        sdk: [ 5.0.x ]
+        sdk: [ 6.0.x ]
         configuration: [ Debug ]
     runs-on: ${{ matrix.os }}
     steps:
