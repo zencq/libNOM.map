@@ -5,7 +5,13 @@ on: [push, pull_request]
 jobs:
   build:
     name: Build and Test
+    strategy:
+      matrix:
+        # os: [ windows-latest, ubuntu-latest ]
+        sdk: [ 6.0.x ]
+        configuration: [ Debug, Release ]
     runs-on: ubuntu-latest
+    # runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -15,26 +21,26 @@ jobs:
           dotnet-version: '6.0.x'
       - name: Dependency
         run: dotnet restore
-      - name: Unit Test
-        run: dotnet test libNOM.test --no-restore
-      - name: Build
-        run: dotnet publish libNOM.map --no-restore -c Release
+      - name: Unit Test (.NET Framework)
+        if: matrix.configuration == 'Debug'
+        run: dotnet test libNOM.test --no-restore -configuration Debug --framework net47
+      - name: Unit Test (.NET)
+        if: matrix.configuration == 'Debug'
+        run: dotnet test libNOM.test --no-restore -configuration Debug --framework net5.0
       - name: NuGet
-        run: dotnet pack libNOM.map --no-restore -c Release
-      - name: Archive
-        uses: thedoctor0/zip-release@0.6.1
-        with:
-          filename: 'libNOM.map.zip'
-          directory: 'libNOM.map/bin/Release/net6.0/publish'
-          exclusions: '*.json *.pdb'
-      - name: Upload
+        run: dotnet pack libNOM.map --no-restore -configuration Release
+      - name: Upload NuGet Package
         uses: actions/upload-artifact@v3
         with:
-          name: libNOM.map
-          path: |
-            libNOM.map/bin/Release/net6.0/libNOM.map.dll
-            libNOM.map/bin/Release/net6.0/publish/libNOM.map.zip
-            libNOM.map/bin/Release/libNOM.map.*.nupkg
+          name: libNOM.map NuGet Package (nupkg)
+          path: libNOM.map/bin/Release/libNOM.map.*.nupkg
+          if-no-files-found: error
+      - name: Upload Symbol Package
+        uses: actions/upload-artifact@v3
+        with:
+          name: libNOM.map Source Link (snupkg)
+          path: libNOM.map/bin/Release/libNOM.map.*.snupkg
+          if-no-files-found: error
   release:
     name: Release
     runs-on: ubuntu-latest
