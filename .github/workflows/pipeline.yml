@@ -37,13 +37,15 @@ jobs:
         with:
           name: libNOM.map NuGet Package
       - name: Version
-        run: echo "dll_version=$(Get-Item -Path .\libNOM.map.*.nupkg | % {Write-Host $_.name.Substring(0, $_.name.LastIndexOf('.')).Substring(11)})" >> $env:GITHUB_ENV
+        run: |
+          ls
+          echo "dll_version=$(Get-Item -Path .\libNOM.map.*.nupkg | % {Write-Host (($_.name -split "\.",3)[2] -split "\.",-2)[0]})" >> $env:GITHUB_ENV
         shell: pwsh
       # Exit if version mismatch.
       - name: Mismatch
         if: ${{ github.ref_name != env.dll_version }}
         run: |
-          echo "There is a version mismatch between git tag and dll version!"
+          echo "There is a version mismatch between git tag (${{ github.ref_name }}) and dll version (${{ env.dll_version }})!"
           exit 1
       # Checkout again to access the changelog.
       - name: Checkout
