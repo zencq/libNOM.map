@@ -13,28 +13,17 @@ public static class Mapping
     #region Field
 
     private static readonly HttpClient _httpClient = new();
-
     private static readonly MappingJson _jsonCompiler = MappingJson.Deserialize(Properties.Resources.MBINCompiler)!; // latest MBINCompiler mapping.json when this version was created
-
     private static MappingJson? _jsonDownload; // dynamic content from the latest MBINCompiler release on GitHub
-
     private static readonly MappingJson _jsonLegacy = MappingJson.Deserialize(Properties.Resources.Legacy)!; // older keys that are not present in the latest version
-
     private static readonly MappingJson _jsonWizard = MappingJson.Deserialize(Properties.Resources.SaveWizard)!; // adjust differing mapping of SaveWizard
-
     private static readonly Dictionary<string, string> _mapForDeobfuscation = new();
-
     private static readonly Dictionary<string, string> _mapForObfuscation = new();
-
     private static MappingSettings _settings = new();
-
     private static Task? _updateTask;
 
-    #region Dependency
-
+    // Dependencies
     private static string _path = GetCombinedPath();
-
-    #endregion
 
     #endregion
 
@@ -126,15 +115,15 @@ public static class Mapping
     {
         if (token.Type == JTokenType.Property)
         {
-            var property = token as JProperty;
-            if (_mapForDeobfuscation.ContainsKey(property!.Name))
+            var property = (JProperty)(token);
+            if (_mapForDeobfuscation.ContainsKey(property.Name))
             {
                 jProperties.Add(property);
             }
             // Only add if it is not a target value as well.
-            else if (!_mapForDeobfuscation.ContainsValue(property!.Name))
+            else if (!_mapForDeobfuscation.ContainsValue(property.Name))
             {
-                keys.Add(property!.Name);
+                keys.Add(property.Name);
             }
         }
         foreach (var child in token.Children().Where(c => c.HasValues))
@@ -152,8 +141,8 @@ public static class Mapping
     {
         if (token.Type == JTokenType.Property)
         {
-            var property = token as JProperty;
-            if (_mapForObfuscation.ContainsKey(property!.Name))
+            var property = (JProperty)(token);
+            if (_mapForObfuscation.ContainsKey(property.Name))
             {
                 jProperties.Add(property);
             }
@@ -291,10 +280,14 @@ public static class Mapping
             return false;
 
         Directory.CreateDirectory(new FileInfo(_path).DirectoryName!);
+#if NET47_OR_GREATER || NETSTANDARD2_0_OR_GREATER
+        File.WriteAllText(_path, content);
+#elif NET5_0_OR_GREATER
         // File does not matter until next startup and therefore no need to wait.
         _ = File.WriteAllTextAsync(_path, content);
+#endif
 
-        _jsonDownload = MappingJson.Deserialize(content);
+        _jsonDownload = MappingJson.Deserialize(content!);
 
         return true;
     }

@@ -13,6 +13,16 @@ All notable changes to this project will be documented in this file. It uses the
 ### Fixed
 ### Security
 
+## 0.6.2 (2022-05-??)
+
+### Added
+* Multiple target frameworks
+
+## 0.6.1 (2022-04-27)
+
+### Fixed
+* Crash when GitHub rate limit (60 requests per hour for unauthenticated requests) is exceeded
+
 ## 0.6.0 (2022-04-05)
 
 ### Changed

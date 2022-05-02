@@ -37,7 +37,7 @@ public static class HttpExtensions
         var response = await input.GetAsync(result.BrowserDownloadUrl);
         response.EnsureSuccessStatusCode();
 
-        await using var contentStream = await response.Content.ReadAsStreamAsync();
+        using var contentStream = await response.Content.ReadAsStreamAsync();
         return new StreamReader(contentStream).ReadToEnd();
     }
 }

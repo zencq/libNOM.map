@@ -18,5 +18,11 @@ internal record class MappingJson
 
     #endregion
 
+    // //
+
+    #region Newtonsoft
+
     internal static MappingJson? Deserialize(string jsonString) => JsonConvert.DeserializeObject<MappingJson>(jsonString);
+
+    #endregion
 }
