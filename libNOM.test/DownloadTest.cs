@@ -14,6 +14,6 @@ public class DownloadTest
         Mapping.Update();
 
         // Assert
-        Assert.IsTrue(File.Exists("download/mapping.json"));
+        Assert.IsTrue(File.Exists(Path.GetFullPath("download/mapping.json")));
     }
 }
