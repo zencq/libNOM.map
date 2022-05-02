@@ -13,10 +13,13 @@ All notable changes to this project will be documented in this file. It uses the
 ### Fixed
 ### Security
 
-## 0.6.2 (2022-05-??)
+## 0.6.2 (2022-05-02)
 
 ### Added
 * Multiple target frameworks
+
+### Changed
+* Updated mapping to 3.88.0.2
 
 ## 0.6.1 (2022-04-27)
 

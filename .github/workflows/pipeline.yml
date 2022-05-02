@@ -40,13 +40,13 @@ jobs:
         with:
           name: libNOM.map NuGet Package
       - name: Version
-        run: echo "dll_version=$((((Get-Item -Path .\libNOM.map.*.nupkg).Name -split '\.',3)[2] -split '\.',-2)[0])" >> $env:GITHUB_ENV
+        run: echo "nupkg_version=$((((Get-Item -Path .\libNOM.map.*.nupkg).Name -split '\.',3)[2] -split '\.',-2)[0])" >> $env:GITHUB_ENV
         shell: pwsh
       # Exit if version mismatch.
       - name: Mismatch
-        if: ${{ github.ref_name != env.dll_version }}
+        if: ${{ github.ref_name != env.nupkg_version }}
         run: |
-          echo "There is a version mismatch between git tag (${{ github.ref_name }}) and dll version (${{ env.dll_version }})!"
+          echo "There is a version mismatch between git tag (${{ github.ref_name }}) and nupkg version (${{ env.nupkg_version }})!"
           exit 1
       - name: Create
         uses: softprops/action-gh-release@v1
