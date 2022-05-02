@@ -7,7 +7,7 @@ jobs:
     name: Test
     strategy:
       matrix:
-        os: [ windows-latest, macos-latest, ubuntu-latest ]
+        os: [ windows-latest, ubuntu-latest ]
         sdk: [ 6.0.x ]
         configuration: [ Debug ]
     runs-on: ${{ matrix.os }}
@@ -32,13 +32,13 @@ jobs:
     steps:
       - name: Pack
         run: dotnet pack libNOM.map --configuration Release
-      - name: Upload NuGet Package
+      - name: Upload (NuGet Package)
         uses: actions/upload-artifact@v3
         with:
           name: libNOM.map NuGet Package (nupkg)
           path: libNOM.map/bin/Release/libNOM.map.*.nupkg
           if-no-files-found: error
-      - name: Upload Symbol Package
+      - name: Upload (Symbol Package)
         uses: actions/upload-artifact@v3
         with:
           name: libNOM.map Symbol Package (snupkg)
