@@ -19,9 +19,6 @@ jobs:
         run: dotnet test libNOM.test --no-restore --configuration Debug --framework net6.0
       - name: Pack
         run: dotnet pack libNOM.map --no-restore --configuration Release
-      - name: Version
-        run: echo "dll_version=$((Get-Command .\libNOM.map\bin\Release\net6.0\libNOM.map.dll).FileVersionInfo.ProductVersion)" >> $env:GITHUB_ENV
-        shell: pwsh
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
@@ -35,6 +32,13 @@ jobs:
     if: ${{ startsWith(github.ref, 'refs/tags/') }}
     needs: build
     steps:
+      - name: Download
+        uses: actions/download-artifact@v3
+        with:
+          name: libNOM.map NuGet Package
+      - name: Version
+        run: echo "dll_version=$(Get-Item -Path .\libNOM.map.*.nupkg | % {Write-Host $_.name.Substring(0, $_.name.LastIndexOf('.')).Substring(11)})" >> $env:GITHUB_ENV
+        shell: pwsh
       # Exit if version mismatch.
       - name: Mismatch
         if: ${{ github.ref_name != env.dll_version }}
@@ -44,10 +48,6 @@ jobs:
       # Checkout again to access the changelog.
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Download
-        uses: actions/download-artifact@v3
-        with:
-          name: libNOM.map
       - name: Create
         uses: softprops/action-gh-release@v1
         with:
