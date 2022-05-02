@@ -12,29 +12,19 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: '6.0.x'
-      - name: Dependency
+          dotnet-version: 6.0.x
+      - name: Dependencies
         run: dotnet restore
       - name: Unit Test
-        run: dotnet test libNOM.test --no-restore
-      - name: Build
-        run: dotnet publish libNOM.map --no-restore -c Release
-      - name: NuGet
-        run: dotnet pack libNOM.map --no-restore -c Release
-      - name: Archive
-        uses: thedoctor0/zip-release@0.6.1
-        with:
-          filename: 'libNOM.map.zip'
-          directory: 'libNOM.map/bin/Release/net6.0/publish'
-          exclusions: '*.json *.pdb'
+        run: dotnet test libNOM.test --no-restore --configuration Debug --framework net6.0
+      - name: Pack
+        run: dotnet pack libNOM.map --no-restore --configuration Release
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
-          name: libNOM.map
-          path: |
-            libNOM.map/bin/Release/net6.0/libNOM.map.dll
-            libNOM.map/bin/Release/net6.0/publish/libNOM.map.zip
-            libNOM.map/bin/Release/libNOM.map.*.nupkg
+          name: libNOM.map NuGet Package
+          path: libNOM.map/bin/Release/libNOM.map.*nupkg
+          if-no-files-found: error
   release:
     name: Release
     runs-on: ubuntu-latest
@@ -42,27 +32,24 @@ jobs:
     if: ${{ startsWith(github.ref, 'refs/tags/') }}
     needs: build
     steps:
-      # Checkout to access the changelog.
+      # Checkout again to access the changelog.
       - name: Checkout
         uses: actions/checkout@v3
       - name: Download
         uses: actions/download-artifact@v3
         with:
-          name: libNOM.map
+          name: libNOM.map NuGet Package
       - name: Version
-        run: echo "dll_version=$((Get-Command .\net6.0\libNOM.map.dll).FileVersionInfo.ProductVersion)" >> $env:GITHUB_ENV
+        run: echo "dll_version=$((((Get-Item -Path .\libNOM.map.*.nupkg).Name -split '\.',3)[2] -split '\.',-2)[0])" >> $env:GITHUB_ENV
         shell: pwsh
       # Exit if version mismatch.
       - name: Mismatch
         if: ${{ github.ref_name != env.dll_version }}
         run: |
-          echo "There is a version mismatch between git tag and dll version!"
+          echo "There is a version mismatch between git tag (${{ github.ref_name }}) and dll version (${{ env.dll_version }})!"
           exit 1
       - name: Create
         uses: softprops/action-gh-release@v1
         with:
           body_path: ${{ github.workspace }}/.github/changelogs/${{ github.ref_name }}.md
-          files: |
-            net6.0/libNOM.map.dll
-            net6.0/publish/libNOM.map.zip
-            libNOM.map.*.nupkg
+          files: libNOM.map.*nupkg

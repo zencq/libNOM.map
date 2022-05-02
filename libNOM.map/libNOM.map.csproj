@@ -38,7 +38,7 @@
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
-  <!-- NuGet -->
+  <!-- Dependencies -->
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
       <PrivateAssets>all</PrivateAssets>
@@ -48,7 +48,7 @@
     <PackageReference Include="Octokit" Version="0.51.0" />
   </ItemGroup>
 
-  <!-- Resource -->
+  <!-- Resources -->
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
