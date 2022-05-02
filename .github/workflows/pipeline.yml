@@ -7,11 +7,10 @@ jobs:
     name: Build and Test
     strategy:
       matrix:
-        # os: [ windows-latest, ubuntu-latest ]
+        os: [ windows-latest, macos-latest, ubuntu-latest ]
         sdk: [ 6.0.x ]
         configuration: [ Debug, Release ]
-    runs-on: ubuntu-latest
-    # runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -22,23 +21,25 @@ jobs:
       - name: Dependency
         run: dotnet restore
       - name: Unit Test (.NET Framework)
-        if: matrix.configuration == 'Debug'
-        run: dotnet test libNOM.test --no-restore --configuration Debug --framework net47
+        if: matrix.configuration == 'Debug' && startsWith(matrix.os, 'windows-')
+        run: dotnet test libNOM.test --no-restore --configuration ${{ matrix.configuration }} --framework net47
       - name: Unit Test (.NET)
         if: matrix.configuration == 'Debug'
-        run: dotnet test libNOM.test --no-restore --configuration Debug --framework net5.0
+        run: dotnet test libNOM.test --no-restore --configuration ${{ matrix.configuration }} --framework net5.0
       - name: NuGet
-        run: dotnet pack libNOM.map --no-restore --configuration Release
+        run: dotnet pack libNOM.map --no-restore --configuration ${{ matrix.configuration }}
       - name: Upload NuGet Package
+        if: matrix.configuration == 'Release'
         uses: actions/upload-artifact@v3
         with:
           name: libNOM.map NuGet Package (nupkg)
           path: libNOM.map/bin/Release/libNOM.map.*.nupkg
           if-no-files-found: error
       - name: Upload Symbol Package
+        if: matrix.configuration == 'Release'
         uses: actions/upload-artifact@v3
         with:
-          name: libNOM.map Source Link (snupkg)
+          name: libNOM.map Symbol Package (snupkg)
           path: libNOM.map/bin/Release/libNOM.map.*.snupkg
           if-no-files-found: error
   release:
