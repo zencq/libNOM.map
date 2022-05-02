@@ -38,8 +38,7 @@ jobs:
           name: libNOM.map NuGet Package
       - name: Version
         run: |
-          ls
-          echo "dll_version=$(Get-Item -Path .\libNOM.map.*.nupkg | % {Write-Host (($_.name -split '\.',3)[2] -split '\.',-2)[0]})" >> $env:GITHUB_ENV
+          echo "dll_version=$((((Get-Item -Path .\libNOM.map.*.nupkg).Name -split '\.',3)[2] -split '\.',-2)[0])" >> $env:GITHUB_ENV
         shell: pwsh
       # Exit if version mismatch.
       - name: Mismatch
