@@ -24,7 +24,7 @@ jobs:
         if: startsWith(matrix.os, 'windows-')
         run: dotnet test libNOM.test --no-restore --configuration ${{ matrix.configuration }} --framework net47
       - name: Unit Test (.NET)
-        run: dotnet test libNOM.test --no-restore --configuration ${{ matrix.configuration }} --framework net5.0
+        run: dotnet test libNOM.test --no-restore --configuration ${{ matrix.configuration }} --framework net6.0
   build:
     name: Build
     needs: test
