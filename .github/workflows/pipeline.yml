@@ -23,12 +23,12 @@ jobs:
         run: dotnet restore
       - name: Unit Test (.NET Framework)
         if: matrix.configuration == 'Debug'
-        run: dotnet test libNOM.test --no-restore -configuration Debug --framework net47
+        run: dotnet test libNOM.test --no-restore --configuration Debug --framework net47
       - name: Unit Test (.NET)
         if: matrix.configuration == 'Debug'
-        run: dotnet test libNOM.test --no-restore -configuration Debug --framework net5.0
+        run: dotnet test libNOM.test --no-restore --configuration Debug --framework net5.0
       - name: NuGet
-        run: dotnet pack libNOM.map --no-restore -configuration Release
+        run: dotnet pack libNOM.map --no-restore --configuration Release
       - name: Upload NuGet Package
         uses: actions/upload-artifact@v3
         with:
