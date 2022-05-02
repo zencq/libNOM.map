@@ -3,35 +3,25 @@ name: libNOM.map
 on: [push, pull_request]
 
 jobs:
-  test:
-    name: Test
-    strategy:
-      matrix:
-        os: [ windows-latest, ubuntu-latest ]
-        sdk: [ 6.0.x ]
-        configuration: [ Debug ]
-    runs-on: ${{ matrix.os }}
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup .NET
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: ${{ matrix.sdk }}
+          dotnet-version: 6.0.x
       - name: Dependencies
         run: dotnet restore
-      - name: Unit Test (.NET Framework)
-        if: startsWith(matrix.os, 'windows-')
-        run: dotnet test libNOM.test --no-restore --configuration ${{ matrix.configuration }} --framework net47
       - name: Unit Test (.NET)
-        run: dotnet test libNOM.test --no-restore --configuration ${{ matrix.configuration }} --framework net6.0
-  build:
-    name: Build
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
+        run: dotnet test libNOM.test --no-restore --configuration Debug --framework net6.0
       - name: Pack
-        run: dotnet pack libNOM.map --configuration Release
+        run: dotnet pack libNOM.map --no-restore --configuration Release
+      - name: Version
+        run: echo "dll_version=$((Get-Command libNOM.map\bin\Release\net6.0\libNOM.map.dll).FileVersionInfo.ProductVersion)" >> $env:GITHUB_ENV
+        shell: pwsh
       - name: Upload (NuGet Package)
         uses: actions/upload-artifact@v3
         with:
@@ -58,9 +48,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: libNOM.map
-      - name: Version
-        run: echo "dll_version=$((Get-Command .\net6.0\libNOM.map.dll).FileVersionInfo.ProductVersion)" >> $env:GITHUB_ENV
-        shell: pwsh
       # Exit if version mismatch.
       - name: Mismatch
         if: ${{ github.ref_name != env.dll_version }}
