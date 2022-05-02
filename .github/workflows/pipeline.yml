@@ -22,17 +22,11 @@ jobs:
       - name: Version
         run: echo "dll_version=$((Get-Command .\libNOM.map\bin\Release\net6.0\libNOM.map.dll).FileVersionInfo.ProductVersion)" >> $env:GITHUB_ENV
         shell: pwsh
-      - name: Upload (NuGet Package)
+      - name: Upload
         uses: actions/upload-artifact@v3
         with:
-          name: libNOM.map NuGet Package (nupkg)
-          path: libNOM.map/bin/Release/libNOM.map.*.nupkg
-          if-no-files-found: error
-      - name: Upload (Symbol Package)
-        uses: actions/upload-artifact@v3
-        with:
-          name: libNOM.map Symbol Package (snupkg)
-          path: libNOM.map/bin/Release/libNOM.map.*.snupkg
+          name: libNOM.map NuGet Package
+          path: libNOM.map/bin/Release/libNOM.map.*nupkg
           if-no-files-found: error
   release:
     name: Release
@@ -41,24 +35,21 @@ jobs:
     if: ${{ startsWith(github.ref, 'refs/tags/') }}
     needs: build
     steps:
-      # Checkout to access the changelog.
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Download
-        uses: actions/download-artifact@v3
-        with:
-          name: libNOM.map
       # Exit if version mismatch.
       - name: Mismatch
         if: ${{ github.ref_name != env.dll_version }}
         run: |
           echo "There is a version mismatch between git tag and dll version!"
           exit 1
+      # Checkout again to access the changelog.
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Download
+        uses: actions/download-artifact@v3
+        with:
+          name: libNOM.map
       - name: Create
         uses: softprops/action-gh-release@v1
         with:
           body_path: ${{ github.workspace }}/.github/changelogs/${{ github.ref_name }}.md
-          files: |
-            net6.0/libNOM.map.dll
-            net6.0/publish/libNOM.map.zip
-            libNOM.map.*.nupkg
+          files: libNOM.map.*nupkg
