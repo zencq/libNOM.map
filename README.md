@@ -1,11 +1,12 @@
 # libNOM.map
 
 ![Maintained](https://img.shields.io/maintenance/yes/2022)
-[![.NET 6](https://img.shields.io/badge/.NET-Framework%204.7%20%7C%20Standard%202.0%20%7C%205.0%20%7C%206.0-lightgrey)](https://dotnet.microsoft.com/en-us/)
-[![C# 10](https://img.shields.io/badge/C%23-10.0-lightgrey)](https://docs.microsoft.com/en-us/dotnet/csharp/)
+[![.NET Framework 4.7 | Standard 2.0 | 5.0 | 6.0](https://img.shields.io/badge/.NET-Framework%204.7%20%7C%20Standard%202.0%20%7C%205.0%20%7C%206.0-lightgrey)](https://dotnet.microsoft.com/en-us/)
+[![C# 10.0](https://img.shields.io/badge/C%23-10.0-lightgrey)](https://docs.microsoft.com/en-us/dotnet/csharp/)
 [![Release](https://img.shields.io/github/v/release/zencq/libNOM.map?display_name=tag)](https://github.com/zencq/libNOM.map/releases/latest)
 
 [![libNOM.map](https://github.com/zencq/libNOM.map/actions/workflows/pipeline.yml/badge.svg)](https://github.com/zencq/libNOM.map/actions/workflows/pipeline.yml)
+
 ## Introduction
 
 The `libNOM` label is a collection of .NET class libraries originally developed
@@ -41,7 +42,7 @@ Mapping.Obfuscate(jsonObject);
 Create and update settings.
 ```csharp
 // Settings
-Mapping.Settings = new() { PathDownload = "download" };
+Mapping.Settings = new() { Download = "download" };
 ```
 
 Update and download the mapping.json if a newer version is available.

@@ -102,7 +102,7 @@ public static class Mapping
     /// <returns></returns>
     private static string GetCombinedPath()
     {
-        return Path.Combine(Path.GetFullPath(_settings.PathDownload), Properties.Resources.RELEASE_ASSET);
+        return Path.Combine(Path.GetFullPath(_settings.Download), Properties.Resources.RELEASE_ASSET);
     }
 
     /// <summary>

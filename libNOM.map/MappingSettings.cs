@@ -7,11 +7,11 @@
 public record class MappingSettings
 {
     /// <summary>
-    /// Where to download the mapping.json.
+    /// Where to download the updated mapping file.
     /// </summary>
 #if NET47_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-    public string PathDownload { get; set; } = "download";
+    public string Download { get; set; } = "download";
 #elif NET5_0_OR_GREATER
-    public string PathDownload { get; init; } = "download";
+    public string Download { get; init; } = "download";
 #endif
 }
