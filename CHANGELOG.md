@@ -13,6 +13,11 @@ All notable changes to this project will be documented in this file. It uses the
 ### Fixed
 ### Security
 
+## 0.7.0 (2022-05-03)
+
+### Changed
+* Renamed some settings
+
 ## 0.6.2 (2022-05-02)
 
 ### Added
