@@ -13,6 +13,14 @@ All notable changes to this project will be documented in this file. It uses the
 ### Fixed
 ### Security
 
+## 0.8.0 (2022-07-25)
+
+### Changed
+* Deobfuscate and Obfuscate now take JToken to allow doing so in any subnode
+
+### Removed
+* .NET Framework as explicit target as .NET Standard is enough
+
 ## 0.7.0 (2022-05-03)
 
 ### Changed

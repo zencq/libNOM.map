@@ -1,7 +1,7 @@
 # libNOM.map
 
 ![Maintained](https://img.shields.io/maintenance/yes/2022)
-[![.NET Framework 4.7 | Standard 2.0 | 5.0 | 6.0](https://img.shields.io/badge/.NET-Framework%204.7%20%7C%20Standard%202.0%20%7C%205.0%20%7C%206.0-lightgrey)](https://dotnet.microsoft.com/en-us/)
+[![.NET Standard 2.0 | 5.0 | 6.0](https://img.shields.io/badge/.NET-Standard%202.0%20%7C%205.0%20%7C%206.0-lightgrey)](https://dotnet.microsoft.com/en-us/)
 [![C# 10.0](https://img.shields.io/badge/C%23-10.0-lightgrey)](https://docs.microsoft.com/en-us/dotnet/csharp/)
 [![Release](https://img.shields.io/github/v/release/zencq/libNOM.map?display_name=tag)](https://github.com/zencq/libNOM.map/releases/latest)
 
@@ -25,7 +25,7 @@ from the [lastest MBINCompiler release](https://github.com/monkeyman192/MBINComp
 It will be downloaded to **download/mapping.json** (if no other path is set) and
 automatically loaded if present.
 
-The built-in mapping is based on `3.88.0.2`.
+The built-in mapping is based on `3.94.0.1`.
 
 ### Usage
 

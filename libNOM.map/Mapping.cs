@@ -158,19 +158,23 @@ public static class Mapping
     #region Mapping
 
     /// <summary>
-    /// Deobfuscates a file to make it human-readable.
+    /// Deobfuscates JSON to make it human-readable.
     /// </summary>
-    /// <param name="root">Entire file as JSON object.</param>
+    /// <param name="node">A node within a JSON object or the root itself.</param>
     /// <returns>List of unknown keys.</returns>
-    public static HashSet<string> Deobfuscate(JObject root)
+    /// <exception cref="ArgumentNullException"></exception>
+    public static HashSet<string> Deobfuscate(JToken? node)
     {
+        if (node is null)
+            throw new ArgumentNullException(nameof(node));
+
         EnsurePreconditions();
 
         var jProperties = new List<JProperty>();
         var keys = new HashSet<string>();
 
         // Collect all jProperties that need to be renamed.
-        foreach (var child in root.Children().Where(c => c.HasValues))
+        foreach (var child in node.Children().Where(c => c.HasValues))
         {
             GetPropertiesToDeobfuscate(child, jProperties, keys);
         }
@@ -200,17 +204,20 @@ public static class Mapping
     }
 
     /// <summary>
-    /// Obfuscates a file to make it readable by the game.
+    /// Obfuscates JSON to make it readable by the game.
     /// </summary>
-    /// <param name="root">Entire file as JSON object.</param>
-    public static void Obfuscate(JObject root)
+    /// <param name="node">A node within a JSON object or the root itself.</param>
+    public static void Obfuscate(JToken? node)
     {
+        if (node is null)
+            throw new ArgumentNullException(nameof(node));
+
         EnsurePreconditions();
 
         var jProperties = new List<JProperty>();
 
         // Collect all jProperties that need to be renamed.
-        foreach (var child in root.Children().Where(c => c.HasValues))
+        foreach (var child in node.Children().Where(c => c.HasValues))
         {
             GetPropertiesToObfuscate(child, jProperties);
         }
@@ -280,9 +287,9 @@ public static class Mapping
             return false;
 
         Directory.CreateDirectory(new FileInfo(_path).DirectoryName!);
-#if NET47_OR_GREATER || NETSTANDARD2_0_OR_GREATER
+#if NETSTANDARD2_0
         File.WriteAllText(_path, content);
-#elif NET5_0_OR_GREATER
+#else // NET5_0_OR_GREATER
         // File does not matter until next startup and therefore no need to wait.
         _ = File.WriteAllTextAsync(_path, content);
 #endif

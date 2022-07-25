@@ -2,7 +2,7 @@
 
   <!-- Application -->
   <PropertyGroup>
-    <TargetFrameworks>net47;netstandard2.0;net5.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
   </PropertyGroup>
 
   <!-- Build -->
@@ -17,7 +17,7 @@
 
   <!-- Package -->
   <PropertyGroup>
-    <Version>0.7.0</Version>
+    <Version>0.8.0</Version>
     <Authors>zencq</Authors>
     <Description>Provides obfuscation and deobfuscation of save files from the game No Man's Sky.</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -45,7 +45,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Octokit" Version="0.51.0" />
+    <PackageReference Include="Octokit" Version="1.0.0" />
   </ItemGroup>
 
   <!-- Resources -->
