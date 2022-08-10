@@ -13,6 +13,12 @@ All notable changes to this project will be documented in this file. It uses the
 ### Fixed
 ### Security
 
+## 0.8.1 (2022-08-10)
+
+### Changed
+* Now targeting .NET Standard 2.x and supported versions in the [.NET release lifecycle](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
+* Updated mapping to 3.98.0.5
+
 ## 0.8.0 (2022-07-25)
 
 ### Changed

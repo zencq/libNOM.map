@@ -9,7 +9,7 @@ public record class MappingSettings
     /// <summary>
     /// Where to download the updated mapping file.
     /// </summary>
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0_OR_GREATER
     public string Download { get; set; } = "download";
 #else // NET5_0_OR_GREATER
     public string Download { get; init; } = "download";
