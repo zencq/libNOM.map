@@ -30,6 +30,10 @@ internal static class NewtonsoftExtensions
             existingProperty = (JProperty)(input.Parent);
         }
 
+        // Stop if parent already has a property with newName.
+        if (input.Parent.SelectTokens(newName).Any())
+            return;
+
         // To avoid triggering a clone of the existing value, we save a reference to it
         // and then null out JProperty.Value before adding the value to the new one.
         var existingValue = existingProperty.Value;
