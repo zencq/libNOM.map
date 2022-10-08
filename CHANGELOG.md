@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file. It uses the
 
 ### Added
 ### Changed
-* Updated mapping to 3.99.1.1
+* Updated mapping to 4.0.0.2
 ### Deprecated
 ### Removed
 ### Fixed
