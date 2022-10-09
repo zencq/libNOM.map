@@ -8,12 +8,17 @@ All notable changes to this project will be documented in this file. It uses the
 
 ### Added
 ### Changed
-* Updated mapping to 4.0.0.2
 ### Deprecated
 ### Removed
 ### Fixed
-* Crash if parent already has a child with the new name
 ### Security
+
+## 0.8.2 (2022-10-09)
+
+### Changed
+* Updated mapping to 4.0.0.2
+### Fixed
+* Crash if parent already has a child with the new name
 
 ## 0.8.1 (2022-08-10)
 
