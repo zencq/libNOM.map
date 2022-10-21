@@ -17,7 +17,7 @@
 
   <!-- Package -->
   <PropertyGroup>
-    <Version>0.8.2</Version>
+    <Version>0.8.3</Version>
     <Authors>zencq</Authors>
     <Description>Provides obfuscation and deobfuscation of save files from the game No Man's Sky.</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>

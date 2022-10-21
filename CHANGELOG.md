@@ -13,6 +13,11 @@ All notable changes to this project will be documented in this file. It uses the
 ### Fixed
 ### Security
 
+## 0.8.3 (2022-10-21)
+
+### Changed
+* Updated mapping to 4.4.0.3
+
 ## 0.8.2 (2022-10-09)
 
 ### Changed
