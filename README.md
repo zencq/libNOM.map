@@ -25,7 +25,7 @@ from the [lastest MBINCompiler release](https://github.com/monkeyman192/MBINComp
 It will be downloaded to **download/mapping.json** (if no other path is set) and
 automatically loaded if present.
 
-The built-in mapping is based on `4.4.0.3`.
+The built-in mapping is based on `4.5.0.2`.
 
 ### Usage
 

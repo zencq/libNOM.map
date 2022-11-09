@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file. It uses the
 ### Added
 * Now targeting .NET 7 as per the [.NET release lifecycle](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
 ### Changed
+* Updated mapping to 4.5.0.2
 ### Deprecated
 ### Removed
 ### Fixed
