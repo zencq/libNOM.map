@@ -26,7 +26,7 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: ${{ runner.os }}-nuget-
       - name: Dependencies
-        run: nuget restore
+        run: dotnet restore
       - name: Unit Test
         run: dotnet test libNOM.test --no-restore --configuration Debug --framework net7.0
       - name: Pack
