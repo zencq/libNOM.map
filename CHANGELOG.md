@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file. It uses the
 ## Unreleased
 
 ### Added
+* Now targeting .NET 7 as per the [.NET release lifecycle](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
 ### Changed
 ### Deprecated
 ### Removed

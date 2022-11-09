@@ -2,7 +2,7 @@
 
   <!-- Application -->
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>net7.0</TargetFrameworks>
   </PropertyGroup>
 
   <!-- Build -->
@@ -10,7 +10,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-    <LangVersion>10.0</LangVersion>
+    <LangVersion>11.0</LangVersion>
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
     <Deterministic>True</Deterministic>
     <IsPackable>false</IsPackable>
