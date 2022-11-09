@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file. It uses the
 ### Deprecated
 ### Removed
 ### Fixed
+* Crash if mapping.json file is in use
 ### Security
 
 ## 0.8.3 (2022-10-21)

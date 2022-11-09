@@ -165,16 +165,13 @@ public static class Mapping
     /// <exception cref="ArgumentNullException"></exception>
     public static HashSet<string> Deobfuscate(JToken? node)
     {
-        if (node is null)
-            throw new ArgumentNullException(nameof(node));
-
-        EnsurePreconditions();
+        EnsurePreconditions(node);
 
         var jProperties = new List<JProperty>();
         var keys = new HashSet<string>();
 
         // Collect all jProperties that need to be renamed.
-        foreach (var child in node.Children().Where(c => c.HasValues))
+        foreach (var child in node!.Children().Where(c => c.HasValues))
         {
             GetPropertiesToDeobfuscate(child, jProperties, keys);
         }
@@ -191,8 +188,15 @@ public static class Mapping
     /// <summary>
     /// Ensures that the update task is complete and both maps are created.
     /// </summary>
-    private static void EnsurePreconditions()
+    private static void EnsurePreconditions(JToken? node)
     {
+#if NETSTANDARD2_0_OR_GREATER
+        if (node is null)
+            throw new ArgumentNullException(nameof(node));
+#else
+        ArgumentNullException.ThrowIfNull(node, nameof(node));
+#endif
+
         // Wait in case of currently running update.
         _updateTask?.Wait();
 
@@ -209,15 +213,12 @@ public static class Mapping
     /// <param name="node">A node within a JSON object or the root itself.</param>
     public static void Obfuscate(JToken? node)
     {
-        if (node is null)
-            throw new ArgumentNullException(nameof(node));
-
-        EnsurePreconditions();
+        EnsurePreconditions(node);
 
         var jProperties = new List<JProperty>();
 
         // Collect all jProperties that need to be renamed.
-        foreach (var child in node.Children().Where(c => c.HasValues))
+        foreach (var child in node!.Children().Where(c => c.HasValues))
         {
             GetPropertiesToObfuscate(child, jProperties);
         }
@@ -287,12 +288,19 @@ public static class Mapping
             return false;
 
         Directory.CreateDirectory(new FileInfo(_path).DirectoryName!);
-#if NETSTANDARD2_0
-        File.WriteAllText(_path, content);
-#else // NET5_0_OR_GREATER
         // File does not matter until next startup and therefore no need to wait.
-        _ = File.WriteAllTextAsync(_path, content);
+        try
+        {
+#if NETSTANDARD2_0
+            _ = Task.Run(() => File.WriteAllText(_path, content));
+#else
+            _ = File.WriteAllTextAsync(_path, content);
 #endif
+        }
+        catch (IOException)
+        {
+            // Nothing to do.
+        }
 
         _jsonDownload = MappingJson.Deserialize(content!);
 
