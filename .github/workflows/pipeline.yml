@@ -1,7 +1,11 @@
 name: libNOM.map
 
 on:
-  push
+  pull_request:
+    branches: [ master ]
+  push:
+    branches: [ master ]
+  workflow_dispatch:  # run via button
 
 jobs:
   build:
@@ -15,8 +19,14 @@ jobs:
         with:
           dotnet-version: 7.0.x
           dotnet-quality: ga
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: ${{ runner.os }}-nuget-
       - name: Dependencies
-        run: dotnet restore
+        run: nuget restore
       - name: Unit Test
         run: dotnet test libNOM.test --no-restore --configuration Debug --framework net7.0
       - name: Pack
