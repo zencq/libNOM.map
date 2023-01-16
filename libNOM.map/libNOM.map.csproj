@@ -45,7 +45,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Octokit" Version="4.0.1" />
+    <PackageReference Include="Octokit" Version="4.0.4" />
   </ItemGroup>
 
   <!-- Resources -->
