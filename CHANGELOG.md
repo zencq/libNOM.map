@@ -7,14 +7,23 @@ All notable changes to this project will be documented in this file. It uses the
 ## Unreleased
 
 ### Added
-* Now targeting .NET 7 as per the [.NET release lifecycle](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
 ### Changed
-* Updated mapping to 4.12.1.1
 ### Deprecated
 ### Removed
 ### Fixed
-* Crash if mapping.json file is in use
 ### Security
+
+## 0.9.0 (2023-03-12)
+
+### Added
+* Now targeting .NET 7 as per the [.NET release lifecycle](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
+* Now publishing to [NuGet Gallery](https://www.nuget.org)
+
+### Changed
+* Updated mapping to 4.12.1.1
+
+### Fixed
+* Crash if mapping.json file is in use
 
 ## 0.8.3 (2022-10-21)
 
@@ -25,6 +34,7 @@ All notable changes to this project will be documented in this file. It uses the
 
 ### Changed
 * Updated mapping to 4.0.0.2
+
 ### Fixed
 * Crash if parent already has a child with the new name
 

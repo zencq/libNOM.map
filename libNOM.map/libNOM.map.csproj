@@ -18,8 +18,8 @@
 
   <!-- Package -->
   <PropertyGroup>
-    <Version>0.8.3</Version>
-    <Authors>zencq</Authors>
+    <Version>0.9.0</Version>
+    <Authors>cengelha</Authors>
     <Description>Provides obfuscation and deobfuscation of save files from the game No Man's Sky.</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/zencq/libNOM.map</RepositoryUrl>
@@ -32,6 +32,8 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols>true</IncludeSymbols>
+    <PackageTags>NoMansSky;NMS;libNOM</PackageTags>
+    <Copyright>Copyright (c) Christian Engelhardt 2021</Copyright>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
   <!-- https://github.com/clairernovotny/DeterministicBuilds -->
