@@ -47,7 +47,7 @@ internal class GitHubService
         if (release is null)
             return null;
 
-        // Find the asset to download it.
+        // Find the asset to download.
         var result = release.Assets.FirstOrDefault(a => a.Name.Equals(Properties.Resources.RELEASE_ASSET));
         if (result is null)
             return null;
