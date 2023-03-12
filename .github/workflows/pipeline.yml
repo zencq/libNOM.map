@@ -5,6 +5,7 @@ on:
     branches: [ master ]
   push:
     branches: [ master ]
+  create:
 
 jobs:
   build:
