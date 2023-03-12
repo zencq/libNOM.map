@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace libNOM.map.Json;
+namespace libNOM.map.Data;
 
 
 /// <summary>
