@@ -11,7 +11,7 @@ public record class MappingSettings
     /// </summary>
 #if NETSTANDARD2_0_OR_GREATER
     public string Download { get; set; } = "download";
-#else // NET5_0_OR_GREATER
+#else
     public string Download { get; init; } = "download";
 #endif
 }

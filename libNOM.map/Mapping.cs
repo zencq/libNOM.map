@@ -1,5 +1,6 @@
-﻿using libNOM.map.Extensions;
-using libNOM.map.Json;
+﻿using libNOM.map.Data;
+using libNOM.map.Extensions;
+using libNOM.map.Services;
 using Newtonsoft.Json.Linq;
 
 namespace libNOM.map;
@@ -12,7 +13,7 @@ public static class Mapping
 {
     #region Field
 
-    private static readonly HttpClient _httpClient = new();
+    private static GitHubService? _gitHub;
     private static readonly MappingJson _jsonCompiler = MappingJson.Deserialize(Properties.Resources.MBINCompiler)!; // latest MBINCompiler mapping.json when this version was created
     private static MappingJson? _jsonDownload; // dynamic content from the latest MBINCompiler release on GitHub
     private static readonly MappingJson _jsonLegacy = MappingJson.Deserialize(Properties.Resources.Legacy)!; // older keys that are not present in the latest version
@@ -29,6 +30,8 @@ public static class Mapping
 
     #region Property
 
+    private static GitHubService GitHub => _gitHub ??= new();
+
     private static bool IsRunning => !_updateTask?.IsCompleted ?? false; // { private get; }
 
     public static MappingSettings Settings // { get; set; }
@@ -36,7 +39,7 @@ public static class Mapping
         get => _settings;
         set
         {
-            _settings = value ?? new();
+            _settings = value;
             _path = GetCombinedPath();
         }
     }
@@ -165,16 +168,13 @@ public static class Mapping
     /// <exception cref="ArgumentNullException"></exception>
     public static HashSet<string> Deobfuscate(JToken? node)
     {
-        if (node is null)
-            throw new ArgumentNullException(nameof(node));
-
-        EnsurePreconditions();
+        EnsurePreconditions(node);
 
         var jProperties = new List<JProperty>();
         var keys = new HashSet<string>();
 
         // Collect all jProperties that need to be renamed.
-        foreach (var child in node.Children().Where(c => c.HasValues))
+        foreach (var child in node!.Children().Where(c => c.HasValues))
         {
             GetPropertiesToDeobfuscate(child, jProperties, keys);
         }
@@ -191,8 +191,15 @@ public static class Mapping
     /// <summary>
     /// Ensures that the update task is complete and both maps are created.
     /// </summary>
-    private static void EnsurePreconditions()
+    private static void EnsurePreconditions(JToken? node)
     {
+#if NETSTANDARD2_0_OR_GREATER
+        if (node is null)
+            throw new ArgumentNullException(nameof(node));
+#else
+        ArgumentNullException.ThrowIfNull(node, nameof(node));
+#endif
+
         // Wait in case of currently running update.
         _updateTask?.Wait();
 
@@ -209,15 +216,12 @@ public static class Mapping
     /// <param name="node">A node within a JSON object or the root itself.</param>
     public static void Obfuscate(JToken? node)
     {
-        if (node is null)
-            throw new ArgumentNullException(nameof(node));
-
-        EnsurePreconditions();
+        EnsurePreconditions(node);
 
         var jProperties = new List<JProperty>();
 
         // Collect all jProperties that need to be renamed.
-        foreach (var child in node.Children().Where(c => c.HasValues))
+        foreach (var child in node!.Children().Where(c => c.HasValues))
         {
             GetPropertiesToObfuscate(child, jProperties);
         }
@@ -244,7 +248,7 @@ public static class Mapping
         {
             _updateTask = Task.Run(async () =>
             {
-                result = await DownloadAsync();
+                result = await GetJsonDownloadAsync();
                 if (result)
                 {
                     CreateMap();
@@ -267,7 +271,7 @@ public static class Mapping
 
         _updateTask = Task.Run(async () =>
         {
-            var result = await DownloadAsync();
+            var result = await GetJsonDownloadAsync();
             if (result)
             {
                 CreateMap();
@@ -276,23 +280,27 @@ public static class Mapping
     }
 
     /// <summary>
-    /// Downloads the lastet mapping file.
+    /// Downloads the lastet mapping file and persists it to a file.
     /// This method does not block the calling thread.
     /// </summary>
     /// <returns>Whether a newer version of the mapping file was successfully downloaded.</returns>
-    private static async Task<bool> DownloadAsync()
+    private static async Task<bool> GetJsonDownloadAsync()
     {
-        var content = await _httpClient.DownloadTextFileContentFromGitHubReleaseAsync(Properties.Resources.REPO_OWNER, Properties.Resources.REPO_NAME, Properties.Resources.RELEASE_ASSET);
+        var content = await GitHub.DownloadMappingJsonAsync();
         if (string.IsNullOrEmpty(content))
             return false;
 
         Directory.CreateDirectory(new FileInfo(_path).DirectoryName!);
-#if NETSTANDARD2_0
-        File.WriteAllText(_path, content);
-#else // NET5_0_OR_GREATER
         // File does not matter until next startup and therefore no need to wait.
-        _ = File.WriteAllTextAsync(_path, content);
+        try
+        {
+#if NETSTANDARD2_0
+            _ = Task.Run(() => File.WriteAllText(_path, content));
+#else
+            _ = File.WriteAllTextAsync(_path, content);
 #endif
+        }
+        catch (IOException) { } // Try again next time.
 
         _jsonDownload = MappingJson.Deserialize(content!);
 

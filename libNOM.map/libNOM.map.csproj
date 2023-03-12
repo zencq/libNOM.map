@@ -2,7 +2,7 @@
 
   <!-- Application -->
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net7.0</TargetFrameworks>
   </PropertyGroup>
 
   <!-- Build -->
@@ -10,9 +10,10 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-    <LangVersion>10.0</LangVersion>
-    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <LangVersion>11.0</LangVersion>
     <Deterministic>True</Deterministic>
+    <EnableNETAnalyzers>True</EnableNETAnalyzers>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
 
   <!-- Package -->
@@ -44,8 +45,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Octokit" Version="4.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Octokit" Version="5.0.2" />
   </ItemGroup>
 
   <!-- Resources -->

@@ -7,10 +7,13 @@ All notable changes to this project will be documented in this file. It uses the
 ## Unreleased
 
 ### Added
+* Now targeting .NET 7 as per the [.NET release lifecycle](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
 ### Changed
+* Updated mapping to 4.12.1.1
 ### Deprecated
 ### Removed
 ### Fixed
+* Crash if mapping.json file is in use
 ### Security
 
 ## 0.8.3 (2022-10-21)

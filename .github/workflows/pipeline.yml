@@ -1,7 +1,10 @@
 name: libNOM.map
 
 on:
-  push
+  pull_request:
+    branches: [ master ]
+  push:
+    branches: [ master ]
 
 jobs:
   build:
@@ -13,18 +16,28 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: 7.0.x
           dotnet-quality: ga
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: ${{ runner.os }}-nuget-
       - name: Dependencies
         run: dotnet restore
       - name: Unit Test
-        run: dotnet test libNOM.test --no-restore --configuration Debug --framework net6.0
+        run: |
+          dotnet test libNOM.test --no-restore --configuration Debug --framework netstandard2.0
+          dotnet test libNOM.test --no-restore --configuration Debug --framework netstandard2.1
+          dotnet test libNOM.test --no-restore --configuration Debug --framework net6.0
+          dotnet test libNOM.test --no-restore --configuration Debug --framework net7.0
       - name: Pack
         run: dotnet pack libNOM.map --no-restore --configuration Release
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
-          name: libNOM.map NuGet Package
+          name: libNOM.map NuGet
           path: libNOM.map/bin/Release/libNOM.map.*nupkg
           if-no-files-found: error
   release:
@@ -40,7 +53,7 @@ jobs:
       - name: Download
         uses: actions/download-artifact@v3
         with:
-          name: libNOM.map NuGet Package
+          name: libNOM.map NuGet
       - name: Version
         run: echo "nupkg_version=$((((Get-Item -Path .\libNOM.map.*.nupkg).Name -split '\.',3)[2] -split '\.',-2)[0])" >> $env:GITHUB_ENV
         shell: pwsh
@@ -55,3 +68,5 @@ jobs:
         with:
           body_path: ${{ github.workspace }}/.github/changelogs/${{ github.ref_name }}.md
           files: libNOM.map.*nupkg
+      - name: Publish
+        run: dotnet nuget push ./libNOM.map.*.nupkg --api-key ${{ secrets.NUGET_API_KEY }}
