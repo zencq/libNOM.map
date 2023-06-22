@@ -1,9 +1,10 @@
 # libNOM.map
 
 ![Maintained](https://img.shields.io/maintenance/yes/2023)
-[![.NET Standard 2.0 - 2.1 | 6.0 - 7.0](https://img.shields.io/badge/.NET-Standard%202.0%20--%202.1%20%7C%206.0%20--%207.0-lightgrey)](https://dotnet.microsoft.com/en-us/)
+[![.NET | Standard 2.0 - 2.1 | 6 - 7](https://img.shields.io/badge/.NET-Standard%202.0%20--%202.1%20%7C%206%20--%207-lightgrey)](https://dotnet.microsoft.com/en-us/)
 [![C# 11](https://img.shields.io/badge/C%23-11-lightgrey)](https://docs.microsoft.com/en-us/dotnet/csharp/)
 [![Release](https://img.shields.io/github/v/release/zencq/libNOM.map?display_name=tag)](https://github.com/zencq/libNOM.map/releases/latest)
+[![Nuget](https://img.shields.io/nuget/v/libNOM.map)](https://www.nuget.org/packages/libNOM.map/)
 
 [![libNOM.map](https://github.com/zencq/libNOM.map/actions/workflows/pipeline.yml/badge.svg)](https://github.com/zencq/libNOM.map/actions/workflows/pipeline.yml)
 
@@ -26,7 +27,7 @@ file from the [lastest MBINCompiler release](https://github.com/monkeyman192/MBI
 It will be downloaded to **download/mapping.json** (if no other path is set) and
 automatically used if present.
 
-The built-in mapping currently is `4.12.1.1`.
+The built-in mapping currently is `4.34.0.1`.
 
 ### Usage
 
