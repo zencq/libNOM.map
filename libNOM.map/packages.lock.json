@@ -29,9 +29,9 @@
       },
       "Octokit": {
         "type": "Direct",
-        "requested": "[5.0.2, )",
-        "resolved": "5.0.2",
-        "contentHash": "W2dSerUsobOoBIGfTOVlA1o7/N/Rcdg4vHvx8pNp0QgZUGZyMX9KVVmyRDuOySSCixgxccL+x6RM4QFEcbbe/w=="
+        "requested": "[6.0.0, )",
+        "resolved": "6.0.0",
+        "contentHash": "uvaQRay+9ASmkA+tAjNq3bw1h/92OiBM0i4DdccM2NwMR2MI33b+CGIY2VlMh57DgkWg5boFP/Q3qfAnBvXc2g=="
       },
       "Microsoft.Build.Tasks.Git": {
         "type": "Transitive",
@@ -68,9 +68,9 @@
       },
       "Octokit": {
         "type": "Direct",
-        "requested": "[5.0.2, )",
-        "resolved": "5.0.2",
-        "contentHash": "W2dSerUsobOoBIGfTOVlA1o7/N/Rcdg4vHvx8pNp0QgZUGZyMX9KVVmyRDuOySSCixgxccL+x6RM4QFEcbbe/w=="
+        "requested": "[6.0.0, )",
+        "resolved": "6.0.0",
+        "contentHash": "uvaQRay+9ASmkA+tAjNq3bw1h/92OiBM0i4DdccM2NwMR2MI33b+CGIY2VlMh57DgkWg5boFP/Q3qfAnBvXc2g=="
       },
       "Microsoft.Build.Tasks.Git": {
         "type": "Transitive",
@@ -102,9 +102,9 @@
       },
       "Octokit": {
         "type": "Direct",
-        "requested": "[5.0.2, )",
-        "resolved": "5.0.2",
-        "contentHash": "W2dSerUsobOoBIGfTOVlA1o7/N/Rcdg4vHvx8pNp0QgZUGZyMX9KVVmyRDuOySSCixgxccL+x6RM4QFEcbbe/w=="
+        "requested": "[6.0.0, )",
+        "resolved": "6.0.0",
+        "contentHash": "uvaQRay+9ASmkA+tAjNq3bw1h/92OiBM0i4DdccM2NwMR2MI33b+CGIY2VlMh57DgkWg5boFP/Q3qfAnBvXc2g=="
       },
       "Microsoft.Build.Tasks.Git": {
         "type": "Transitive",
@@ -136,9 +136,9 @@
       },
       "Octokit": {
         "type": "Direct",
-        "requested": "[5.0.2, )",
-        "resolved": "5.0.2",
-        "contentHash": "W2dSerUsobOoBIGfTOVlA1o7/N/Rcdg4vHvx8pNp0QgZUGZyMX9KVVmyRDuOySSCixgxccL+x6RM4QFEcbbe/w=="
+        "requested": "[6.0.0, )",
+        "resolved": "6.0.0",
+        "contentHash": "uvaQRay+9ASmkA+tAjNq3bw1h/92OiBM0i4DdccM2NwMR2MI33b+CGIY2VlMh57DgkWg5boFP/Q3qfAnBvXc2g=="
       },
       "Microsoft.Build.Tasks.Git": {
         "type": "Transitive",
