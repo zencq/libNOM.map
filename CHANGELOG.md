@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file. It uses the
 ### Deprecated
 ### Removed
 ### Fixed
+* Creating the map when called in multiple threads simultaneously
 ### Security
 
 ## 0.9.1 (2023-06-22)
