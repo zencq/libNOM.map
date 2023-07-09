@@ -18,6 +18,7 @@ public static class Mapping
     private static MappingJson? _jsonDownload; // dynamic content from the latest MBINCompiler release on GitHub
     private static readonly MappingJson _jsonLegacy = MappingJson.Deserialize(Properties.Resources.Legacy)!; // older keys that are not present in the latest version
     private static readonly MappingJson _jsonWizard = MappingJson.Deserialize(Properties.Resources.SaveWizard)!; // adjust differing mapping of SaveWizard
+    private static readonly ReaderWriterLockSlim _lock = new(LockRecursionPolicy.SupportsRecursion);
     private static readonly Dictionary<string, string> _mapForDeobfuscation = new();
     private static readonly Dictionary<string, string> _mapForObfuscation = new();
     private static MappingSettings _settings = new();
@@ -203,11 +204,17 @@ public static class Mapping
         // Wait in case of currently running update.
         _updateTask?.Wait();
 
+        // Lock here to avoid entering CreateMap().
+        _lock.EnterWriteLock();
+
         // Create map if not done yet.
         if (!_mapForDeobfuscation.Any() || !_mapForObfuscation.Any())
         {
             CreateMap();
         }
+
+        if (_lock.IsWriteLockHeld)
+            _lock.ExitWriteLock();
     }
 
     /// <summary>
