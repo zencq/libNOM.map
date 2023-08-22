@@ -67,7 +67,7 @@ public static class Mapping
         {
             _jsonDownload = MappingJson.Deserialize(File.ReadAllText(_path));
         }
-        // Apply additional mapping but keep those that might have become outdated by adding JsonCompiler nonetheless.
+        // Apply additional mapping but keep those that might have become outdated by always adding _jsonCompiler.
         if (_jsonDownload?.Version > _jsonCompiler.Version)
         {
             AddToMap(_jsonDownload, true, true);
@@ -114,8 +114,8 @@ public static class Mapping
     /// </summary>
     /// <param name="token">Current property that should be deobfuscated.</param>
     /// <param name="jProperties">List of properties that need to be deobfuscated.</param>
-    /// <param name="keys">List of keys that cannot be deobfuscated.</param>
-    private static void GetPropertiesToDeobfuscate(JToken token, List<JProperty> jProperties, HashSet<string> keys)
+    /// <param name="unknownKeys">List of keys that cannot be deobfuscated.</param>
+    private static void GetPropertiesToDeobfuscate(JToken token, List<JProperty> jProperties, HashSet<string> unknownKeys)
     {
         if (token.Type == JTokenType.Property)
         {
@@ -127,12 +127,12 @@ public static class Mapping
             // Only add if it is not a target value as well.
             else if (!_mapForDeobfuscation.ContainsValue(property.Name))
             {
-                keys.Add(property.Name);
+                unknownKeys.Add(property.Name);
             }
         }
-        foreach (var child in token.Children().Where(c => c.HasValues))
+        foreach (var child in token.Children().Where(i => i.HasValues))
         {
-            GetPropertiesToDeobfuscate(child, jProperties, keys);
+            GetPropertiesToDeobfuscate(child, jProperties, unknownKeys);
         }
     }
 
@@ -151,7 +151,7 @@ public static class Mapping
                 jProperties.Add(property);
             }
         }
-        foreach (var child in token.Children().Where(c => c.HasValues))
+        foreach (var child in token.Children().Where(i => i.HasValues))
         {
             GetPropertiesToObfuscate(child, jProperties);
         }
@@ -172,12 +172,12 @@ public static class Mapping
         EnsurePreconditions(node);
 
         var jProperties = new List<JProperty>();
-        var keys = new HashSet<string>();
+        var unknownKeys = new HashSet<string>();
 
         // Collect all jProperties that need to be renamed.
-        foreach (var child in node!.Children().Where(c => c.HasValues))
+        foreach (var child in node!.Children().Where(i => i.HasValues))
         {
-            GetPropertiesToDeobfuscate(child, jProperties, keys);
+            GetPropertiesToDeobfuscate(child, jProperties, unknownKeys);
         }
 
         // Actually rename each jProperty.
@@ -186,7 +186,7 @@ public static class Mapping
             jProperty.Rename(_mapForDeobfuscation[jProperty.Name]);
         }
 
-        return keys;
+        return unknownKeys;
     }
 
     /// <summary>
@@ -228,7 +228,7 @@ public static class Mapping
         var jProperties = new List<JProperty>();
 
         // Collect all jProperties that need to be renamed.
-        foreach (var child in node!.Children().Where(c => c.HasValues))
+        foreach (var child in node!.Children().Where(i => i.HasValues))
         {
             GetPropertiesToObfuscate(child, jProperties);
         }
