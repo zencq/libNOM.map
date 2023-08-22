@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file. It uses the
 ### Removed
 ### Fixed
 * Creating the map when called in multiple threads simultaneously
+* Some exceptions if the download of the latest mapping file does not work
 ### Security
 
 ## 0.9.1 (2023-06-22)
