@@ -38,24 +38,31 @@ internal class GitHubService
     internal async Task<string?> DownloadMappingJsonAsync()
     {
         // Get the latest release from GitHub.
-        Release? release = null;
+        Release release;
         try
         {
             release = await GitHubClient.Repository.Release.GetLatest(Properties.Resources.REPO_OWNER, Properties.Resources.REPO_NAME);
         }
-        catch (RateLimitExceededException) { } // Too many unauthenticated requests (60 per hour). Try again next time.
-        if (release is null)
+        catch (Exception ex) when (ex is HttpRequestException or RateLimitExceededException or TaskCanceledException) // Rate limit is 60 unauthenticated requests per hour.
+        {
             return null;
+        }
 
         // Find the asset to download.
-        var result = release.Assets.FirstOrDefault(a => a.Name.Equals(Properties.Resources.RELEASE_ASSET));
+        ReleaseAsset? result = release.Assets.FirstOrDefault(i => i.Name.Equals(Properties.Resources.RELEASE_ASSET));
         if (result is null)
             return null;
 
-        var response = await HttpClient.GetAsync(result.BrowserDownloadUrl);
-        response.EnsureSuccessStatusCode();
-
-        using var contentStream = await response.Content.ReadAsStreamAsync();
-        return new StreamReader(contentStream).ReadToEnd();
+        // Download the asset from GitHub.
+        try
+        {
+            using HttpResponseMessage response = await HttpClient.GetAsync(result.BrowserDownloadUrl);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsStringAsync();
+        }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+        {
+            return null;
+        }
     }
 }
