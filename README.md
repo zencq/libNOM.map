@@ -4,7 +4,7 @@
 [![.NET | Standard 2.0 - 2.1 | 6 - 7](https://img.shields.io/badge/.NET-Standard%202.0%20--%202.1%20%7C%206%20--%207-lightgrey)](https://dotnet.microsoft.com/en-us/)
 [![C# 11](https://img.shields.io/badge/C%23-11-lightgrey)](https://docs.microsoft.com/en-us/dotnet/csharp/)
 [![Release](https://img.shields.io/github/v/release/zencq/libNOM.map?display_name=tag)](https://github.com/zencq/libNOM.map/releases/latest)
-[![Nuget](https://img.shields.io/nuget/v/libNOM.map)](https://www.nuget.org/packages/libNOM.map/)
+[![NuGet](https://img.shields.io/nuget/v/libNOM.map)](https://www.nuget.org/packages/libNOM.map/)
 
 [![libNOM.map](https://github.com/zencq/libNOM.map/actions/workflows/pipeline.yml/badge.svg)](https://github.com/zencq/libNOM.map/actions/workflows/pipeline.yml)
 
@@ -14,12 +14,12 @@ The `libNOM` label is a collection of .NET class libraries originally developed
 and used in [NomNom](https://github.com/zencq/NomNom), the most complete savegame
 editor for [No Man's Sky](https://www.nomanssky.com/).
 
-`libNOM.map` can be used to obfuscate and deobfuscate the file content.
+`libNOM.map` can be used to obfuscate and deobfuscate the JSON save file content.
 
 ## Getting Started
 
-The mapping can be accessed through a static class and each functionality is just
-a simple call.
+The mapping can be accessed through a single static class and each functionality
+is just a simple call.
 
 Not only the latest mapping is supported but also legacy keys that are gone in a
 game version after **Beyond 2.11**. It is also possible to download an updated mapping
@@ -47,7 +47,7 @@ Create and update settings.
 Mapping.Settings = new() { Download = "download" };
 ```
 
-Update and download the mapping.json if a newer version is available.
+Update by downloading a newer version of the mapping file.
 ```csharp
 // Update
 Mapping.Update();
@@ -61,7 +61,7 @@ file for details.
 
 ## Authors
 
-* **Christian Engelhardt** (zencq) - [GitHub](https://github.com/cengelha)
+* **Christian Engelhardt** (zencq) - [GitHub](https://github.com/zencq)
 
 ## Credits
 
