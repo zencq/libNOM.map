@@ -11,9 +11,17 @@ All notable changes to this project will be documented in this file. It uses the
 ### Deprecated
 ### Removed
 ### Fixed
-* Creating the map when called in multiple threads simultaneously
-* Some exceptions if the download of the latest mapping file does not work
 ### Security
+
+## 0.9.2 (2023-09-05)
+
+### Changed
+* Bump Octokit from 6.0.0 to 7.1.0
+* Updated mapping to 4.43.0.1
+
+### Fixed
+* A crash if creating the map in multiple threads simultaneously
+* A crash if downloading the latest mapping file does not work due to connection issues
 
 ## 0.9.1 (2023-06-22)
 
