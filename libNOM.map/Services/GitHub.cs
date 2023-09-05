@@ -5,20 +5,20 @@ namespace libNOM.map.Services;
 
 
 /// <summary>
-/// Specialised client for GitHub download the mapping file.
+/// Specialized client for GitHub to download the mapping file.
 /// </summary>
 internal class GitHubService
 {
     #region Field
 
-    private GitHubClient? _gitHubClient;
+    private GitHubClient? _githubClient;
     private HttpClient? _httpClient;
 
     #endregion
 
     #region Property
 
-    private GitHubClient GitHubClient => _gitHubClient ??= new(new ProductHeaderValue(Assembly.GetExecutingAssembly().GetName().Name));
+    private GitHubClient GitHubClient => _githubClient ??= new(new ProductHeaderValue(Assembly.GetExecutingAssembly().GetName().Name));
 
     private HttpClient HttpClient => _httpClient ??= new();
 
