@@ -7,7 +7,11 @@ All notable changes to this project will be documented in this file. It uses the
 ## Unreleased
 
 ### Added
+* Now targeting .NET 8 as per the [.NET release lifecycle](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
+* A version property for the used mapping (built-in or downloaded)
 ### Changed
+* Bump Octokit from 7.1.0 to 9.0.0
+* Updated mapping to 4.46.0.1
 ### Deprecated
 ### Removed
 ### Fixed
