@@ -27,7 +27,7 @@ file from the [lastest MBINCompiler release](https://github.com/monkeyman192/MBI
 It will be downloaded to **download/mapping.json** (if no other path is set) and
 automatically used if present.
 
-The built-in mapping currently is `4.43.0.1`.
+The built-in mapping currently is `4.46.0.1`.
 
 ### Usage
 
