@@ -31,7 +31,7 @@ public static class Mapping
 
     #region Property
 
-    private static GitHubService GithubService => _githubService ??= new();
+    private static GitHubService GithubService => _githubService ??= new(); // { private get; }
 
     private static bool IsRunning => !_updateTask?.IsCompleted ?? false; // { private get; }
 
@@ -44,6 +44,11 @@ public static class Mapping
             _path = GetCombinedPath();
         }
     }
+
+    /// <summary>
+    /// Used mapping version. Either the built-in or downloaded one.
+    /// </summary>
+    public static Version Version => _jsonDownload?.Version ?? _jsonCompiler.Version; // { get; }
 
     #endregion
 
