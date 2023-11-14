@@ -1,8 +1,8 @@
 # libNOM.map
 
-![Maintained](https://img.shields.io/maintenance/yes/2023)
-[![.NET | Standard 2.0 - 2.1 | 6 - 7](https://img.shields.io/badge/.NET-Standard%202.0%20--%202.1%20%7C%206%20--%207-lightgrey)](https://dotnet.microsoft.com/en-us/)
-[![C# 11](https://img.shields.io/badge/C%23-11-lightgrey)](https://docs.microsoft.com/en-us/dotnet/csharp/)
+![Maintained](https://img.shields.io/maintenance/yes/2024)
+[![.NET | Standard 2.0 - 2.1 | 6 - 8](https://img.shields.io/badge/.NET-Standard%202.0%20--%202.1%20%7C%206%20--%208-lightgrey)](https://dotnet.microsoft.com/en-us/)
+[![C# 12](https://img.shields.io/badge/C%23-12-lightgrey)](https://docs.microsoft.com/en-us/dotnet/csharp/)
 [![Release](https://img.shields.io/github/v/release/zencq/libNOM.map?display_name=tag)](https://github.com/zencq/libNOM.map/releases/latest)
 [![NuGet](https://img.shields.io/nuget/v/libNOM.map)](https://www.nuget.org/packages/libNOM.map/)
 
