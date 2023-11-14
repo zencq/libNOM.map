@@ -7,7 +7,7 @@ namespace libNOM.map.Services;
 /// <summary>
 /// Specialized client for GitHub to download the mapping file.
 /// </summary>
-internal class GitHubService
+internal class GithubService
 {
     #region Field
 
@@ -26,7 +26,7 @@ internal class GitHubService
 
     // //
 
-    internal GitHubService() { }
+    internal GithubService() { }
 
     // //
 

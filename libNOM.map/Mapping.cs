@@ -13,14 +13,14 @@ public static class Mapping
 {
     #region Field
 
-    private static GitHubService? _githubService;
+    private static GithubService? _githubService;
     private static readonly MappingJson _jsonCompiler = MappingJson.Deserialize(Properties.Resources.MBINCompiler)!; // latest MBINCompiler mapping.json when this version was created
     private static MappingJson? _jsonDownload; // dynamic content from the latest MBINCompiler release on GitHub
     private static readonly MappingJson _jsonLegacy = MappingJson.Deserialize(Properties.Resources.Legacy)!; // older keys that are not present in the latest version
     private static readonly MappingJson _jsonWizard = MappingJson.Deserialize(Properties.Resources.SaveWizard)!; // adjust differing mapping of SaveWizard
     private static readonly ReaderWriterLockSlim _lock = new(LockRecursionPolicy.SupportsRecursion);
-    private static readonly Dictionary<string, string> _mapForDeobfuscation = new();
-    private static readonly Dictionary<string, string> _mapForObfuscation = new();
+    private static readonly Dictionary<string, string> _mapForDeobfuscation = [];
+    private static readonly Dictionary<string, string> _mapForObfuscation = [];
     private static MappingSettings _settings = new();
     private static Task? _updateTask;
 
@@ -31,7 +31,7 @@ public static class Mapping
 
     #region Property
 
-    private static GitHubService GithubService => _githubService ??= new(); // { private get; }
+    private static GithubService GithubService => _githubService ??= new(); // { private get; }
 
     private static bool IsRunning => !_updateTask?.IsCompleted ?? false; // { private get; }
 
@@ -213,7 +213,7 @@ public static class Mapping
         _lock.EnterWriteLock();
 
         // Create map if not done yet.
-        if (!_mapForDeobfuscation.Any() || !_mapForObfuscation.Any())
+        if (_mapForDeobfuscation.Count == 0 || _mapForObfuscation.Count == 0)
         {
             CreateMap();
         }

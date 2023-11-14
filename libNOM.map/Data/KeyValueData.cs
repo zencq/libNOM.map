@@ -9,22 +9,22 @@ namespace libNOM.map.Data;
 internal record class KeyValueData
 {
 #if NETSTANDARD2_0_OR_GREATER
-    [JsonProperty("Key")]
+    [JsonProperty(nameof(Key))]
     internal string Key { get; set; } = null!;
 
-    [JsonProperty("Value")]
+    [JsonProperty(nameof(Value))]
     internal string Value { get; set; } = null!;
 #elif NET6_0
-    [JsonProperty("Key")]
+    [JsonProperty(nameof(Key))]
     internal string Key { get; init; } = null!;
 
-    [JsonProperty("Value")]
+    [JsonProperty(nameof(Value))]
     internal string Value { get; init; } = null!;
 #else
-    [JsonProperty("Key")]
+    [JsonProperty(nameof(Key))]
     internal required string Key { get; init; }
 
-    [JsonProperty("Value")]
+    [JsonProperty(nameof(Value))]
     internal required string Value { get; init; }
 #endif
 }
