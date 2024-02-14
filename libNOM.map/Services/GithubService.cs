@@ -1,4 +1,5 @@
 ﻿using Octokit;
+
 using System.Reflection;
 
 namespace libNOM.map.Services;
@@ -34,14 +35,23 @@ internal class GithubService
     /// Downloads the lastet mapping file.
     /// This method does not block the calling thread.
     /// </summary>
+    /// <param name="prerelease"></param>
     /// <returns>File content as string.</returns>
-    internal async Task<string?> DownloadMappingJsonAsync()
+    internal async Task<string?> DownloadMappingJsonAsync(bool prerelease)
     {
         // Get the latest release from GitHub.
         Release release;
         try
         {
-            release = await GitHubClient.Repository.Release.GetLatest(Properties.Resources.REPO_OWNER, Properties.Resources.REPO_NAME);
+            // To include prereleases, use GetAll instead of GetLatest.
+            if (prerelease)
+            {
+                release = (await GitHubClient.Repository.Release.GetAll(Properties.Resources.REPO_OWNER, Properties.Resources.REPO_NAME))[0];
+            }
+            else
+            {
+                release = await GitHubClient.Repository.Release.GetLatest(Properties.Resources.REPO_OWNER, Properties.Resources.REPO_NAME);
+            }
         }
         catch (Exception ex) when (ex is HttpRequestException or RateLimitExceededException or TaskCanceledException) // Rate limit is 60 unauthenticated requests per hour.
         {

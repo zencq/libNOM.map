@@ -9,8 +9,10 @@ All notable changes to this project will be documented in this file. It uses the
 ### Added
 * Now targeting .NET 8 as per the [.NET release lifecycle](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
 * A version property for the used mapping (built-in or downloaded)
+* A new setting to decide whether prereleases should be included in the mapping updates
 ### Changed
-* Bump Octokit from 7.1.0 to 9.0.0
+* Include pre-release when updating from the [latest MBINCompiler release](https://github.com/monkeyman192/MBINCompiler/releases)
+* Bump Octokit from 7.1.0 to 9.1.2
 * Updated mapping to 4.46.0.1
 ### Deprecated
 ### Removed
@@ -145,4 +147,4 @@ All notable changes to this project will be documented in this file. It uses the
 ### Added
 * Deobfuscate
 * Obfuscate
-* Update mapping by downloading from [lastest MBINCompiler release](https://github.com/monkeyman192/MBINCompiler/releases/latest)
+* Update mapping by downloading from [latest MBINCompiler release](https://github.com/monkeyman192/MBINCompiler/releases/latest)

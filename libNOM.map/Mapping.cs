@@ -1,6 +1,7 @@
 ﻿using libNOM.map.Data;
 using libNOM.map.Extensions;
 using libNOM.map.Services;
+
 using Newtonsoft.Json.Linq;
 
 namespace libNOM.map;
@@ -298,7 +299,7 @@ public static class Mapping
     /// <returns>Whether a newer version of the mapping file was successfully downloaded.</returns>
     private static async Task<bool> GetJsonDownloadAsync()
     {
-        var content = await GithubService.DownloadMappingJsonAsync();
+        var content = await GithubService.DownloadMappingJsonAsync(_settings.IncludePrerelease);
         if (string.IsNullOrEmpty(content))
             return false;
 
