@@ -13,7 +13,7 @@ All notable changes to this project will be documented in this file. It uses the
 ### Changed
 * Include pre-release when updating from the [latest MBINCompiler release](https://github.com/monkeyman192/MBINCompiler/releases)
 * Bump Octokit from 7.1.0 to 9.1.2
-* Updated mapping to 4.46.0.1
+* Updated mapping to 4.49.0.2
 ### Deprecated
 ### Removed
 ### Fixed
