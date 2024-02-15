@@ -83,6 +83,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           body_path: ./.github/changelogs/${{ github.ref_name }}.md
-          files: ./libNOM.map.*nupkg
+          files: ./libNOM.map/bin/Release/libNOM.map.*nupkg
       - name: Publish
         run: dotnet nuget push ./libNOM.map/bin/Release/libNOM.map.*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
