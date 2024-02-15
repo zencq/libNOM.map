@@ -173,7 +173,7 @@ public static class Mapping
     /// <param name="node">A node within a JSON object or the root itself.</param>
     /// <returns>List of unknown keys.</returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public static HashSet<string> Deobfuscate(JToken? node)
+    public static HashSet<string> Deobfuscate(JToken node)
     {
         EnsurePreconditions(node);
 
@@ -227,7 +227,7 @@ public static class Mapping
     /// Obfuscates JSON to make it readable by the game.
     /// </summary>
     /// <param name="node">A node within a JSON object or the root itself.</param>
-    public static void Obfuscate(JToken? node)
+    public static void Obfuscate(JToken node)
     {
         EnsurePreconditions(node);
 
