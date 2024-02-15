@@ -7,6 +7,15 @@ All notable changes to this project will be documented in this file. It uses the
 ## Unreleased
 
 ### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+
+## 0.10.0 (2024-02-15)
+
+### Added
 * Now targeting .NET 8 as per the [.NET release lifecycle](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
 * A version property for the used mapping (built-in or downloaded)
 * A new setting to decide whether pre-releases should be included in the mapping updates
