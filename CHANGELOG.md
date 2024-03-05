@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file. It uses the
 
 ## Unreleased
 
+### Known Issues
 ### Added
 ### Changed
 ### Deprecated
