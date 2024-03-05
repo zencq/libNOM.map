@@ -1,6 +1,6 @@
-﻿using Octokit;
+﻿using System.Reflection;
 
-using System.Reflection;
+using Octokit;
 
 namespace libNOM.map.Services;
 
@@ -39,38 +39,23 @@ internal class GithubService
     /// <returns>File content as string.</returns>
     internal async Task<string?> DownloadMappingJsonAsync(bool prerelease)
     {
-        // Get the latest release from GitHub.
-        Release release;
         try
         {
-            // To include prereleases, use GetAll instead of GetLatest.
-            if (prerelease)
-            {
-                release = (await GitHubClient.Repository.Release.GetAll(Properties.Resources.REPO_OWNER, Properties.Resources.REPO_NAME))[0];
-            }
-            else
-            {
-                release = await GitHubClient.Repository.Release.GetLatest(Properties.Resources.REPO_OWNER, Properties.Resources.REPO_NAME);
-            }
-        }
-        catch (Exception ex) when (ex is HttpRequestException or RateLimitExceededException or TaskCanceledException) // Rate limit is 60 unauthenticated requests per hour.
-        {
-            return null;
-        }
+            // Get the latest release from GitHub. To include prereleases, use GetAll instead of GetLatest.
+            var release = prerelease
+                ? (await GitHubClient.Repository.Release.GetAll(Properties.Resources.REPO_OWNER, Properties.Resources.REPO_NAME, new() { PageCount = 1, PageSize = 1 }))[0] // only get one as we only need the latest
+                : (await GitHubClient.Repository.Release.GetLatest(Properties.Resources.REPO_OWNER, Properties.Resources.REPO_NAME));
 
-        // Find the asset to download.
-        ReleaseAsset? result = release.Assets.FirstOrDefault(i => i.Name.Equals(Properties.Resources.RELEASE_ASSET));
-        if (result is null)
-            return null;
+            // Get the asset to download. We assume that it exists, as it is very unlikely to change in the foreseeable future.
+            var result = release.Assets.First(Properties.Resources.RELEASE_ASSET.Equals);
 
-        // Download the asset from GitHub.
-        try
-        {
-            using HttpResponseMessage response = await HttpClient.GetAsync(result.BrowserDownloadUrl);
+            // Download the asset from GitHub.
+            using var response = await HttpClient.GetAsync(result.BrowserDownloadUrl);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         }
-        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+        // Rate limit is 60 unauthenticated requests per hour.
+        catch (Exception ex) when (ex is HttpRequestException or RateLimitExceededException)
         {
             return null;
         }
