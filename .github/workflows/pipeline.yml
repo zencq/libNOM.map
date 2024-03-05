@@ -31,7 +31,7 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: ${{ runner.os }}-nuget-
       - name: Unit Test
-        run: dotnet test libNOM.test --collect:"XPlat Code Coverage" --configuration Debug --framework ${{ matrix.framwork }}
+        run: dotnet test libNOM.test --configuration Debug --framework ${{ matrix.framwork }}
   build:
     name: Build
     runs-on: ubuntu-latest

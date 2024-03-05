@@ -6,8 +6,8 @@
 [![Release](https://img.shields.io/github/v/release/zencq/libNOM.map?display_name=tag)](https://github.com/zencq/libNOM.map/releases/latest)
 [![NuGet](https://img.shields.io/nuget/v/libNOM.map)](https://www.nuget.org/packages/libNOM.map/)
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/859a1d289e75d936c40f/maintainability)](https://codeclimate.com/github/zencq/libNOM.map/maintainability)
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/zencq/libNOM.map/pipeline.yml)](https://github.com/zencq/libNOM.map/actions/workflows/pipeline.yml)
+[![Maintainability](https://api.codeclimate.com/v1/badges/859a1d289e75d936c40f/maintainability)](https://codeclimate.com/github/zencq/libNOM.map/maintainability)
 
 ## Introduction
 
