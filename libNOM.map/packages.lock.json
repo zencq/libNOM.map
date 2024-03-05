@@ -29,9 +29,9 @@
       },
       "Octokit": {
         "type": "Direct",
-        "requested": "[9.1.2, )",
-        "resolved": "9.1.2",
-        "contentHash": "YKh5EYi+b2mV8eafANJkkZKKBCpI2MNPeSCTlKLYWqVGktOn/TBc7NZEcViPMSNw6R+glgmbkOetLc6LuNK5qQ=="
+        "requested": "[10.0.0, )",
+        "resolved": "10.0.0",
+        "contentHash": "PHUXVZwE0C2wW9Slkfvw85YNr+uPvLKDgnmxVOzDds+jsv7TgTW9GiGNs4ENYKx1vHfZuH2/VmUlJ9W6GKfDSA=="
       },
       "Microsoft.Build.Tasks.Git": {
         "type": "Transitive",
@@ -68,9 +68,9 @@
       },
       "Octokit": {
         "type": "Direct",
-        "requested": "[9.1.2, )",
-        "resolved": "9.1.2",
-        "contentHash": "YKh5EYi+b2mV8eafANJkkZKKBCpI2MNPeSCTlKLYWqVGktOn/TBc7NZEcViPMSNw6R+glgmbkOetLc6LuNK5qQ=="
+        "requested": "[10.0.0, )",
+        "resolved": "10.0.0",
+        "contentHash": "PHUXVZwE0C2wW9Slkfvw85YNr+uPvLKDgnmxVOzDds+jsv7TgTW9GiGNs4ENYKx1vHfZuH2/VmUlJ9W6GKfDSA=="
       },
       "Microsoft.Build.Tasks.Git": {
         "type": "Transitive",
@@ -102,9 +102,9 @@
       },
       "Octokit": {
         "type": "Direct",
-        "requested": "[9.1.2, )",
-        "resolved": "9.1.2",
-        "contentHash": "YKh5EYi+b2mV8eafANJkkZKKBCpI2MNPeSCTlKLYWqVGktOn/TBc7NZEcViPMSNw6R+glgmbkOetLc6LuNK5qQ=="
+        "requested": "[10.0.0, )",
+        "resolved": "10.0.0",
+        "contentHash": "PHUXVZwE0C2wW9Slkfvw85YNr+uPvLKDgnmxVOzDds+jsv7TgTW9GiGNs4ENYKx1vHfZuH2/VmUlJ9W6GKfDSA=="
       },
       "Microsoft.Build.Tasks.Git": {
         "type": "Transitive",
@@ -136,9 +136,9 @@
       },
       "Octokit": {
         "type": "Direct",
-        "requested": "[9.1.2, )",
-        "resolved": "9.1.2",
-        "contentHash": "YKh5EYi+b2mV8eafANJkkZKKBCpI2MNPeSCTlKLYWqVGktOn/TBc7NZEcViPMSNw6R+glgmbkOetLc6LuNK5qQ=="
+        "requested": "[10.0.0, )",
+        "resolved": "10.0.0",
+        "contentHash": "PHUXVZwE0C2wW9Slkfvw85YNr+uPvLKDgnmxVOzDds+jsv7TgTW9GiGNs4ENYKx1vHfZuH2/VmUlJ9W6GKfDSA=="
       },
       "Microsoft.Build.Tasks.Git": {
         "type": "Transitive",
@@ -170,9 +170,9 @@
       },
       "Octokit": {
         "type": "Direct",
-        "requested": "[9.1.2, )",
-        "resolved": "9.1.2",
-        "contentHash": "YKh5EYi+b2mV8eafANJkkZKKBCpI2MNPeSCTlKLYWqVGktOn/TBc7NZEcViPMSNw6R+glgmbkOetLc6LuNK5qQ=="
+        "requested": "[10.0.0, )",
+        "resolved": "10.0.0",
+        "contentHash": "PHUXVZwE0C2wW9Slkfvw85YNr+uPvLKDgnmxVOzDds+jsv7TgTW9GiGNs4ENYKx1vHfZuH2/VmUlJ9W6GKfDSA=="
       },
       "Microsoft.Build.Tasks.Git": {
         "type": "Transitive",

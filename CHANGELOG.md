@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file. It uses the
 ### Known Issues
 ### Added
 ### Changed
+* Bump Octokit from 9.1.2 to 10.0.0
 ### Deprecated
 ### Removed
 ### Fixed
