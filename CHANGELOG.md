@@ -9,11 +9,18 @@ All notable changes to this project will be documented in this file. It uses the
 ### Known Issues
 ### Added
 ### Changed
-* Bump Octokit from 9.1.2 to 10.0.0
 ### Deprecated
 ### Removed
 ### Fixed
 ### Security
+
+## 0.10.1 (2024-03-10)
+
+### Added
+* Some legacy mappings
+
+### Changed
+* Bump Octokit from 9.1.2 to 10.0.0
 
 ## 0.10.0 (2024-02-15)
 
@@ -21,13 +28,10 @@ All notable changes to this project will be documented in this file. It uses the
 * Now targeting .NET 8 as per the [.NET release lifecycle](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
 * A version property for the used mapping (built-in or downloaded)
 * A new setting to decide whether pre-releases should be included in the mapping updates
+
 ### Changed
 * Bump Octokit from 7.1.0 to 9.1.2
 * Updated mapping to 4.50.0.1
-### Deprecated
-### Removed
-### Fixed
-### Security
 
 ## 0.9.2 (2023-09-05)
 
