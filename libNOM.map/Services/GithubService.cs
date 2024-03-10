@@ -47,7 +47,7 @@ internal class GithubService
                 : (await GitHubClient.Repository.Release.GetLatest(Properties.Resources.REPO_OWNER, Properties.Resources.REPO_NAME));
 
             // Get the asset to download. We assume that it exists, as it is very unlikely to change in the foreseeable future.
-            var result = release.Assets.First(Properties.Resources.RELEASE_ASSET.Equals);
+            var result = release.Assets.First(i => i.Name.Equals(Properties.Resources.RELEASE_ASSET));
 
             // Download the asset from GitHub.
             using var response = await HttpClient.GetAsync(result.BrowserDownloadUrl);
