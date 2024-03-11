@@ -22,34 +22,28 @@ public static class Mapping
     private static readonly ReaderWriterLockSlim _lock = new(LockRecursionPolicy.SupportsRecursion);
     private static readonly Dictionary<string, string> _mapForDeobfuscation = [];
     private static readonly Dictionary<string, string> _mapForObfuscation = [];
-    private static MappingSettings _settings = new();
     private static Task? _updateTask;
-
-    // Dependencies
-    private static string _path = GetCombinedPath();
 
     #endregion
 
     #region Property
 
+    // public //
+
+    public static MappingSettings Settings { get; set; } = new();
+
+    /// <summary>
+    /// Used mapping version. Either the downloaded one if exists or built-in.
+    /// </summary>
+    public static Version Version => _jsonDownload?.Version ?? _jsonCompiler.Version; // { get; }
+
+    // private
+
+    private static string CombinedPath => Path.Combine(Path.GetFullPath(Settings.DownloadDirectory), Properties.Resources.RELEASE_ASSET);
+
     private static GithubService GithubService => _githubService ??= new(); // { private get; }
 
     private static bool IsRunning => !_updateTask?.IsCompleted ?? false; // { private get; }
-
-    public static MappingSettings Settings // { get; set; }
-    {
-        get => _settings;
-        set
-        {
-            _settings = value;
-            _path = GetCombinedPath();
-        }
-    }
-
-    /// <summary>
-    /// Used mapping version. Either the built-in or downloaded one.
-    /// </summary>
-    public static Version Version => _jsonDownload?.Version ?? _jsonCompiler.Version; // { get; }
 
     #endregion
 
@@ -69,11 +63,10 @@ public static class Mapping
         AddToMap(_jsonLegacy, true, true);
         AddToMap(_jsonWizard, true, false);
 
-        if (_jsonDownload is null && File.Exists(_path))
-        {
-            _jsonDownload = MappingJson.Deserialize(File.ReadAllText(_path));
-        }
-        // Apply additional mapping but keep those that might have become outdated by always adding _jsonCompiler.
+        if (_jsonDownload is null && File.Exists(CombinedPath))
+            _jsonDownload = MappingJson.Deserialize(File.ReadAllText(CombinedPath));
+
+        // Apply additional mapping but keep those that might have become outdated by always adding _jsonCompiler above.
         if (_jsonDownload?.Version > _jsonCompiler.Version)
         {
             AddToMap(_jsonDownload, true, true);
@@ -92,28 +85,16 @@ public static class Mapping
         {
             // Set it this way to avoid conflicts if adding JsonDownload.
             if (deobfuscate)
-            {
                 _mapForDeobfuscation[pair.Key] = pair.Value;
-            }
+
             if (obfuscate)
-            {
                 _mapForObfuscation[pair.Value] = pair.Key;
-            }
         }
     }
 
     #endregion
 
     #region Getter
-
-    /// <summary>
-    /// Combines the download path from the settings with the filename.
-    /// </summary>
-    /// <returns></returns>
-    private static string GetCombinedPath()
-    {
-        return Path.Combine(Path.GetFullPath(_settings.Download), Properties.Resources.RELEASE_ASSET);
-    }
 
     /// <summary>
     /// Iterates over all JSON properties to collect a list for deobfuscation.
@@ -126,6 +107,7 @@ public static class Mapping
         if (token.Type == JTokenType.Property)
         {
             var property = (JProperty)(token);
+
             if (_mapForDeobfuscation.ContainsKey(property.Name))
             {
                 jProperties.Add(property);
@@ -136,10 +118,9 @@ public static class Mapping
                 unknownKeys.Add(property.Name);
             }
         }
+
         foreach (var child in token.Children().Where(i => i.HasValues))
-        {
             GetPropertiesToDeobfuscate(child, jProperties, unknownKeys);
-        }
     }
 
     /// <summary>
@@ -152,15 +133,15 @@ public static class Mapping
         if (token.Type == JTokenType.Property)
         {
             var property = (JProperty)(token);
+
             if (_mapForObfuscation.ContainsKey(property.Name))
             {
                 jProperties.Add(property);
             }
         }
+
         foreach (var child in token.Children().Where(i => i.HasValues))
-        {
             GetPropertiesToObfuscate(child, jProperties);
-        }
     }
 
     #endregion
@@ -182,15 +163,11 @@ public static class Mapping
 
         // Collect all jProperties that need to be renamed.
         foreach (var child in node!.Children().Where(i => i.HasValues))
-        {
             GetPropertiesToDeobfuscate(child, jProperties, unknownKeys);
-        }
 
         // Actually rename each jProperty.
         foreach (var jProperty in jProperties)
-        {
             jProperty.Rename(_mapForDeobfuscation[jProperty.Name]);
-        }
 
         return unknownKeys;
     }
@@ -215,10 +192,9 @@ public static class Mapping
 
         // Create map if not done yet.
         if (_mapForDeobfuscation.Count == 0 || _mapForObfuscation.Count == 0)
-        {
             CreateMap();
-        }
 
+        // Release lock if necessary.
         if (_lock.IsWriteLockHeld)
             _lock.ExitWriteLock();
     }
@@ -235,15 +211,11 @@ public static class Mapping
 
         // Collect all jProperties that need to be renamed.
         foreach (var child in node!.Children().Where(i => i.HasValues))
-        {
             GetPropertiesToObfuscate(child, jProperties);
-        }
 
         // Actually rename each jProperty.
         foreach (var jProperty in jProperties)
-        {
             jProperty.Rename(_mapForObfuscation[jProperty.Name]);
-        }
     }
 
     #endregion
@@ -299,18 +271,18 @@ public static class Mapping
     /// <returns>Whether a newer version of the mapping file was successfully downloaded.</returns>
     private static async Task<bool> GetJsonDownloadAsync()
     {
-        var content = await GithubService.DownloadMappingJsonAsync(_settings.IncludePrerelease);
+        var content = await GithubService.DownloadMappingJsonAsync(Settings.IncludePrerelease);
         if (string.IsNullOrEmpty(content))
             return false;
 
-        Directory.CreateDirectory(new FileInfo(_path).DirectoryName!);
+        Directory.CreateDirectory(new FileInfo(CombinedPath).DirectoryName!);
         // File does not matter until next startup and therefore no need to wait.
         try
         {
 #if NETSTANDARD2_0
-            _ = Task.Run(() => File.WriteAllText(_path, content));
+            _ = Task.Run(() => File.WriteAllText(CombinedPath, content));
 #else
-            _ = File.WriteAllTextAsync(_path, content);
+            _ = File.WriteAllTextAsync(CombinedPath, content);
 #endif
         }
         catch (IOException) { } // Try again next time.
