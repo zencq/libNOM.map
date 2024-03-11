@@ -251,7 +251,7 @@ public static class Mapping
     #region Update
 
     /// <summary>
-    /// Downloads the lastet mapping file and updates the maps.
+    /// Downloads the latest mapping file and updates the maps.
     /// </summary>
     /// <returns>Whether a newer version of the mapping file was successfully downloaded.</returns>
     public static bool Update()
@@ -273,7 +273,7 @@ public static class Mapping
     }
 
     /// <summary>
-    /// Downloads the lastet mapping file and updates the maps.
+    /// Downloads the latest mapping file and updates the maps.
     /// This method does not block the calling thread.
     /// </summary>
     public static void UpdateAsync()
@@ -293,7 +293,7 @@ public static class Mapping
     }
 
     /// <summary>
-    /// Downloads the lastet mapping file and persists it to a file.
+    /// Downloads the latest mapping file and persists it to a file.
     /// This method does not block the calling thread.
     /// </summary>
     /// <returns>Whether a newer version of the mapping file was successfully downloaded.</returns>
