@@ -19,9 +19,11 @@ public class DeobfuscateTest
         var jsonObject = JsonConvert.DeserializeObject(Properties.Resources.compiler_375_obfuscated) as JObject;
 
         // Act
-        _ = Mapping.Deobfuscate(jsonObject!);
+        var unknownKeys = Mapping.Deobfuscate(jsonObject!);
 
         // Assert
+        Assert.Equals(0, unknownKeys.Count);
+
         var actual = JsonConvert.SerializeObject(jsonObject);
         Assert.AreEqual(expected, actual, "Compiler not deobfuscated correctly");
     }
@@ -34,9 +36,11 @@ public class DeobfuscateTest
         var jsonObject = JsonConvert.DeserializeObject(Properties.Resources.legay_350_obfuscated) as JObject;
 
         // Act
-        _ = Mapping.Deobfuscate(jsonObject!);
+        var unknownKeys = Mapping.Deobfuscate(jsonObject!);
 
         // Assert
+        Assert.Equals(0, unknownKeys.Count);
+
         var actual = JsonConvert.SerializeObject(jsonObject);
         Assert.AreEqual(expected, actual, "Legacy not deobfuscated correctly");
     }
@@ -49,9 +53,11 @@ public class DeobfuscateTest
         var jsonObject = JsonConvert.DeserializeObject(Properties.Resources.wizard_362_original) as JObject;
 
         // Act
-        _ = Mapping.Deobfuscate(jsonObject!);
+        var unknownKeys = Mapping.Deobfuscate(jsonObject!);
 
         // Assert
+        Assert.Equals(0, unknownKeys.Count);
+
         var actual = JsonConvert.SerializeObject(jsonObject);
         Assert.AreEqual(expected, actual, "Wizard not deobfuscated correctly");
     }
