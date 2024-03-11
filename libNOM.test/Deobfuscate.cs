@@ -22,7 +22,7 @@ public class DeobfuscateTest
         var unknownKeys = Mapping.Deobfuscate(jsonObject!);
 
         // Assert
-        Assert.Equals(0, unknownKeys.Count);
+        Assert.AreEqual(0, unknownKeys.Count);
 
         var actual = JsonConvert.SerializeObject(jsonObject);
         Assert.AreEqual(expected, actual, "Compiler not deobfuscated correctly");
@@ -39,7 +39,7 @@ public class DeobfuscateTest
         var unknownKeys = Mapping.Deobfuscate(jsonObject!);
 
         // Assert
-        Assert.Equals(0, unknownKeys.Count);
+        Assert.AreEqual(0, unknownKeys.Count);
 
         var actual = JsonConvert.SerializeObject(jsonObject);
         Assert.AreEqual(expected, actual, "Legacy not deobfuscated correctly");
@@ -56,7 +56,7 @@ public class DeobfuscateTest
         var unknownKeys = Mapping.Deobfuscate(jsonObject!);
 
         // Assert
-        Assert.Equals(0, unknownKeys.Count);
+        Assert.AreEqual(0, unknownKeys.Count);
 
         var actual = JsonConvert.SerializeObject(jsonObject);
         Assert.AreEqual(expected, actual, "Wizard not deobfuscated correctly");
