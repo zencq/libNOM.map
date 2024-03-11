@@ -1,14 +1,17 @@
 # CHANGELOG
 
 All notable changes to this project will be documented in this file. It uses the
-[Keep a Changelog](http://keepachangelog.com/en/1.0.0/) principles and
-[Semantic Versioning](https://semver.org/).
+[Keep a Changelog](http://keepachangelog.com/en/1.0.0/) principles and [Semantic Versioning](https://semver.org/)
+since 1.0.0.
 
-## Unreleased
+## Unreleased (0.11.0)
 
 ### Known Issues
 ### Added
+* Some legacy mappings for account data
 ### Changed
+* Renamed `Download` setting to `DownloadDirectory` to improve clarity
+* Settings now have `{ get; set; }` for all targets
 ### Deprecated
 ### Removed
 ### Fixed
@@ -20,28 +23,30 @@ All notable changes to this project will be documented in this file. It uses the
 * Some legacy mappings
 
 ### Changed
-* Bump Octokit from 9.1.2 to 10.0.0
+* Bump *Octokit* from 9.1.2 to 10.0.0
 
 ## 0.10.0 (2024-02-15)
 
 ### Added
 * Now targeting .NET 8 as per the [.NET release lifecycle](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
-* A version property for the used mapping (built-in or downloaded)
-* A new setting to decide whether pre-releases should be included in the mapping updates
+* A `Version` property for the used mapping (downloaded if exists or built-in)
+* A new setting `IncludePrerelease` to decide whether pre-releases should be included
+  in the mapping updates
 
 ### Changed
-* Bump Octokit from 7.1.0 to 9.1.2
+* Bump *Octokit* from 7.1.0 to 9.1.2
 * Updated mapping to 4.50.0.1
 
 ## 0.9.2 (2023-09-05)
 
 ### Changed
-* Bump Octokit from 6.0.0 to 7.1.0
+* Bump *Octokit* from 6.0.0 to 7.1.0
 * Updated mapping to 4.43.0.1
 
 ### Fixed
 * A crash if creating the map in multiple threads simultaneously
-* A crash if downloading the latest mapping file does not work due to connection issues
+* A crash if downloading the latest mapping file does not work due to connection
+  issues
 
 ## 0.9.1 (2023-06-22)
 
@@ -58,7 +63,7 @@ All notable changes to this project will be documented in this file. It uses the
 * Updated mapping to 4.12.1.1
 
 ### Fixed
-* Crash if mapping.json file is in use
+* Crash if *mapping.json* file is in use
 
 ## 0.8.3 (2022-10-21)
 
@@ -76,7 +81,7 @@ All notable changes to this project will be documented in this file. It uses the
 ## 0.8.1 (2022-08-10)
 
 ### Changed
-* Now targeting .NET Standard 2.x and supported versions in the [.NET release lifecycle](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
+* Now targeting .NET Standard 2.x and currently supported versions in the [.NET release lifecycle](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
 * Updated mapping to 3.98.0.5
 
 ## 0.8.0 (2022-07-25)
@@ -90,7 +95,7 @@ All notable changes to this project will be documented in this file. It uses the
 ## 0.7.0 (2022-05-03)
 
 ### Changed
-* Renamed some settings
+* Renamed `PathDownload` setting to `Download`
 
 ## 0.6.2 (2022-05-02)
 
@@ -103,7 +108,8 @@ All notable changes to this project will be documented in this file. It uses the
 ## 0.6.1 (2022-04-27)
 
 ### Fixed
-* Crash when GitHub rate limit (60 requests per hour for unauthenticated requests) is exceeded
+* Crash when GitHub rate limit (60 requests per hour for unauthenticated requests)
+  is exceeded
 
 ## 0.6.0 (2022-04-05)
 
@@ -138,7 +144,7 @@ All notable changes to this project will be documented in this file. It uses the
 ## 0.3.0 (2022-02-20)
 
 ### Added
-* MappingSettings
+* `MappingSettings`
 
 ## 0.2.1 (2022-01-08)
 
@@ -148,7 +154,7 @@ All notable changes to this project will be documented in this file. It uses the
 ## 0.2.0 (2022-01-03)
 
 ### Added
-* UpdateAsync
+* `UpdateAsync`
 
 ## 0.1.1 (2021-12-28)
 
@@ -159,6 +165,6 @@ All notable changes to this project will be documented in this file. It uses the
 ## 0.1.0 (2021-12-27)
 
 ### Added
-* Deobfuscate
-* Obfuscate
+* `Deobfuscate`
+* `Obfuscate`
 * Update mapping by downloading from [latest MBINCompiler release](https://github.com/monkeyman192/MBINCompiler/releases/latest)
