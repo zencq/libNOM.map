@@ -24,7 +24,7 @@ is just a simple call.
 
 Not only the latest mapping is supported but also legacy keys that are gone in a
 game version after **Beyond 2.11**. It is also possible to download an updated mapping
-file from the [lastest MBINCompiler release](https://github.com/monkeyman192/MBINCompiler/releases/latest).
+file from the [latest MBINCompiler release](https://github.com/monkeyman192/MBINCompiler/releases/latest).
 It will be downloaded to **download/mapping.json** (if no other path is set) and
 automatically used if present.
 

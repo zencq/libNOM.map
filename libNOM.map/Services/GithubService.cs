@@ -32,7 +32,7 @@ internal class GithubService
     // //
 
     /// <summary>
-    /// Downloads the lastet mapping file.
+    /// Downloads the latest mapping file.
     /// This method does not block the calling thread.
     /// </summary>
     /// <param name="prerelease"></param>

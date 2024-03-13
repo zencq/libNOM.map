@@ -4,7 +4,7 @@ namespace libNOM.map.Data;
 
 
 /// <summary>
-/// Holds data of a deserialized mapping.json file and a cuntion to retrieve them.
+/// Holds data of a deserialized mapping.json file and a function to retrieve them.
 /// </summary>
 internal record class MappingJson
 {
