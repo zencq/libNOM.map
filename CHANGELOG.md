@@ -4,18 +4,24 @@ All notable changes to this project will be documented in this file. It uses the
 [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) principles and [Semantic Versioning](https://semver.org/)
 since 1.0.0.
 
-## Unreleased (0.11.0)
+## Unreleased
 
 ### Known Issues
 ### Added
-* Some legacy mappings for account data
 ### Changed
-* Renamed `Download` setting to `DownloadDirectory` to improve clarity
-* Settings now have `{ get; set; }` for all targets
 ### Deprecated
 ### Removed
 ### Fixed
 ### Security
+
+## 0.11.0 (2024-03-13)
+
+### Added
+* Some legacy mappings for account data
+
+### Changed
+* Renamed `Download` setting to `DownloadDirectory` to improve clarity
+* Settings now have `{ get; set; }` for all targets
 
 ## 0.10.1 (2024-03-10)
 
