@@ -8,6 +8,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libNOM.test", "libNOM.test\libNOM.test.csproj", "{BDF92BED-3664-4630-950D-8D30A2447A58}"
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{68470A13-F82E-40B8-9146-2AD3D5E82CC1}"
 	ProjectSection(SolutionItems) = preProject
+		.codeclimate.yml = .codeclimate.yml
 		.editorconfig = .editorconfig
 		.exclusion.dic = .exclusion.dic
 	EndProjectSection
