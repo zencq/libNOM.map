@@ -15,19 +15,19 @@ internal record class MappingJson
     internal Version Version { get; set; } = null!;
 
     [JsonProperty("Mapping")]
-    internal KeyValueData[] Data { get; set; } = null!;
+    internal KeyValuePair<string, string>[] Data { get; set; } = null!;
 #elif NET6_0
     [JsonProperty("libMBIN_version")]
     internal Version Version { get; init; } = null!;
 
     [JsonProperty("Mapping")]
-    internal KeyValueData[] Data { get; init; } = null!;
+    internal KeyValuePair<string, string>[] Data { get; init; } = null!;
 #else
     [JsonProperty("libMBIN_version")]
     internal required Version Version { get; init; }
 
     [JsonProperty("Mapping")]
-    internal required KeyValueData[] Data { get; init; }
+    internal required KeyValuePair<string, string>[] Data { get; init; }
 #endif
 
     #endregion
