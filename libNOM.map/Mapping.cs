@@ -20,8 +20,12 @@ public static class Mapping
     private static readonly MappingJson _jsonLegacy = MappingJson.Deserialize(Properties.Resources.Legacy)!; // older keys that are not present in the latest version
     private static readonly MappingJson _jsonWizard = MappingJson.Deserialize(Properties.Resources.SaveWizard)!; // adjust differing mapping of SaveWizard
     private static readonly ReaderWriterLockSlim _lock = new(LockRecursionPolicy.SupportsRecursion);
+    private static readonly Dictionary<string, string> _mapForCommon = [];
+    private static readonly Dictionary<string, string> _mapForCommonAccount = [];
     private static readonly Dictionary<string, string> _mapForDeobfuscation = [];
+    private static readonly Dictionary<string, string> _mapForDeobfuscationAccount = [];
     private static readonly Dictionary<string, string> _mapForObfuscation = [];
+    private static readonly Dictionary<string, string> _mapForObfuscationAccount = [];
     private static Task? _updateTask;
 
     #endregion
@@ -56,21 +60,24 @@ public static class Mapping
     /// </summary>
     private static void CreateMap()
     {
+        _mapForCommon.Clear();
         _mapForDeobfuscation.Clear();
         _mapForObfuscation.Clear();
 
-        AddToMap(_jsonCompiler, true, true);
-        AddToMap(_jsonLegacy, true, true);
-        AddToMap(_jsonWizard, true, false);
+        _mapForCommonAccount.Clear();
+        _mapForDeobfuscationAccount.Clear();
+        _mapForObfuscationAccount.Clear();
+
+        AddToMap(_jsonCompiler, true, true, true);
+        AddToMap(_jsonLegacy, true, true, true);
+        AddToMap(_jsonWizard, true, false, false);
 
         if (_jsonDownload is null && File.Exists(CombinedPath))
             _jsonDownload = MappingJson.Deserialize(File.ReadAllText(CombinedPath));
 
         // Apply additional mapping but keep those that might have become outdated by always adding _jsonCompiler above.
         if (_jsonDownload?.Version > _jsonCompiler.Version)
-        {
-            AddToMap(_jsonDownload, true, true);
-        }
+            AddToMap(_jsonDownload, true, true, true);
     }
 
     /// <summary>
@@ -79,16 +86,54 @@ public static class Mapping
     /// <param name="mappingJson">Object of a deserialized file.</param>
     /// <param name="deobfuscate">Whether to add a pair to the deobfuscation map.</param>
     /// <param name="obfuscate">Whether to add a pair to the obfuscation map.</param>
-    private static void AddToMap(MappingJson mappingJson, bool deobfuscate, bool obfuscate)
+    private static void AddToMap(MappingJson mappingJson, bool deobfuscate, bool obfuscate, bool includeAccount)
     {
-        foreach (var pair in mappingJson.Data)
+        if (includeAccount)
         {
-            // Set it this way to avoid conflicts if adding JsonDownload.
-            if (deobfuscate)
-                _mapForDeobfuscation[pair.Key] = pair.Value;
+            var data = mappingJson.Data;
+            var dataAccount = mappingJson.Data;
+            var element = mappingJson.Data.Select((pair, Index) => (pair.Value, Index)).FirstOrDefault(i => i.Value.Equals("UserSettingsData")); // reverse as UserSettingsData is added last
 
-            if (obfuscate)
-                _mapForObfuscation[pair.Value] = pair.Key;
+            if (element.Value is not null) // only for _jsonCompiler
+            {
+#if NETSTANDARD2_0
+                data = mappingJson.Data.Take(element.Index).ToArray();
+                dataAccount = mappingJson.Data.Skip(element.Index).ToArray();
+#else
+                data = mappingJson.Data[..element.Index];
+                dataAccount = mappingJson.Data[element.Index..];
+#endif
+            }
+
+            AddToMap(data, deobfuscate, obfuscate, useAccount: false);
+            AddToMap(dataAccount, deobfuscate, obfuscate, useAccount: true);
+        }
+        else
+            AddToMap(mappingJson.Data, deobfuscate, obfuscate, useAccount: false);
+    }
+
+    private static void AddToMap(IEnumerable<KeyValuePair<string, string>> data, bool deobfuscate, bool obfuscate, bool useAccount)
+    {
+        foreach (var pair in data)
+        {
+            if (deobfuscate == obfuscate)
+            {
+                var mapForCommon = useAccount ? _mapForCommonAccount : _mapForCommon;
+                mapForCommon[pair.Key] = pair.Value;
+            }
+            else
+            {
+                if (deobfuscate)
+                {
+                    var mapForDeobfuscation = useAccount ? _mapForDeobfuscationAccount : _mapForDeobfuscation;
+                    mapForDeobfuscation[pair.Key] = pair.Value;
+                }
+                if (obfuscate)
+                {
+                    var mapForObfuscation = useAccount ? _mapForObfuscationAccount : _mapForObfuscation;
+                    mapForObfuscation[pair.Key] = pair.Value;
+                }
+            }
         }
     }
 
@@ -102,25 +147,25 @@ public static class Mapping
     /// <param name="token">Current property that should be deobfuscated.</param>
     /// <param name="jProperties">List of properties that need to be deobfuscated.</param>
     /// <param name="unknownKeys">List of keys that cannot be deobfuscated.</param>
-    private static void GetPropertiesToDeobfuscate(JToken token, List<JProperty> jProperties, HashSet<string> unknownKeys)
+    private static void GetPropertiesToDeobfuscate(JToken token, List<JProperty> jProperties, Dictionary<string, string> mapForDeobfuscation, HashSet<string> unknownKeys)
     {
         if (token.Type == JTokenType.Property)
         {
             var property = (JProperty)(token);
 
-            if (_mapForDeobfuscation.ContainsKey(property.Name))
+            if (mapForDeobfuscation.ContainsKey(property.Name))
             {
                 jProperties.Add(property);
             }
             // Only add if it is not a target value as well.
-            else if (!_mapForDeobfuscation.ContainsValue(property.Name))
+            else if (!mapForDeobfuscation.ContainsValue(property.Name))
             {
                 unknownKeys.Add(property.Name);
             }
         }
 
         foreach (var child in token.Children().Where(i => i.HasValues))
-            GetPropertiesToDeobfuscate(child, jProperties, unknownKeys);
+            GetPropertiesToDeobfuscate(child, jProperties, mapForDeobfuscation, unknownKeys);
     }
 
     /// <summary>
@@ -128,46 +173,51 @@ public static class Mapping
     /// </summary>
     /// <param name="token">Current property that should be obfuscated.</param>
     /// <param name="jProperties">List of properties that need to be obfuscated.</param>
-    private static void GetPropertiesToObfuscate(JToken token, List<JProperty> jProperties)
+    private static void GetPropertiesToObfuscate(JToken token, List<JProperty> jProperties, Dictionary<string, string> mapForObfuscation)
     {
         if (token.Type == JTokenType.Property)
         {
             var property = (JProperty)(token);
 
-            if (_mapForObfuscation.ContainsKey(property.Name))
+            if (mapForObfuscation.ContainsKey(property.Name))
             {
                 jProperties.Add(property);
             }
         }
 
         foreach (var child in token.Children().Where(i => i.HasValues))
-            GetPropertiesToObfuscate(child, jProperties);
+            GetPropertiesToObfuscate(child, jProperties, mapForObfuscation);
     }
 
     #endregion
 
     #region Mapping
 
+    /// <inheritdoc cref="Deobfuscate(JToken, bool)"/>
+    public static HashSet<string> Deobfuscate(JToken node) => Deobfuscate(node, false);
+
     /// <summary>
     /// Deobfuscates JSON to make it human-readable.
     /// </summary>
     /// <param name="node">A node within a JSON object or the root itself.</param>
+    /// <param name="useAccount"></param>
     /// <returns>List of unknown keys.</returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public static HashSet<string> Deobfuscate(JToken node)
+    public static HashSet<string> Deobfuscate(JToken node, bool useAccount)
     {
         EnsurePreconditions(node);
 
         var jProperties = new List<JProperty>();
+        var mapForDeobfuscation = (useAccount ? _mapForCommonAccount.Concat(_mapForDeobfuscationAccount) : _mapForCommon.Concat(_mapForDeobfuscation)).ToDictionary(i => i.Key, i => i.Value);
         var unknownKeys = new HashSet<string>();
 
         // Collect all jProperties that need to be renamed.
-        foreach (var child in node!.Children().Where(i => i.HasValues))
-            GetPropertiesToDeobfuscate(child, jProperties, unknownKeys);
+        foreach (var child in node.Children().Where(i => i.HasValues))
+            GetPropertiesToDeobfuscate(child, jProperties, mapForDeobfuscation, unknownKeys);
 
         // Actually rename each jProperty.
         foreach (var jProperty in jProperties)
-            jProperty.Rename(_mapForDeobfuscation[jProperty.Name]);
+            jProperty.Rename(mapForDeobfuscation[jProperty.Name]);
 
         return unknownKeys;
     }
@@ -191,7 +241,7 @@ public static class Mapping
         _lock.EnterWriteLock();
 
         // Create map if not done yet.
-        if (_mapForDeobfuscation.Count == 0 || _mapForObfuscation.Count == 0)
+        if (_mapForCommon.Count == 0 || _mapForCommonAccount.Count == 0)
             CreateMap();
 
         // Release lock if necessary.
@@ -199,23 +249,28 @@ public static class Mapping
             _lock.ExitWriteLock();
     }
 
+    /// <inheritdoc cref="Obfuscate(JToken, bool)"/>
+    public static void Obfuscate(JToken node) => Obfuscate(node, false);
+
     /// <summary>
     /// Obfuscates JSON to make it readable by the game.
     /// </summary>
     /// <param name="node">A node within a JSON object or the root itself.</param>
-    public static void Obfuscate(JToken node)
+    /// <param name="useAccount"></param>
+    public static void Obfuscate(JToken node, bool useAccount)
     {
         EnsurePreconditions(node);
 
         var jProperties = new List<JProperty>();
+        var mapForObfuscation = (useAccount ? _mapForCommonAccount.Concat(_mapForObfuscationAccount) : _mapForCommon.Concat(_mapForObfuscation)).ToDictionary(i => i.Value, i => i.Key); // switch to have the origin as Key
 
         // Collect all jProperties that need to be renamed.
-        foreach (var child in node!.Children().Where(i => i.HasValues))
-            GetPropertiesToObfuscate(child, jProperties);
+        foreach (var child in node.Children().Where(i => i.HasValues))
+            GetPropertiesToObfuscate(child, jProperties, mapForObfuscation);
 
         // Actually rename each jProperty.
         foreach (var jProperty in jProperties)
-            jProperty.Rename(_mapForObfuscation[jProperty.Name]);
+            jProperty.Rename(mapForObfuscation[jProperty.Name]);
     }
 
     #endregion
