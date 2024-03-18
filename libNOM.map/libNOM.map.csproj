@@ -50,7 +50,7 @@
 
 	<!-- Package -->
 	<PropertyGroup Label="General">
-		<Version>0.11.0</Version>
+		<Version>0.12.0-beta.1</Version>
 		<Authors>cengelha</Authors>
 		<Description>Provides obfuscation and deobfuscation of save files from the game No Man's Sky.</Description>
 		<Copyright>Copyright (c) Christian Engelhardt 2021</Copyright>
