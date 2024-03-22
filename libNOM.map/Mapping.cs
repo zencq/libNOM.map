@@ -89,25 +89,8 @@ public static class Mapping
     private static void AddToMap(MappingJson mappingJson, bool deobfuscate, bool obfuscate, bool includeAccount)
     {
         if (includeAccount)
-        {
-            var data = mappingJson.Data;
-            var dataAccount = mappingJson.Data;
-            var element = mappingJson.Data.Select((pair, Index) => (pair.Value, Index)).FirstOrDefault(i => i.Value.Equals("UserSettingsData")); // reverse as UserSettingsData is added last
-
-            if (element.Value is not null) // only for _jsonCompiler
-            {
-#if NETSTANDARD2_0
-                data = mappingJson.Data.Take(element.Index).ToArray();
-                dataAccount = mappingJson.Data.Skip(element.Index).ToArray();
-#else
-                data = mappingJson.Data[..element.Index];
-                dataAccount = mappingJson.Data[element.Index..];
-#endif
-            }
-
-            AddToMap(data, deobfuscate, obfuscate, useAccount: false);
-            AddToMap(dataAccount, deobfuscate, obfuscate, useAccount: true);
-        }
+            foreach (var (data, useAccount) in mappingJson.Data.SplitAtElement("UserSettingsData"))
+                AddToMap(data, deobfuscate, obfuscate, useAccount);
         else
             AddToMap(mappingJson.Data, deobfuscate, obfuscate, useAccount: false);
     }
@@ -115,7 +98,6 @@ public static class Mapping
     private static void AddToMap(IEnumerable<KeyValuePair<string, string>> data, bool deobfuscate, bool obfuscate, bool useAccount)
     {
         foreach (var pair in data)
-        {
             if (deobfuscate == obfuscate)
             {
                 var mapForCommon = useAccount ? _mapForCommonAccount : _mapForCommon;
@@ -134,7 +116,6 @@ public static class Mapping
                     mapForObfuscation[pair.Key] = pair.Value;
                 }
             }
-        }
     }
 
     #endregion
