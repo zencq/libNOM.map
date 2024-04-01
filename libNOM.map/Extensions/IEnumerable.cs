@@ -18,6 +18,6 @@ internal static class IEnumerableExtensions
         }
         else
             for (var i = 0; i < 2; i++)
-                yield return (self, i != 0);
+                yield return (self, i != 0); // yields false and then true
     }
 }

@@ -47,7 +47,7 @@ public static class Mapping
 
     private static GithubService GithubService => _githubService ??= new(); // { private get; }
 
-    private static bool IsRunning => !_updateTask?.IsCompleted ?? false; // { private get; }
+    private static bool IsUpdateRunning => !_updateTask?.IsCompleted ?? false; // { private get; }
 
     #endregion
 
@@ -265,7 +265,7 @@ public static class Mapping
     public static bool Update()
     {
         var result = false;
-        if (!IsRunning)
+        if (!IsUpdateRunning)
         {
             _updateTask = Task.Run(async () =>
             {
@@ -287,7 +287,7 @@ public static class Mapping
     public static void UpdateAsync()
     {
         // No need to run if currently running.
-        if (IsRunning)
+        if (IsUpdateRunning)
             return;
 
         _updateTask = Task.Run(async () =>

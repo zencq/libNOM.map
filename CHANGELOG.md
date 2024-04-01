@@ -4,17 +4,24 @@ All notable changes to this project will be documented in this file. It uses the
 [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) principles and [Semantic Versioning](https://semver.org/)
 since 1.0.0.
 
-## Unreleased (0.12.0)
+## Unreleased
 
 ### Known Issues
 ### Added
-* `Deobfuscate` and `Obfuscate` have new overloads with the new parameter `useAccount`
 ### Changed
-* The mappings for account data and actual saves are now separated
 ### Deprecated
 ### Removed
 ### Fixed
 ### Security
+
+## 0.12.0 (2024-04-01)
+
+### Added
+* Some more legacy mappings
+* `Deobfuscate` and `Obfuscate` have new overloads with the new parameter `useAccount`
+
+### Changed
+* The mappings for account data and actual saves are now separated
 
 ## 0.11.0 (2024-03-13)
 
