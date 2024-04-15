@@ -7,6 +7,10 @@ on:
     branches: [ master ]
   create:
 
+env:
+  dotnet: 8.0.x
+  injection: ./libNOM.io/Properties/
+
 jobs:
   test:
     name: Test
@@ -20,7 +24,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: ${{ env.dotnet }}
           dotnet-quality: ga
       - name: Checkout
         uses: actions/checkout@v4
@@ -39,7 +43,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: ${{ env.dotnet }}
           dotnet-quality: ga
       - name: Checkout
         uses: actions/checkout@v4
@@ -51,29 +55,30 @@ jobs:
           restore-keys: ${{ runner.os }}-nuget-
       - name: Pack
         run: dotnet pack libNOM.map --configuration Release
-      - name: Upload
+      - name: Upload (NuGet)
         uses: actions/upload-artifact@v4
         with:
           name: NuGet
-          path: |
-            ./.github/changelogs/
-            ./libNOM.map/bin/Release/libNOM.map.*nupkg
+          path: ./libNOM.map/bin/Release/libNOM.map.*nupkg
+          if-no-files-found: error
+      - name: Upload (Release)
+        if: ${{ startsWith(github.ref, 'refs/tags/') }} # only if tagged
+        uses: actions/upload-artifact@v4
+        with:
+          name: Release
+          path: ./.github/changelogs/${{ github.ref_name }}.md
           if-no-files-found: error
   release:
     name: Release
+    if: ${{ startsWith(github.ref, 'refs/tags/') }} # only if tagged
     runs-on: ubuntu-latest
-    # Only if commit was tagged.
-    if: ${{ startsWith(github.ref, 'refs/tags/') }}
     needs: [test, build]
     steps:
       - name: Download
         uses: actions/download-artifact@v4
-        with:
-          name: NuGet
       - name: Version
-        run: echo "nupkg_version=$((((Get-Item -Path ./libNOM.map/bin/Release/libNOM.map.*.nupkg).Name -split '\.',3)[2] -split '\.',-2)[0])" >> $env:GITHUB_ENV
+        run: echo "nupkg_version=$((((Get-Item -Path ./NuGet/libNOM.map.*.nupkg).Name -split '\.',3)[2] -split '\.',-2)[0])" >> $env:GITHUB_ENV
         shell: pwsh
-      # Exit if version mismatch.
       - name: Mismatch
         if: ${{ github.ref_name != env.nupkg_version }}
         run: |
@@ -82,7 +87,7 @@ jobs:
       - name: Create
         uses: softprops/action-gh-release@v2
         with:
-          body_path: ./.github/changelogs/${{ github.ref_name }}.md
-          files: ./libNOM.map/bin/Release/libNOM.map.*nupkg
+          body_path: ./Release/${{ github.ref_name }}.md
+          files: ./NuGet/libNOM.map.*nupkg
       - name: Publish
-        run: dotnet nuget push ./libNOM.map/bin/Release/libNOM.map.*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
+        run: dotnet nuget push ./NuGet/libNOM.map.*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
