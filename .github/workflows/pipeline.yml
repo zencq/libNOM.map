@@ -9,7 +9,6 @@ on:
 
 env:
   dotnet: 8.0.x
-  injection: ./libNOM.io/Properties/
 
 jobs:
   test:
