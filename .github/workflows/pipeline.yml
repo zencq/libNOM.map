@@ -7,23 +7,20 @@ on:
     branches: [ master ]
   create:
 
-env:
-  dotnet: 8.0.x
-
 jobs:
   test:
     name: Test
     strategy:
       matrix:
         # November, 2024 / May, 2024 / November, 2026
-        framwork: [net6.0, net7.0, net8.0]
-        os: [windows-latest, macos-latest, ubuntu-latest]
+        framwork: [{dotnet: 'net6.0', version: '6.0.x'}, {dotnet: 'net7.0', version: '7.0.x'}, {dotnet: 'net8.0', version: '8.0.x'}]
+        os: ['windows-latest', 'macos-latest', 'ubuntu-latest']
     runs-on: ${{ matrix.os }}
     steps:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: ${{ env.dotnet }}
+          dotnet-version: ${{ matrix.framwork.version }}
           dotnet-quality: ga
       - name: Checkout
         uses: actions/checkout@v4
@@ -34,15 +31,19 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: ${{ runner.os }}-nuget-
       - name: Unit Test
-        run: dotnet test libNOM.test --configuration Debug --framework ${{ matrix.framwork }}
+        run: dotnet test libNOM.test --configuration Debug --framework ${{ matrix.framwork.dotnet }}
   build:
     name: Build
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        framwork: ['8.0.x'] # must match project file
+        os: ['ubuntu-latest']
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: ${{ env.dotnet }}
+          dotnet-version: ${{ matrix.framwork }}
           dotnet-quality: ga
       - name: Checkout
         uses: actions/checkout@v4
