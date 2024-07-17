@@ -308,13 +308,18 @@ public static class Mapping
     private static async Task<bool> GetJsonDownloadAsync()
     {
         var content = await GithubService.DownloadMappingJsonAsync(Settings.IncludePrerelease);
+
+        // Use an existing download file as fallback if it has not been loaded for some reason.
+        if (string.IsNullOrEmpty(content) && _jsonDownload is null && File.Exists(CombinedPath))
+            content = File.ReadAllText(CombinedPath);
+        // Exit if no content found.
         if (string.IsNullOrEmpty(content))
             return false;
 
-        Directory.CreateDirectory(new FileInfo(CombinedPath).DirectoryName!);
-        // File does not matter until next startup and therefore no need to wait.
+        Directory.CreateDirectory(Settings.DownloadDirectory);
         try
         {
+            // File does not matter until next startup and therefore no need to wait.
 #if NETSTANDARD2_0
             _ = Task.Run(() => File.WriteAllText(CombinedPath, content));
 #else

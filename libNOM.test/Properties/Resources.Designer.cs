@@ -97,6 +97,16 @@ namespace libNOM.test.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] mapping_46504_download {
+            get {
+                object obj = ResourceManager.GetObject("mapping_46504_download", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {&quot;Version&quot;:5159,&quot;Platform&quot;:&quot;PS4|Final&quot;,&quot;PlayerStateData&quot;:{&quot;UniverseAddress&quot;:{&quot;RealityIndex&quot;:0,&quot;GalacticAddress&quot;:{&quot;VoxelX&quot;:-1752,&quot;VoxelY&quot;:-3,&quot;VoxelZ&quot;:-381,&quot;SolarSystemIndex&quot;:106,&quot;PlanetIndex&quot;:4}},&quot;PreviousUniverseAddress&quot;:{&quot;RealityIndex&quot;:0,&quot;GalacticAddress&quot;:{&quot;VoxelX&quot;:0,&quot;VoxelY&quot;:0,&quot;VoxelZ&quot;:0,&quot;SolarSystemIndex&quot;:0,&quot;PlanetIndex&quot;:0}},&quot;HomeRealityIteration&quot;:0,&quot;Inventory&quot;:{&quot;Slots&quot;:[{&quot;Type&quot;:{&quot;InventoryType&quot;:&quot;Technology&quot;},&quot;Id&quot;:&quot;^JET1&quot;,&quot;Amount&quot;:1,&quot;MaxAmount&quot;:100,&quot;DamageFactor&quot;:0.0,&quot;FullyInstalled&quot;:true,&quot;Index&quot;:{&quot;X&quot;:0, [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string wizard_362_deobfuscated {
