@@ -10,6 +10,7 @@ since 1.0.0.
 ### Added
 ### Changed
 * Bump *Octokit* from 10.0.0 to 13.0.1
+* Updated mapping to 5.01.0.1
 ### Deprecated
 ### Removed
 ### Fixed
