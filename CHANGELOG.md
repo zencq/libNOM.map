@@ -14,7 +14,7 @@ since 1.0.0.
 ### Fixed
 ### Security
 
-## 0.12.1 (2024-07-21)
+## 0.12.1 (2024-07-22)
 
 ### Changed
 * Bump *Octokit* from 10.0.0 to 13.0.1
