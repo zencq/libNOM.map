@@ -309,28 +309,31 @@ public static class Mapping
     {
         var content = await GithubService.DownloadMappingJsonAsync(Settings.IncludePrerelease);
 
-        // Use an existing download file as fallback if it has not been loaded for some reason.
-        if (string.IsNullOrEmpty(content) && _jsonDownload is null && File.Exists(CombinedPath))
-            content = File.ReadAllText(CombinedPath);
-        // Exit if no content found.
-        if (string.IsNullOrEmpty(content))
-            return false;
+        // Use existing download file as fallback if it has not been loaded for some reason.
+        if (_jsonDownload is null && File.Exists(CombinedPath) && MappingJson.Deserialize(File.ReadAllText(CombinedPath)) is MappingJson existing && existing.Version > Version)
+            _jsonDownload = existing;
 
-        Directory.CreateDirectory(Settings.DownloadDirectory);
-        try
+        if (!string.IsNullOrEmpty(content) && MappingJson.Deserialize(content!) is MappingJson download && download.Version > Version)
         {
-            // File does not matter until next startup and therefore no need to wait.
+            // Write file only if downloaded mapping is newer than current one.
+            Directory.CreateDirectory(Settings.DownloadDirectory);
+            try
+            {
+                // File does not matter until next startup and therefore no need to wait.
 #if NETSTANDARD2_0
-            _ = Task.Run(() => File.WriteAllText(CombinedPath, content));
+                _ = Task.Run(() => File.WriteAllText(CombinedPath, content));
 #else
-            _ = File.WriteAllTextAsync(CombinedPath, content);
+                _ = File.WriteAllTextAsync(CombinedPath, content);
 #endif
+            }
+            catch (IOException) { } // Try again next time.
+
+            _jsonDownload = download;
+
+            return true;
         }
-        catch (IOException) { } // Try again next time.
 
-        _jsonDownload = MappingJson.Deserialize(content!);
-
-        return true;
+        return false;
     }
 
     #endregion
