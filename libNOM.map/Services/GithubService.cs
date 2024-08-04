@@ -19,15 +19,17 @@ internal class GithubService
 
     #region Property
 
-    private GitHubClient GitHubClient => _githubClient ??= new(new ProductHeaderValue(Assembly.GetExecutingAssembly().GetName().Name));
+    private GitHubClient GithubClient => _githubClient ??= new(new ProductHeaderValue(Assembly.GetExecutingAssembly().GetName().Name));
 
     private HttpClient HttpClient => _httpClient ??= new();
 
     #endregion
 
-    // //
+    #region Constructor
 
     internal GithubService() { }
+
+    #endregion
 
     // //
 
@@ -39,25 +41,28 @@ internal class GithubService
     /// <returns>File content as string.</returns>
     internal async Task<string?> DownloadMappingJsonAsync(bool prerelease)
     {
-        try
-        {
-            // Get the latest release from GitHub. To include prereleases, use GetAll instead of GetLatest.
-            var release = prerelease
-                ? (await GitHubClient.Repository.Release.GetAll(Properties.Resources.REPO_OWNER, Properties.Resources.REPO_NAME, new() { PageCount = 1, PageSize = 1 }))[0] // only get one as we only need the latest
-                : (await GitHubClient.Repository.Release.GetLatest(Properties.Resources.REPO_OWNER, Properties.Resources.REPO_NAME));
-
-            // Get the asset to download. We assume that it exists, as it is very unlikely to change in the foreseeable future.
-            var result = release.Assets.First(i => i.Name.Equals(Properties.Resources.RELEASE_ASSET));
-
-            // Download the asset from GitHub.
-            using var response = await HttpClient.GetAsync(result.BrowserDownloadUrl);
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadAsStringAsync();
-        }
         // Rate limit is 60 unauthenticated requests per hour.
-        catch (Exception ex) when (ex is HttpRequestException or RateLimitExceededException)
+        var rateLimit = await GetRateLimit();
+        if (rateLimit.Remaining > 0)
         {
-            return null;
+            try
+            {
+                // Get the latest release from GitHub. To include pre-releases, use GetAll instead of GetLatest.
+                var release = prerelease
+                    ? (await GithubClient.Repository.Release.GetAll(Properties.Resources.REPO_OWNER, Properties.Resources.REPO_NAME, new() { PageCount = 1, PageSize = 1 }))[0] // only get one as we only need the latest
+                    : (await GithubClient.Repository.Release.GetLatest(Properties.Resources.REPO_OWNER, Properties.Resources.REPO_NAME));
+
+                // Get the asset to download. We assume that it exists, as it is very unlikely to change in the foreseeable future.
+                var result = release.Assets.First(i => i.Name.Equals(Properties.Resources.RELEASE_ASSET));
+
+                // Download the asset from GitHub.
+                return await HttpClient.GetStringAsync(result.BrowserDownloadUrl);
+            }
+            catch (Exception ex) when (ex is HttpRequestException) { }
         }
+
+        return null;
     }
+
+    private async Task<RateLimit> GetRateLimit() => GithubClient.GetLastApiInfo()?.RateLimit ?? (await GithubClient.RateLimit.GetRateLimits()).Rate;
 }
