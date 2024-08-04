@@ -34,8 +34,6 @@ public static class Mapping
 
     // public //
 
-    public static MappingSettings Settings { get; set; } = new();
-
     /// <summary>
     /// Used mapping version. Either the downloaded one if exists or built-in.
     /// </summary>
@@ -43,11 +41,28 @@ public static class Mapping
 
     // private
 
-    private static string CombinedPath => Path.Combine(Path.GetFullPath(Settings.DownloadDirectory), Properties.Resources.RELEASE_ASSET);
+    private static string CombinedPath => Path.Combine(Path.GetFullPath(Settings.DownloadDirectory), Properties.Resources.RELEASE_ASSET); // { private get; }
 
     private static GithubService GithubService => _githubService ??= new(); // { private get; }
 
     private static bool IsUpdateRunning => !_updateTask?.IsCompleted ?? false; // { private get; }
+
+    private static MappingSettings Settings { get; set; } = new();
+
+    #endregion
+
+    #region Accessor
+
+    public static MappingSettings GetSettings() => Settings;
+
+    public static void SetSettings(MappingSettings settings)
+    {
+        Settings = settings;
+
+        // Check whether there is already a file in the new path.
+        if (File.Exists(CombinedPath))
+            ReloadExistingFile();
+    }
 
     #endregion
 
@@ -310,8 +325,7 @@ public static class Mapping
         var content = await GithubService.DownloadMappingJsonAsync(Settings.IncludePrerelease);
 
         // Use existing download file as fallback if it has not been loaded for some reason.
-        if (_jsonDownload is null && File.Exists(CombinedPath) && MappingJson.Deserialize(File.ReadAllText(CombinedPath)) is MappingJson existing && existing.Version > Version)
-            _jsonDownload = existing;
+        ReloadExistingFile();
 
         if (!string.IsNullOrEmpty(content) && MappingJson.Deserialize(content!) is MappingJson download && download.Version > Version)
         {
@@ -334,6 +348,13 @@ public static class Mapping
         }
 
         return false;
+    }
+
+    private static void ReloadExistingFile()
+    {
+        // Use existing download file as fallback if it has not been loaded for some reason.
+        if (_jsonDownload is null && File.Exists(CombinedPath) && MappingJson.Deserialize(File.ReadAllText(CombinedPath)) is MappingJson existing && existing.Version > Version)
+            _jsonDownload = existing;
     }
 
     #endregion
