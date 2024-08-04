@@ -189,6 +189,30 @@ public static class Mapping
 
     #region Mapping
 
+    private static Dictionary<string, string> GetMapForDeobfuscation(bool useAccount) => (useAccount ? _mapForCommonAccount.Concat(_mapForDeobfuscationAccount) : _mapForCommon.Concat(_mapForDeobfuscation)).ToDictionary(i => i.Key, i => i.Value);
+    
+    private static Dictionary<string, string> GetMapForObfuscation(bool useAccount) => (useAccount ? _mapForCommonAccount.Concat(_mapForObfuscationAccount) : _mapForCommon.Concat(_mapForObfuscation)).ToDictionary(i => i.Value, i => i.Key); // switch to have the origin as Key
+
+    /// <inheritdoc cref="GetMappedOrInput(string, bool)"/>
+    public static string GetMappedOrInput(string key) => GetMappedOrInput(key, false);
+
+    /// <summary>
+    /// Maps the specified key. Works for both, deobfuscated and obfuscated input.
+    /// </summary>
+    /// <param name="key"></param>
+    /// <param name="useAccount"></param>
+    /// <returns>The mapped key or the input if no mapping found.</returns>
+    public static string GetMappedOrInput(string key, bool useAccount)
+    {
+        if (GetMapForDeobfuscation(useAccount).TryGetValue(key, out var resultFromDeobfuscation))
+            return resultFromDeobfuscation;
+
+        if (GetMapForObfuscation(useAccount).TryGetValue(key, out var resultFromObfuscation))
+            return resultFromObfuscation;
+
+        return key;
+    }
+
     /// <inheritdoc cref="Deobfuscate(JToken, bool)"/>
     public static HashSet<string> Deobfuscate(JToken node) => Deobfuscate(node, false);
 
@@ -204,7 +228,7 @@ public static class Mapping
         EnsurePreconditions(node);
 
         var jProperties = new List<JProperty>();
-        var mapForDeobfuscation = (useAccount ? _mapForCommonAccount.Concat(_mapForDeobfuscationAccount) : _mapForCommon.Concat(_mapForDeobfuscation)).ToDictionary(i => i.Key, i => i.Value);
+        var mapForDeobfuscation = GetMapForDeobfuscation(useAccount);
         var unknownKeys = new HashSet<string>();
 
         // Collect all jProperties that need to be renamed.
@@ -258,7 +282,7 @@ public static class Mapping
         EnsurePreconditions(node);
 
         var jProperties = new List<JProperty>();
-        var mapForObfuscation = (useAccount ? _mapForCommonAccount.Concat(_mapForObfuscationAccount) : _mapForCommon.Concat(_mapForObfuscation)).ToDictionary(i => i.Value, i => i.Key); // switch to have the origin as Key
+        var mapForObfuscation = GetMapForObfuscation(useAccount);
 
         // Collect all jProperties that need to be renamed.
         foreach (var child in node.Children().Where(i => i.HasValues))
