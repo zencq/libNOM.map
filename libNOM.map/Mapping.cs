@@ -190,11 +190,11 @@ public static class Mapping
     #region Mapping
 
     private static Dictionary<string, string> GetMapForDeobfuscation(bool useAccount) => (useAccount ? _mapForCommonAccount.Concat(_mapForDeobfuscationAccount) : _mapForCommon.Concat(_mapForDeobfuscation)).ToDictionary(i => i.Key, i => i.Value);
-    
+
     private static Dictionary<string, string> GetMapForObfuscation(bool useAccount) => (useAccount ? _mapForCommonAccount.Concat(_mapForObfuscationAccount) : _mapForCommon.Concat(_mapForObfuscation)).ToDictionary(i => i.Value, i => i.Key); // switch to have the origin as Key
 
-    /// <inheritdoc cref="GetMappedOrInput(string, bool)"/>
-    public static string GetMappedOrInput(string key) => GetMappedOrInput(key, false);
+    /// <inheritdoc cref="GetMappedKeyOrInput(string, bool)"/>
+    public static string GetMappedKeyOrInput(string key) => GetMappedKeyOrInput(key, false);
 
     /// <summary>
     /// Maps the specified key. Works for both, deobfuscated and obfuscated input.
@@ -202,7 +202,7 @@ public static class Mapping
     /// <param name="key"></param>
     /// <param name="useAccount"></param>
     /// <returns>The mapped key or the input if no mapping found.</returns>
-    public static string GetMappedOrInput(string key, bool useAccount)
+    public static string GetMappedKeyOrInput(string key, bool useAccount)
     {
         if (GetMapForDeobfuscation(useAccount).TryGetValue(key, out var resultFromDeobfuscation))
             return resultFromDeobfuscation;
