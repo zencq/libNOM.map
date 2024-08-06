@@ -14,6 +14,14 @@ since 1.0.0.
 ### Fixed
 ### Security
 
+## 0.13.0 (2024-08-06)
+
+### Added
+* New method `GetMappedKeyOrInput` to map a single key
+
+### Changed
+* Existing *mapping.json* is now loaded when changing the `Settings` and therefore the property has been replaced by a getter and a setter
+
 ## 0.12.1 (2024-07-22)
 
 ### Changed
