@@ -4,10 +4,11 @@ All notable changes to this project will be documented in this file. It uses the
 [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) principles and [Semantic Versioning](https://semver.org/)
 since 1.0.0.
 
-## Unreleased
+## Unreleased (0.13.1)
 
 ### Known Issues
 ### Added
+* New dedicated methods as alternative for `GetMappedKeyOrInput` which works in both directions
 ### Changed
 ### Deprecated
 ### Removed

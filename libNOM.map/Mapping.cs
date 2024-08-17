@@ -213,6 +213,42 @@ public static class Mapping
         return key;
     }
 
+    /// <inheritdoc cref="GetMappedKeyForDeobfuscationOrInput(string, bool)"/>
+    public static string GetMappedKeyForDeobfuscationOrInput(string key) => GetMappedKeyForDeobfuscationOrInput(key, false);
+
+    /// <summary>
+    /// Maps the specified key.
+    /// </summary>
+    /// <param name="key"></param>
+    /// <param name="useAccount"></param>
+    /// <returns>The deobfuscated key or the input if no mapping found.</returns>
+    public static string GetMappedKeyForDeobfuscationOrInput(string key, bool useAccount)
+    {
+        if (GetMapForDeobfuscation(useAccount).TryGetValue(key, out var resultFromDeobfuscation))
+            return resultFromDeobfuscation;
+
+        return key;
+    }
+
+    /// <inheritdoc cref="GetMappedKeyForObfuscationOrInput(string, bool)"/>
+    public static string GetMappedKeyForObfuscationOrInput(string key) => GetMappedKeyForObfuscationOrInput(key, false);
+
+    /// <summary>
+    /// Maps the specified key.
+    /// </summary>
+    /// <param name="key"></param>
+    /// <param name="useAccount"></param>
+    /// <returns>The obfuscated key or the input if no mapping found.</returns>
+    public static string GetMappedKeyForObfuscationOrInput(string key, bool useAccount)
+    {
+        if (GetMapForObfuscation(useAccount).TryGetValue(key, out var resultFromObfuscation))
+            return resultFromObfuscation;
+
+        return key;
+    }
+
+    // //
+
     /// <inheritdoc cref="Deobfuscate(JToken, bool)"/>
     public static HashSet<string> Deobfuscate(JToken node) => Deobfuscate(node, false);
 
