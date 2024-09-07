@@ -333,14 +333,22 @@ public static class Mapping
 
     #region Update
 
+    /// <inheritdoc cref="UpdateAsync"/>
+    public static bool Update()
+    {
+        var updateTask = UpdateAsync();
+        updateTask.Wait();
+        return updateTask.Result;
+    }
+
     /// <summary>
     /// Downloads the latest mapping file and updates the maps.
     /// </summary>
     /// <returns>Whether a newer version of the mapping file was successfully downloaded.</returns>
-    public static bool Update()
+    public static async Task<bool> UpdateAsync()
     {
         var result = false;
-        if (!IsUpdateRunning)
+        if (!IsUpdateRunning) // no need to run if currently running
         {
             _updateTask = Task.Run(async () =>
             {
@@ -351,28 +359,8 @@ public static class Mapping
                 }
             });
         }
-        _updateTask!.Wait(); // in case it was running, assume not newer
+        await _updateTask!; // in case it was running, assume not newer
         return result;
-    }
-
-    /// <summary>
-    /// Downloads the latest mapping file and updates the maps.
-    /// This method does not block the calling thread.
-    /// </summary>
-    public static void UpdateAsync()
-    {
-        // No need to run if currently running.
-        if (IsUpdateRunning)
-            return;
-
-        _updateTask = Task.Run(async () =>
-        {
-            var result = await GetJsonDownloadAsync();
-            if (result)
-            {
-                CreateMap();
-            }
-        });
     }
 
     /// <summary>
