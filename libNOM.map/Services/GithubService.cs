@@ -42,8 +42,7 @@ internal class GithubService
     internal async Task<string?> DownloadMappingJsonAsync(bool prerelease)
     {
         // Rate limit is 60 unauthenticated requests per hour.
-        var rateLimit = await GetRateLimit();
-        if (rateLimit.Remaining > 0)
+        if ((await GetRateLimit())?.Remaining > 0)
         {
             try
             {
@@ -64,5 +63,15 @@ internal class GithubService
         return null;
     }
 
-    private async Task<RateLimit> GetRateLimit() => GithubClient.GetLastApiInfo()?.RateLimit ?? (await GithubClient.RateLimit.GetRateLimits()).Rate;
+    private async Task<RateLimit?> GetRateLimit()
+    {
+        try
+        {
+            return GithubClient.GetLastApiInfo()?.RateLimit ?? (await GithubClient.RateLimit.GetRateLimits()).Rate;
+        }
+        catch (Exception ex) when (ex is HttpRequestException)
+        {
+            return null;
+        }
+    }
 }
