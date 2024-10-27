@@ -7,7 +7,7 @@
 [![.NET | Standard 2.0 - 2.1 | 6 - 8](https://img.shields.io/badge/.NET-Standard%202.0%20--%202.1%20%7C%206%20--%208-lightgrey)](https://dotnet.microsoft.com/en-us/)
 [![C# 12](https://img.shields.io/badge/C%23-12-lightgrey)](https://docs.microsoft.com/en-us/dotnet/csharp/)
 [![GitHub Release](https://img.shields.io/github/v/release/zencq/libNOM.map?logo=github)](https://github.com/zencq/libNOM.map/releases/latest)
-[![NuGet Version](https://img.shields.io/nuget/v/libNOM.map?logo=nuget)](https://www.nuget.org/packages/libNOM.map/)
+[![NuGet Version](https://img.shields.io/nuget/v/libNOM.map?logo=nuget&label=release)](https://www.nuget.org/packages/libNOM.map/)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/libNOM.map?logo=nuget)](https://www.nuget.org/packages/libNOM.map/)
 
 ## Introduction

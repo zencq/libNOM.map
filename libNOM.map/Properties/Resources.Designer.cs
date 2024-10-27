@@ -61,7 +61,7 @@ namespace libNOM.map.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {&quot;libMBIN_version&quot;:&quot;3.72.0.0&quot;,&quot;Mapping&quot;:[{&quot;Key&quot;:&quot;KLP&quot;,&quot;Value&quot;:&quot;ScreenshotRight&quot;},{&quot;Key&quot;:&quot;fJB&quot;,&quot;Value&quot;:&quot;ScreenshotUp&quot;},{&quot;Key&quot;:&quot;rBG&quot;,&quot;Value&quot;:&quot;PlayerWeaponName&quot;},{&quot;Key&quot;:&quot;14a&quot;,&quot;Value&quot;:&quot;DepthOfFieldAmount&quot;},{&quot;Key&quot;:&quot;uK6&quot;,&quot;Value&quot;:&quot;SectionsData&quot;},{&quot;Key&quot;:&quot;2jw&quot;,&quot;Value&quot;:&quot;DiscovererUID&quot;},{&quot;Key&quot;:&quot;J3C&quot;,&quot;Value&quot;:&quot;DiscovererPlatform&quot;},{&quot;Key&quot;:&quot;OYB&quot;,&quot;Value&quot;:&quot;DiscoveredState&quot;},{&quot;Key&quot;:&quot;ym&gt;&quot;,&quot;Value&quot;:&quot;PlanetaryMappingData&quot;},{&quot;Key&quot;:&quot;TFZ&quot;,&quot;Value&quot;:&quot;SeasonalData&quot;},{&quot;Key&quot;:&quot;:Je&quot;,&quot;Value&quot;:&quot;SecondaryStats&quot;},{&quot;Key&quot;:&quot;OCG&quot;,&quot;Value&quot;:&quot;SunDirSet ....
+        ///   Looks up a localized string similar to {&quot;libMBIN_version&quot;:&quot;0.13.3&quot;,&quot;Mapping&quot;:[{&quot;Key&quot;:&quot;5Ta&quot;,&quot;Value&quot;:&quot;AllowFriendBases&quot;},{&quot;Key&quot;:&quot;fDU&quot;,&quot;Value&quot;:&quot;BLANK&quot;},{&quot;Key&quot;:&quot;UpF&quot;,&quot;Value&quot;:&quot;CompletedInteractions&quot;},{&quot;Key&quot;:&quot;?sW&quot;,&quot;Value&quot;:&quot;DepthOfField&quot;},{&quot;Key&quot;:&quot;14a&quot;,&quot;Value&quot;:&quot;DepthOfFieldAmount&quot;},{&quot;Key&quot;:&quot;wKU&quot;,&quot;Value&quot;:&quot;DepthOfFieldStrengthSetting&quot;},{&quot;Key&quot;:&quot;f:D&quot;,&quot;Value&quot;:&quot;DifficultySettings&quot;},{&quot;Key&quot;:&quot;OYB&quot;,&quot;Value&quot;:&quot;DiscoveredState&quot;},{&quot;Key&quot;:&quot;J3C&quot;,&quot;Value&quot;:&quot;DiscovererPlatform&quot;},{&quot;Key&quot;:&quot;2jw&quot;,&quot;Value&quot;:&quot;DiscovererUID&quot;},{&quot;Key&quot;:&quot;UMK&quot;,&quot;Value&quot;:&quot;EyeTracking&quot;},{&quot;Key&quot;:&quot;LDt&quot;,&quot;Value&quot;:&quot;Fl [re....
         /// </summary>
         internal static string Legacy {
             get {
@@ -70,7 +70,7 @@ namespace libNOM.map.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {&quot;libMBIN_version&quot;:&quot;3.82.0.2&quot;,&quot;Mapping&quot;:[{&quot;Key&quot;:&quot;Iis&quot;,&quot;Value&quot;:&quot;RealityIndex&quot;},{&quot;Key&quot;:&quot;dZj&quot;,&quot;Value&quot;:&quot;VoxelX&quot;},{&quot;Key&quot;:&quot;IyE&quot;,&quot;Value&quot;:&quot;VoxelY&quot;},{&quot;Key&quot;:&quot;uXE&quot;,&quot;Value&quot;:&quot;VoxelZ&quot;},{&quot;Key&quot;:&quot;vby&quot;,&quot;Value&quot;:&quot;SolarSystemIndex&quot;},{&quot;Key&quot;:&quot;jsv&quot;,&quot;Value&quot;:&quot;PlanetIndex&quot;},{&quot;Key&quot;:&quot;oZw&quot;,&quot;Value&quot;:&quot;GalacticAddress&quot;},{&quot;Key&quot;:&quot;yhJ&quot;,&quot;Value&quot;:&quot;UniverseAddress&quot;},{&quot;Key&quot;:&quot;ux@&quot;,&quot;Value&quot;:&quot;PreviousUniverseAddress&quot;},{&quot;Key&quot;:&quot;QQp&quot;,&quot;Value&quot;:&quot;HomeRealityIteration&quot;},{&quot;Key&quot;:&quot;elv&quot;,&quot;Value&quot;:&quot;InventoryType&quot;},{&quot;Key&quot;:&quot;Vn8&quot;,&quot;Value&quot;:&quot;Type&quot;},{&quot;Key&quot;:&quot;....
+        ///   Looks up a localized string similar to {&quot;libMBIN_version&quot;:&quot;5.21.0.1&quot;,&quot;Mapping&quot;:[{&quot;Key&quot;:&quot;jU1&quot;,&quot;Value&quot;:&quot;x&quot;},{&quot;Key&quot;:&quot;Uoj&quot;,&quot;Value&quot;:&quot;y&quot;},{&quot;Key&quot;:&quot;j22&quot;,&quot;Value&quot;:&quot;z&quot;},{&quot;Key&quot;:&quot;cL6&quot;,&quot;Value&quot;:&quot;BufferAnchors&quot;},{&quot;Key&quot;:&quot;r:j&quot;,&quot;Value&quot;:&quot;GalacticAddresses&quot;},{&quot;Key&quot;:&quot;wMC&quot;,&quot;Value&quot;:&quot;Position&quot;},{&quot;Key&quot;:&quot;8?J&quot;,&quot;Value&quot;:&quot;Data&quot;},{&quot;Key&quot;:&quot;Mes&quot;,&quot;Value&quot;:&quot;Edits&quot;},{&quot;Key&quot;:&quot;eiy&quot;,&quot;Value&quot;:&quot;BufferSizes&quot;},{&quot;Key&quot;:&quot;w0G&quot;,&quot;Value&quot;:&quot;BufferAges&quot;},{&quot;Key&quot;:&quot;deQ&quot;,&quot;Value&quot;:&quot;BufferProtected&quot;},{&quot;Key&quot;:&quot;=o:&quot;,&quot;Value&quot;:&quot;TerrainEditData&quot;},{&quot;Key&quot;:&quot;3@T&quot;,&quot;Value&quot;:&quot;LastBuilding....
         /// </summary>
         internal static string MBINCompiler {
             get {
@@ -106,7 +106,7 @@ namespace libNOM.map.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {&quot;libMBIN_version&quot;:&quot;3.62.0.0&quot;,&quot;Mapping&quot;:[{&quot;Key&quot;:&quot;MultiTools&quot;,&quot;Value&quot;:&quot;Multitools&quot;}]}.
+        ///   Looks up a localized string similar to {&quot;libMBIN_version&quot;:&quot;0.1.0&quot;,&quot;Mapping&quot;:[{&quot;Key&quot;:&quot;MultiTools&quot;,&quot;Value&quot;:&quot;Multitools&quot;}]}.
         /// </summary>
         internal static string SaveWizard {
             get {
