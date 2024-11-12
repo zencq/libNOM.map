@@ -4,11 +4,13 @@ All notable changes to this project will be documented in this file. It uses the
 [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) principles and [Semantic Versioning](https://semver.org/)
 since 1.0.0.
 
-## Unreleased
+## Unreleased (0.13.4)
 
 ### Known Issues
 ### Added
 ### Changed
+* Now also targeting .NET 9 according to supported versions in the [.NET release lifecycle](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
+* No longer targeting .NET 6 and .NET 7 (can be still used thanks to .NET Standard)
 ### Deprecated
 ### Removed
 ### Fixed
@@ -78,7 +80,7 @@ since 1.0.0.
 ## 0.10.0 (2024-02-15)
 
 ### Added
-* Now targeting .NET 8 as per the [.NET release lifecycle](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
+* Now targeting .NET 8 according to supported versions in the [.NET release lifecycle](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
 * A `Version` property for the used mapping (downloaded if exists or built-in)
 * A new setting `IncludePrerelease` to decide whether pre-releases should be included
   in the mapping updates
@@ -106,7 +108,7 @@ since 1.0.0.
 ## 0.9.0 (2023-03-12)
 
 ### Added
-* Now targeting .NET 7 as per the [.NET release lifecycle](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
+* Now targeting .NET 7 according to supported versions in the [.NET release lifecycle](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
 * Now publishing to [NuGet Gallery](https://www.nuget.org/packages/libNOM.map)
 
 ### Changed

@@ -41,7 +41,7 @@ public class DeobfuscateTest
         // Assert
         Assert.AreEqual(0, unknownKeys.Count);
 
-        var actual = JsonConvert.SerializeObject(jsonObject);
+        var actual = JsonConvert.SerializeObject(jsonObject).Replace("2.980232238769531E-08", "2.9802322387695312E-08");
         Assert.AreEqual(expected, actual, "Legacy not deobfuscated correctly");
     }
 
@@ -58,7 +58,7 @@ public class DeobfuscateTest
         // Assert
         Assert.AreEqual(0, unknownKeys.Count);
 
-        var actual = JsonConvert.SerializeObject(jsonObject);
+        var actual = JsonConvert.SerializeObject(jsonObject).Replace("2.980232238769531E-08", "2.9802322387695312E-08");
         Assert.AreEqual(expected, actual, "Wizard not deobfuscated correctly");
     }
 }

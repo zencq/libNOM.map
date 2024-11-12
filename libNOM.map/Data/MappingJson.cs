@@ -16,12 +16,6 @@ internal record class MappingJson
 
     [JsonProperty("Mapping")]
     internal KeyValuePair<string, string>[] Data { get; set; } = null!;
-#elif NET6_0
-    [JsonProperty("libMBIN_version")]
-    internal Version Version { get; init; } = null!;
-
-    [JsonProperty("Mapping")]
-    internal KeyValuePair<string, string>[] Data { get; init; } = null!;
 #else
     [JsonProperty("libMBIN_version")]
     internal required Version Version { get; init; }
