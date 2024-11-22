@@ -13,14 +13,14 @@ jobs:
     strategy:
       matrix:
         # November, 2026 / May, 2026
-        framwork: [{dotnet: 'net8.0', version: '8.0.x'}, {dotnet: 'net9.0', version: '9.0.x'}]
+        framework: [{dotnet: 'net8.0', version: '9.0.x'}, {dotnet: 'net9.0', version: '9.0.x'}] # set up 9.0 for all as there is an error when executing the tests on 8.0 otherwise (macos, ubuntu)
         os: ['windows-latest', 'macos-latest', 'ubuntu-latest']
     runs-on: ${{ matrix.os }}
     steps:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: ${{ matrix.framwork.version }}
+          dotnet-version: ${{ matrix.framework.version }}
           dotnet-quality: ga
       - name: Checkout
         uses: actions/checkout@v4
@@ -31,19 +31,19 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: ${{ runner.os }}-nuget-
       - name: Unit Test
-        run: dotnet test libNOM.test --configuration Debug --framework ${{ matrix.framwork.dotnet }}
+        run: dotnet test libNOM.test --configuration Debug --framework ${{ matrix.framework.dotnet }}
   build:
     name: Build
     strategy:
       matrix:
-        framwork: ['9.0.x'] # must match project file
+        framework: ['9.0.x'] # must match project file
         os: ['ubuntu-latest']
     runs-on: ${{ matrix.os }}
     steps:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: ${{ matrix.framwork }}
+          dotnet-version: ${{ matrix.framework }}
           dotnet-quality: ga
       - name: Checkout
         uses: actions/checkout@v4
