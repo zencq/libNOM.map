@@ -11,6 +11,7 @@ since 1.0.0.
 ### Changed
 * Now also targeting .NET 9 according to supported versions in the [.NET release lifecycle](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
 * No longer targeting .NET 6 and .NET 7 (can be still used thanks to .NET Standard)
+* Updated mapping to 5.25.0.1
 ### Deprecated
 ### Removed
 ### Fixed
