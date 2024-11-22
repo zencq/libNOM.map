@@ -4,18 +4,22 @@ All notable changes to this project will be documented in this file. It uses the
 [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) principles and [Semantic Versioning](https://semver.org/)
 since 1.0.0.
 
-## Unreleased (0.13.4)
+## Unreleased
 
 ### Known Issues
 ### Added
 ### Changed
-* Now also targeting .NET 9 according to supported versions in the [.NET release lifecycle](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
-* No longer targeting .NET 6 and .NET 7 (can be still used thanks to .NET Standard)
-* Updated mapping to 5.25.0.1
 ### Deprecated
 ### Removed
 ### Fixed
 ### Security
+
+## 0.13.4 (2024-11-22)
+
+### Changed
+* Now also targeting .NET 9 according to supported versions in the [.NET release lifecycle](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
+* No longer targeting .NET 6 and .NET 7 (still works thanks to .NET Standard)
+* Updated mapping to 5.25.0.1
 
 ## 0.13.3 (2024-10-28)
 
