@@ -20,12 +20,15 @@ public static partial class Mapping
     private static readonly MappingJson _jsonLegacy = MappingJson.Deserialize(Properties.Resources.Legacy)!; // older keys that are not present in the latest version
     private static readonly MappingJson _jsonWizard = MappingJson.Deserialize(Properties.Resources.SaveWizard)!; // adjust differing mapping of SaveWizard
     private static readonly ReaderWriterLockSlim _lock = new(LockRecursionPolicy.SupportsRecursion);
-    private static readonly Dictionary<string, string> _mapForCommon = [];
-    private static readonly Dictionary<string, string> _mapForCommonAccount = [];
-    private static readonly Dictionary<string, string> _mapForDeobfuscation = [];
-    private static readonly Dictionary<string, string> _mapForDeobfuscationAccount = [];
-    private static readonly Dictionary<string, string> _mapForObfuscation = [];
-    private static readonly Dictionary<string, string> _mapForObfuscationAccount = [];
+    private static readonly List<KeyValuePair<string, string>> _mapForCommon = [];
+    private static readonly List<KeyValuePair<string, string>> _mapForCommonAccount = [];
+    private static readonly List<KeyValuePair<string, string>> _mapForDeobfuscation = [];
+    private static readonly List<KeyValuePair<string, string>> _mapForDeobfuscationAccount = [];
+    private static readonly List<KeyValuePair<string, string>> _mapForObfuscation = [];
+    private static readonly List<KeyValuePair<string, string>> _mapForObfuscationAccount = [];
+    private static readonly (string ObfuscatedKey, string DeobfuscatedKey, string PartialPath)[] _mapOfCollision = [
+        ("NE3", "AllowedToBePurpleWithoutAccess", "SolarSystemAttributes"),
+    ];
     private static Task? _updateTask;
 
     #endregion
@@ -113,24 +116,28 @@ public static partial class Mapping
     private static void AddToMap(IEnumerable<KeyValuePair<string, string>> data, bool deobfuscate, bool obfuscate, bool useAccount)
     {
         foreach (var pair in data)
-            if (deobfuscate == obfuscate)
+        {
+            List<KeyValuePair<string, string>> map = [];
+
+            // Only if both are true.
+            if (deobfuscate == obfuscate && obfuscate)
             {
-                var mapForCommon = useAccount ? _mapForCommonAccount : _mapForCommon;
-                mapForCommon[pair.Key] = pair.Value;
+                map = useAccount ? _mapForCommonAccount : _mapForCommon;
             }
-            else
+            // As both are not true, it can only be one of if any.
+            else if (deobfuscate)
             {
-                if (deobfuscate)
-                {
-                    var mapForDeobfuscation = useAccount ? _mapForDeobfuscationAccount : _mapForDeobfuscation;
-                    mapForDeobfuscation[pair.Key] = pair.Value;
-                }
-                if (obfuscate)
-                {
-                    var mapForObfuscation = useAccount ? _mapForObfuscationAccount : _mapForObfuscation;
-                    mapForObfuscation[pair.Key] = pair.Value;
-                }
+                map = useAccount ? _mapForDeobfuscationAccount : _mapForDeobfuscation;
             }
+            else if (obfuscate)
+            {
+                map = useAccount ? _mapForObfuscationAccount : _mapForObfuscation;
+            }
+
+            // Add the pair to the selected map.
+            if (!map.Contains(pair))
+                map.Add(pair);
+        }
     }
 
     #endregion
@@ -148,10 +155,10 @@ public static partial class Mapping
     /// <returns>The mapped key or the input if no mapping found.</returns>
     public static string GetMappedKeyOrInput(string key, bool useAccount)
     {
-        if (GetMapForDeobfuscation(useAccount).TryGetValue(key, out var resultFromDeobfuscation))
+        if (GetMappedKeyForDeobfuscationOrInput(key, useAccount, out var resultFromDeobfuscation))
             return resultFromDeobfuscation;
 
-        if (GetMapForObfuscation(useAccount).TryGetValue(key, out var resultFromObfuscation))
+        if (GetMappedKeyForObfuscationOrInput(key, useAccount, out var resultFromObfuscation))
             return resultFromObfuscation;
 
         return key;
