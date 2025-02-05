@@ -19,13 +19,13 @@ public static partial class Mapping
     /// </summary>
     /// <param name="token">Current property that should be obfuscated.</param>
     /// <param name="jProperties">List of properties that need to be obfuscated.</param>
-    private static void GetPropertiesToObfuscate(JToken token, List<JProperty> jProperties, Dictionary<string, string> mapForObfuscation)
+    private static void GetPropertiesToObfuscate(JToken token, List<JProperty> jProperties, IEnumerable<KeyValuePair<string, string>> mapForObfuscation)
     {
         if (token.Type == JTokenType.Property)
         {
             var property = (JProperty)(token);
 
-            if (mapForObfuscation.ContainsKey(property.Name))
+            if (mapForObfuscation.FirstOrDefault(i => i.Value == property.Name).Value is not null)
             {
                 jProperties.Add(property);
             }
@@ -39,23 +39,30 @@ public static partial class Mapping
 
     #region Mapping
 
-    private static Dictionary<string, string> GetMapForObfuscation(bool useAccount) => (useAccount ? _mapForCommonAccount.Concat(_mapForObfuscationAccount) : _mapForCommon.Concat(_mapForObfuscation)).ToDictionary(i => i.Value, i => i.Key); // switch to have the origin as Key
+    private static IEnumerable<KeyValuePair<string, string>> GetMapForObfuscation(bool useAccount) => useAccount ? _mapForCommonAccount.Concat(_mapForObfuscationAccount) : _mapForCommon.Concat(_mapForObfuscation);
 
     /// <inheritdoc cref="GetMappedKeyForObfuscationOrInput(string, bool)"/>
-    public static string GetMappedKeyForObfuscationOrInput(string key) => GetMappedKeyForObfuscationOrInput(key, false);
+    public static bool GetMappedKeyForObfuscationOrInput(string key, out string result) => GetMappedKeyForObfuscationOrInput(key, false, out result);
 
     /// <summary>
-    /// Maps the specified key.
+    /// Maps the specified deobfuscated key.
     /// </summary>
     /// <param name="key"></param>
     /// <param name="useAccount"></param>
     /// <returns>The obfuscated key or the input if no mapping found.</returns>
-    public static string GetMappedKeyForObfuscationOrInput(string key, bool useAccount)
+    public static bool GetMappedKeyForObfuscationOrInput(string key, bool useAccount, out string result)
     {
-        if (GetMapForObfuscation(useAccount).TryGetValue(key, out var resultFromObfuscation))
-            return resultFromObfuscation;
-
-        return key;
+        var mapped = GetMapForObfuscation(useAccount).FirstOrDefault(i => i.Value == key);
+        if (mapped.Key is null)
+        {
+            result = key;
+            return false;
+        }
+        else
+        {
+            result = mapped.Key;
+            return true;
+        }
     }
 
     // //
@@ -81,7 +88,11 @@ public static partial class Mapping
 
         // Actually rename each jProperty.
         foreach (var jProperty in jProperties)
-            jProperty.Rename(mapForObfuscation[jProperty.Name]);
+        {
+            var result = mapForObfuscation.FirstOrDefault(i => i.Value == jProperty.Name);
+            if (result.Key is not null)
+                jProperty.Rename(result.Key);
+        }
     }
 
     #endregion
