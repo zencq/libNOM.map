@@ -4,18 +4,25 @@ All notable changes to this project will be documented in this file. It uses the
 [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) principles and [Semantic Versioning](https://semver.org/)
 since 1.0.0.
 
-## Unreleased (0.13.5)
+## Unreleased
 
 ### Known Issues
 ### Added
-* New legacy mapping
 ### Changed
-* Updated mapping to 5.52.0.1
-* Bump *Octokit* from 13.0.1 to 14.0.0
 ### Deprecated
 ### Removed
 ### Fixed
 ### Security
+
+## 0.13.5 (2025-02-05)
+
+### Added
+* New legacy mappings
+* Internal handling of collisions (duplicated obfuscated keys) within save/account data
+
+### Changed
+* Updated mapping to 5.52.0.1
+* Bump *Octokit* from 13.0.1 to 14.0.0
 
 ## 0.13.4 (2024-11-22)
 
@@ -27,7 +34,7 @@ since 1.0.0.
 ## 0.13.3 (2024-10-28)
 
 ### Added
-* New legacy mapping (UsedDiscoveryOwners <= 5.20.0.1)
+* New legacy mappings
 
 ### Changed
 * Updated mapping to 5.21.0.1
