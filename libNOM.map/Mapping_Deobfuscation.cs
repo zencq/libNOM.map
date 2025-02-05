@@ -15,6 +15,39 @@ public static partial class Mapping
     #region Getter
 
     /// <summary>
+    /// Gets the deobfuscated key for the specified property (name).
+    /// </summary>
+    /// <param name="mapForDeobfuscation"></param>
+    /// <param name="jProperty"></param>
+    /// <returns></returns>
+    private static string? GetDeobfuscatedKey(IEnumerable<KeyValuePair<string, string>> mapForDeobfuscation, JProperty jProperty)
+    {
+        KeyValuePair<string, string> result = default;
+
+        foreach (var (ObfuscatedKey, DeobfuscatedKey, PartialPath) in _mapOfCollision)
+            if (jProperty.Name == ObfuscatedKey)
+            {
+                if (jProperty.Path.Contains(PartialPath))
+                {
+                    result = mapForDeobfuscation.FirstOrDefault(i => i.Key == jProperty.Name && i.Value == DeobfuscatedKey);
+                }
+                else
+                {
+                    result = mapForDeobfuscation.FirstOrDefault(i => i.Key == jProperty.Name && i.Value != DeobfuscatedKey);
+                }
+
+                // Stop if found a match.
+                break;
+            }
+
+        // If no collision found, use default matching.
+        if (result.Value is null)
+            result = mapForDeobfuscation.FirstOrDefault(i => i.Key == jProperty.Name);
+
+        return result.Value;
+    }
+
+    /// <summary>
     /// Iterates over all JSON properties to collect a list for deobfuscation.
     /// </summary>
     /// <param name="token">Current property that should be deobfuscated.</param>
@@ -98,30 +131,9 @@ public static partial class Mapping
         // Actually rename each jProperty.
         foreach (var jProperty in jProperties)
         {
-            KeyValuePair<string, string> result = default;
-
-            foreach (var (ObfuscatedKey, DeobfuscatedKey, PartialPath) in _mapOfCollision)
-                if (jProperty.Name == ObfuscatedKey)
-                {
-                    if (jProperty.Path.Contains(PartialPath))
-                    {
-                        result = mapForDeobfuscation.FirstOrDefault(i => i.Key == jProperty.Name && i.Value == DeobfuscatedKey);
-                    }
-                    else
-                    {
-                        result = mapForDeobfuscation.FirstOrDefault(i => i.Key == jProperty.Name && i.Value != DeobfuscatedKey);
-                    }
-                    // Stop if found a match.
-                    break;
-                }
-
-            // If no collision found, use default matching.
-            if (result.Value is null)
-                result = mapForDeobfuscation.FirstOrDefault(i => i.Key == jProperty.Name);
-
-            // If any match found, rename property.
-            if (result.Value is not null)
-                jProperty.Rename(result.Value);
+            var deobfuscated = GetDeobfuscatedKey(mapForDeobfuscation, jProperty);
+            if (deobfuscated is not null)
+                jProperty.Rename(deobfuscated);
         }
 
         return unknownKeys;
