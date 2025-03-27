@@ -31,10 +31,14 @@ since 1.0.0.
 
 ## 0.13.4 (2024-11-22)
 
-### Changed
+### Added
 * Now also targeting .NET 9 according to supported versions in the [.NET release lifecycle](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
-* No longer targeting .NET 6 and .NET 7 (still works thanks to .NET Standard)
+
+### Changed
 * Updated mapping to 5.25.0.1
+
+### Removed
+* No longer targeting .NET 6 and .NET 7 (still works thanks to .NET Standard)
 
 ## 0.13.3 (2024-10-28)
 
