@@ -14,6 +14,11 @@ since 1.0.0.
 ### Fixed
 ### Security
 
+## 0.13.6 (2025-03-27)
+
+### Changed
+* Updated mapping to 5.61.0.1
+
 ## 0.13.5 (2025-02-05)
 
 ### Added
