@@ -24,10 +24,10 @@ since 1.0.0.
 ## 0.13.5 (2025-02-05)
 
 ### Added
-* New legacy mappings
 * Internal handling of collisions (duplicated obfuscated keys) within save/account data
 
 ### Changed
+* Updated legacy mappings
 * Updated mapping to 5.52.0.1
 * Bump *Octokit* from 13.0.1 to 14.0.0
 
@@ -44,10 +44,8 @@ since 1.0.0.
 
 ## 0.13.3 (2024-10-28)
 
-### Added
-* New legacy mappings
-
 ### Changed
+* Updated legacy mappings
 * Updated mapping to 5.21.0.1
 
 ## 0.13.2 (2024-09-08)
@@ -80,27 +78,23 @@ since 1.0.0.
 ## 0.12.0 (2024-04-01)
 
 ### Added
-* Some more legacy mappings
 * `Deobfuscate` and `Obfuscate` have new overloads with the new parameter `useAccount`
 
 ### Changed
+* Updated legacy mappings
 * The mappings for account data and actual saves are now separated
 
 ## 0.11.0 (2024-03-13)
 
-### Added
-* Some legacy mappings for account data
-
 ### Changed
+* Updated legacy mappings for account data
 * Renamed `Download` setting to `DownloadDirectory` to improve clarity
 * Settings now have `{ get; set; }` for all targets
 
 ## 0.10.1 (2024-03-10)
 
-### Added
-* Some legacy mappings
-
 ### Changed
+* Updated legacy mappings
 * Bump *Octokit* from 9.1.2 to 10.0.0
 
 ## 0.10.0 (2024-02-15)
