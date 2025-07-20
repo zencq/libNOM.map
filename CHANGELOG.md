@@ -4,17 +4,21 @@ All notable changes to this project will be documented in this file. It uses the
 [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) principles and [Semantic Versioning](https://semver.org/)
 since 1.0.0.
 
-## Unreleased (0.13.7)
+## Unreleased
 
 ### Known Issues
 ### Added
 ### Changed
-* Updated legacy mappings
-* Updated mapping to 5.74.0.3
 ### Deprecated
 ### Removed
 ### Fixed
 ### Security
+
+## 0.13.7 (2025-07-20)
+
+### Changed
+* Updated legacy mappings
+* Updated mapping to 5.74.0.3
 
 ## 0.13.6 (2025-03-27)
 
