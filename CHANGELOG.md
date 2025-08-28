@@ -18,13 +18,13 @@ since 1.0.0.
 ## 0.13.7 (2025-07-20)
 
 ### Changed
-* Updated legacy mappings
-* Updated mapping to 5.74.0.3
+* Update legacy mappings
+* Update mapping to 5.74.0.3
 
 ## 0.13.6 (2025-03-27)
 
 ### Changed
-* Updated mapping to 5.61.0.1
+* Update mapping to 5.61.0.1
 
 ## 0.13.5 (2025-02-05)
 
@@ -32,8 +32,8 @@ since 1.0.0.
 * Internal handling of collisions (duplicated obfuscated keys) within save/account data
 
 ### Changed
-* Updated legacy mappings
-* Updated mapping to 5.52.0.1
+* Update legacy mappings
+* Update mapping to 5.52.0.1
 * Bump *Octokit* from 13.0.1 to 14.0.0
 
 ## 0.13.4 (2024-11-22)
@@ -42,7 +42,7 @@ since 1.0.0.
 * Now also targeting .NET 9 according to supported versions in the [.NET release lifecycle](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
 
 ### Changed
-* Updated mapping to 5.25.0.1
+* Update mapping to 5.25.0.1
 
 ### Removed
 * No longer targeting .NET 6 and .NET 7 (still works thanks to .NET Standard)
@@ -50,8 +50,8 @@ since 1.0.0.
 ## 0.13.3 (2024-10-28)
 
 ### Changed
-* Updated legacy mappings
-* Updated mapping to 5.21.0.1
+* Update legacy mappings
+* Update mapping to 5.21.0.1
 
 ## 0.13.2 (2024-09-08)
 
@@ -78,7 +78,7 @@ since 1.0.0.
 
 ### Changed
 * Bump *Octokit* from 10.0.0 to 13.0.1
-* Updated mapping to 5.01.0.1
+* Update mapping to 5.01.0.1
 
 ## 0.12.0 (2024-04-01)
 
@@ -86,20 +86,20 @@ since 1.0.0.
 * `Deobfuscate` and `Obfuscate` have new overloads with the new parameter `useAccount`
 
 ### Changed
-* Updated legacy mappings
+* Update legacy mappings
 * The mappings for account data and actual saves are now separated
 
 ## 0.11.0 (2024-03-13)
 
 ### Changed
-* Updated legacy mappings for account data
-* Renamed `Download` setting to `DownloadDirectory` to improve clarity
+* Update legacy mappings for account data
+* Rename `Download` setting to `DownloadDirectory` to improve clarity
 * Settings now have `{ get; set; }` for all targets
 
 ## 0.10.1 (2024-03-10)
 
 ### Changed
-* Updated legacy mappings
+* Update legacy mappings
 * Bump *Octokit* from 9.1.2 to 10.0.0
 
 ## 0.10.0 (2024-02-15)
@@ -112,13 +112,13 @@ since 1.0.0.
 
 ### Changed
 * Bump *Octokit* from 7.1.0 to 9.1.2
-* Updated mapping to 4.50.0.1
+* Update mapping to 4.50.0.1
 
 ## 0.9.2 (2023-09-05)
 
 ### Changed
 * Bump *Octokit* from 6.0.0 to 7.1.0
-* Updated mapping to 4.43.0.1
+* Update mapping to 4.43.0.1
 
 ### Fixed
 * A crash if creating the map in multiple threads simultaneously
@@ -128,7 +128,7 @@ since 1.0.0.
 ## 0.9.1 (2023-06-22)
 
 ### Changed
-* Updated mapping to 4.34.0.1
+* Update mapping to 4.34.0.1
 
 ## 0.9.0 (2023-03-12)
 
@@ -137,7 +137,7 @@ since 1.0.0.
 * Now publishing to [NuGet Gallery](https://www.nuget.org/packages/libNOM.map)
 
 ### Changed
-* Updated mapping to 4.12.1.1
+* Update mapping to 4.12.1.1
 
 ### Fixed
 * Crash if *mapping.json* file is in use
@@ -145,12 +145,12 @@ since 1.0.0.
 ## 0.8.3 (2022-10-21)
 
 ### Changed
-* Updated mapping to 4.4.0.3
+* Update mapping to 4.4.0.3
 
 ## 0.8.2 (2022-10-09)
 
 ### Changed
-* Updated mapping to 4.0.0.2
+* Update mapping to 4.0.0.2
 
 ### Fixed
 * Crash if parent already has a child with the new name
@@ -159,7 +159,7 @@ since 1.0.0.
 
 ### Changed
 * Now targeting .NET Standard 2.x and currently supported versions in the [.NET release lifecycle](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
-* Updated mapping to 3.98.0.5
+* Update mapping to 3.98.0.5
 
 ## 0.8.0 (2022-07-25)
 
@@ -172,7 +172,7 @@ since 1.0.0.
 ## 0.7.0 (2022-05-03)
 
 ### Changed
-* Renamed `PathDownload` setting to `Download`
+* Rename `PathDownload` setting to `Download`
 
 ## 0.6.2 (2022-05-02)
 
@@ -180,7 +180,7 @@ since 1.0.0.
 * Multiple target frameworks
 
 ### Changed
-* Updated mapping to 3.88.0.2
+* Update mapping to 3.88.0.2
 
 ## 0.6.1 (2022-04-27)
 
@@ -191,13 +191,13 @@ since 1.0.0.
 ## 0.6.0 (2022-04-05)
 
 ### Changed
-* Removed singleton and now use static class instead
+* Remove singleton and now use static class instead
 
 ## 0.5.0 (2022-04-03)
 
 ### Changed
-* Hid `UpdateTask` from public and only use internal
-* Moved `SetSettings` directly into property
+* Hide `UpdateTask` from public and only use internal
+* Move `SetSettings` directly into property
 
 ### Fixed
 * A deadlock when calling `Update` or `UpdateAsync`
@@ -210,13 +210,13 @@ since 1.0.0.
     * archive with all necessary DLLs
 
 ### Changed
-* Updated mapping to 3.82.0.2
+* Update mapping to 3.82.0.2
 
 ## 0.4.0 (2022-02-24)
 
 ### Changed
-* Updated mapping to 3.81.0.2
-* Moved all public classes to root namespace
+* Update mapping to 3.81.0.2
+* Move all public classes to root namespace
 
 ## 0.3.0 (2022-02-20)
 
@@ -226,7 +226,7 @@ since 1.0.0.
 ## 0.2.1 (2022-01-08)
 
 ### Changed
-* Removed Serilog dependency
+* Remove Serilog dependency
 
 ## 0.2.0 (2022-01-03)
 
