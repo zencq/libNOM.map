@@ -4,17 +4,21 @@ All notable changes to this project will be documented in this file. It uses the
 [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) principles and [Semantic Versioning](https://semver.org/)
 since 1.0.0.
 
-## Unreleased (0.13.9)
+## Unreleased
 
 ### Known Issues
 ### Added
 ### Changed
-* Bump *Newtonsoft.Json* from 13.0.3 to 13.0.4
-* Update mapping to 6.11.0.1
 ### Deprecated
 ### Removed
 ### Fixed
 ### Security
+
+## 0.13.9 (2025-10-25)
+
+### Changed
+* Bump *Newtonsoft.Json* from 13.0.3 to 13.0.4
+* Update mapping to 6.11.0.1
 
 ## 0.13.8 (2025-09-06)
 
