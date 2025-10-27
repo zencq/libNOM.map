@@ -59,7 +59,7 @@ jobs:
         uses: actions/upload-artifact@v5
         with:
           name: Coverage
-          path: ./libNOM.test/TestResults/**/
+          path: ./libNOM.test/TestResults/**/coverage.*
           if-no-files-found: error
       - name: Upload (Qlty)
         uses: qltysh/qlty-action/coverage@v2
@@ -67,7 +67,7 @@ jobs:
           token: ${{ secrets.QLTY_COVERAGE_TOKEN }}
           files: ./libNOM.test/TestResults/**/coverage.cobertura.xml
           format: cobertura
-          strip-prefix: /home/runner/work/libNOM.map/libNOM.map/
+          add-prefix: libNOM.map/
   build:
     name: Build
     strategy:
