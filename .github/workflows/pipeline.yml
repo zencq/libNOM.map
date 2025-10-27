@@ -55,7 +55,13 @@ jobs:
           restore-keys: ${{ runner.os }}-nuget-
       - name: Unit Test
         run: dotnet test libNOM.test --framework ${{ matrix.dotnet.framework }} --settings coverage.runsettings
-      - name: Upload Coverage
+      - name: Upload (Artifact)
+        uses: actions/upload-artifact@v5
+        with:
+          name: Coverage
+          path: ./libNOM.test/TestResults/**/
+          if-no-files-found: error
+      - name: Upload (Qlty)
         uses: qltysh/qlty-action/coverage@v2
         with:
           token: ${{ secrets.QLTY_COVERAGE_TOKEN }}
