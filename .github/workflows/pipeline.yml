@@ -31,7 +31,13 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: ${{ runner.os }}-nuget-
       - name: Unit Test
-        run: dotnet test libNOM.test --configuration Debug --framework ${{ matrix.framework.dotnet }}
+        run: dotnet test libNOM.test --configuration Debug --framework ${{ matrix.framework.dotnet }} --settings test.runsettings
+      - name: Upload Coverage
+        uses: qltysh/qlty-action/coverage@v2
+        with:
+          token: ${{ secrets.QLTY_COVERAGE_TOKEN }}
+          files: ./TestResults/**/*.cobertura.xml
+          format: cobertura
   build:
     name: Build
     strategy:
