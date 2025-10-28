@@ -3,6 +3,7 @@
 ![Maintained](https://img.shields.io/maintenance/yes/2025)
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/zencq/libNOM.map/pipeline.yml?logo=github)](https://github.com/zencq/libNOM.map/actions/workflows/pipeline.yml)
 [![Maintainability](https://qlty.sh/gh/zencq/projects/libNOM.map/maintainability.svg)](https://qlty.sh/gh/zencq/projects/libNOM.map)
+[![Code Coverage](https://qlty.sh/gh/zencq/projects/libNOM.map/coverage.svg)](https://qlty.sh/gh/zencq/projects/libNOM.map)
 
 [![.NET | Standard 2.0 - 2.1 | 8 - 9](https://img.shields.io/badge/.NET-Standard%202.0%20--%202.1%20%7C%208%20--%209-lightgrey)](https://dotnet.microsoft.com/en-us/)
 [![C# 13](https://img.shields.io/badge/C%23-13-lightgrey)](https://docs.microsoft.com/en-us/dotnet/csharp/)
@@ -61,7 +62,7 @@ file for details.
 
 ## Authors
 
-* **Christian Engelhardt** (zencq) - [GitHub](https://github.com/zencq)
+* zencq - [GitHub](https://github.com/zencq)
 
 ## Credits
 
